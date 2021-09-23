@@ -1,0 +1,84 @@
+<app-content [header]="data.articleId ? 'Editing: ' + data.title : 'Creating: ' + data.title " [actions]="actions"
+             (onAction)="onAction($event)">
+
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="title" class="display-block">Title</label>
+            <input id="title" type="text" [(ngModel)]="data.title"/>
+        </div>
+        <div class="cell small-6">
+            <label for="type" class="display-block">Type</label>
+            <select id="type" [(ngModel)]="data.type" (ngModelChange)="onTypeChange()">
+                <option *ngFor="let option of types" [ngValue]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
+        </div>
+
+        <div class="cell small-6" *ngIf="showBadges">
+            <label for="badges" class="display-block">Badges <em>(comma separated)</em></label>
+            <input id="badges" type="text" [(ngModel)]="badges" (input)="onBadgesChange()"/>
+            <div class="badges">
+                <img appHabboBadge *ngFor="let badge of data.badges" [code]="badge"/>
+            </div>
+        </div>
+        <div class="cell small-6" *ngIf="showBadges">
+            <label for="room" class="display-block">Room</label>
+            <input id="room" type="text" [(ngModel)]="data.room"/>
+        </div>
+        <div class="cell small-6" *ngIf="showBadges">
+            <label for="roomOwner" class="display-block">Room owner</label>
+            <input id="roomOwner" type="text" [(ngModel)]="data.roomOwner"/>
+        </div>
+        <div class="cell small-6" *ngIf="showBadges">
+            <label for="difficulty" class="display-block">Difficulty</label>
+            <select id="difficulty" [(ngModel)]="data.difficulty">
+                <option *ngFor="let option of difficulties" [ngValue]="option.value">
+                    {{ option.label }}
+                </option>
+            </select>
+        </div>
+
+        <div class="cell small-6">
+            <label for="thumbnail" class="display-block">Thumbnail</label>
+            <input id="thumbnail" type="file" accept="image/*" #fileElement/>
+        </div>
+
+        <div class="cell small-3" *ngIf="showBadges">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.isAvailable"
+                           (change)="data.isAvailable = !data.isAvailable">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Is available
+                        <span tooltip="Is the badge still available to get?"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="cell small-3" *ngIf="showBadges">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.isPaid"
+                           (change)="data.isPaid = !data.isPaid">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Is paid
+                        <span tooltip="Do you have to pay for the badge?"><i
+                            class="fas fa-info-circle"></i></span>
+                    </span>
+                </label>
+            </div>
+        </div>
+
+        <div class="cell small-12">
+            <app-editor></app-editor>
+        </div>
+    </div>
+
+</app-content>

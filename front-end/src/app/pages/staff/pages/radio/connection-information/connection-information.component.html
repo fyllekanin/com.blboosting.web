@@ -1,0 +1,60 @@
+<app-content header="Radio Connection Information">
+    <div *ngIf="!data.canSeeInformation">
+        You are not able to see the connection information, you can only see it if: <br/>
+        <ul>
+            <li>It's your slot right now</li>
+            <li>You are on the next hour</li>
+            <li>You have permission to always view this</li>
+        </ul>
+    </div>
+    <div class="grid-x grid-margin-x" *ngIf="data.canSeeInformation">
+        <div class="cell small-3">
+            <strong>Host/Ip: </strong>
+        </div>
+        <div class="cell small-9">
+            {{data.host}}
+        </div>
+
+        <div class="cell small-3">
+            <strong>Port: </strong>
+        </div>
+        <div class="cell small-9">
+            {{data.port}}
+        </div>
+
+        <div class="cell small-3">
+            <strong>Password: </strong>
+        </div>
+        <div class="cell small-9">
+            {{data.password}}
+        </div>
+
+        <div class="cell small-3" *ngIf="data.mountPoint">
+            <strong>Mount point: </strong>
+        </div>
+        <div class="cell small-9" *ngIf="data.mountPoint">
+            {{data.mountPoint}}
+        </div>
+
+        <div class="cell small-3">
+            <strong>Server: </strong>
+        </div>
+        <div class="cell small-9">
+            {{data.serverType}}
+        </div>
+
+        <div class="cell small-3">
+            <strong>Bitrate: </strong>
+        </div>
+        <div class="cell small-9">
+            128kbps, 44100Hz
+        </div>
+
+        <div class="cell small-3">
+            <strong>Genre: </strong>
+        </div>
+        <div class="cell small-9">
+            {{username}}
+        </div>
+    </div>
+</app-content>

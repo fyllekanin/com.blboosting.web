@@ -1,0 +1,57 @@
+:host {
+    width: 100%;
+    display: block;
+    background-color: #ffffff;
+    padding: 5px;
+    position: relative;
+    cursor: pointer;
+}
+
+.image {
+    width: 100%;
+    height: 130px;
+}
+
+.title {
+    color: #585858;
+}
+
+.author {
+    color: #cccccc;
+}
+
+.badge-wrapper {
+    position: absolute;
+    top: 3px;
+    right: 8px;
+}
+
+.badge-count {
+    position: absolute;
+    right: 3px;
+    top: 7px;
+    background-color: #cc6363;
+    color: #fff;
+    font-size: 8px;
+    font-weight: 700;
+    padding: .5px 3px;
+    border-radius: 2px;
+}
+
+.tags {
+    position: absolute;
+    top: 112px;
+    left: 8px;
+}
+
+.tags span {
+    color: #ffffff;
+    padding: 4px 8px;
+    margin-right: 5px;
+    border-radius: 2px;
+    font-weight: bold;
+}
+
+img[appHabboBadge] {
+    opacity: 1 !important;
+}

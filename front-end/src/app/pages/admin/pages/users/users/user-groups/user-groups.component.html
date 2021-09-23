@@ -1,0 +1,24 @@
+<app-content [header]="'Editing groups on: ' + data.username" [actions]="contentActions" (onAction)="onAction($event)">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-12">
+            <label class="display-block">Display group</label>
+            <select [(ngModel)]="data.displayGroupId">
+                <option *ngFor="let group of possibleDisplayGroups" [ngValue]="group.groupId">{{group.name}}</option>
+            </select>
+        </div>
+
+        <div class="cell small-4" *ngFor="let group of data.groups">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="group.isSelected"
+                           (change)="group.isSelected = !group.isSelected; onChange();">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        {{group.name}}
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+</app-content>

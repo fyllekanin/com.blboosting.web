@@ -1,0 +1,60 @@
+<nav>
+    <div class="grid-container">
+        <div class="grid-x">
+            <div class="cell small-8">
+                <div class="main-navigation-item" *ngFor="let mainItem of items"
+                     [ngClass]="mainItem.children?.length > 0 ? 'dropdown-menu' : ''">
+                    <a [routerLink]="mainItem.path">
+                        <i *ngIf="mainItem.icon" class="fa" aria-hidden="true" [ngClass]="mainItem.icon"></i>
+                        {{mainItem.title}}
+                    </a>
+                    <div class="dropdown-content">
+                        <a *ngFor="let child of mainItem?.children" [routerLink]="child.path">
+                            <i *ngIf="child.icon" class="fa" aria-hidden="true" [ngClass]="child.icon"></i>
+                            {{child.title}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="cell small-3 small-offset-1 welcome">
+                <div *ngIf="!user; else isLoggedIn" class="not-logged-in">
+                    <button id="top-login-button" class="green" routerLink="/auth/login">Login</button>
+                    <span class="slash">/</span>
+                    <button class="blue" routerLink="/auth/register">Register</button>
+                </div>
+                <ng-template #isLoggedIn>
+
+                    <div class="logged-in-icon dropdown-menu">
+                        <i class="fas fa-user"></i>
+                        {{user.username}}
+                        <i class="fas fa-angle-down"></i>
+
+                        <div class="dropdown-content gray-bottom-shadow">
+                            <a href="#">Profile</a>
+                            <span class="dropdown-meny-divider"></span>
+                            <a routerLink="/user">UserCP</a>
+                            <a routerLink="/admin" *ngIf="user.doHaveAdminPermissions">AdminCP</a>
+                            <a routerLink="/staff" *ngIf="user.doHaveStaffPermissions">StaffCP</a>
+                            <span
+                                class="dropdown-meny-divider"></span>
+
+                            <a (click)="onLogout()">Logout</a>
+                        </div>
+                    </div>
+
+                    <div class="logged-in-icon">
+                        <i class="fas fa-bell"></i>
+                    </div>
+
+                    <div class="logged-in-icon">
+                        <i class="fas fa-cog"></i>
+                    </div>
+
+                </ng-template>
+                <div class="avatar" [ngClass]="user ? '' : 'logged-out-avatar'">
+                    <img [src]="avatarUrl"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</nav>

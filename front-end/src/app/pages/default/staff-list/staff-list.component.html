@@ -1,0 +1,10 @@
+<app-content *ngFor="let row of data.rows" [header]="row.name" [titleBackground]="row.nameColor">
+    <div class="grid-x">
+        <div *ngFor="let user of row.users" class="cell medium-3">
+            <img
+                [src]="'https://www.habbo.com/habbo-imaging/avatarimage?user=' + user.habbo + '&gesture=nrm&direction=4&head_direction=2&size=m&action=sit'"/>
+            <br/>
+            {{ user.username }}
+        </div>
+    </div>
+</app-content>

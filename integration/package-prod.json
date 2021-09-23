@@ -1,0 +1,15 @@
+{
+  "name": "back-end",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/main.js",
+  "scripts": {
+    "start": "node .",
+    "re:migrate": "node drop-tables.js && node node_modules/typeorm/cli migration:run --config ./dist/environments/database",
+    "migrate": "node node_modules/typeorm/cli migration:run --config ./dist/environments/database"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {},
+  "devDependencies": {}
+}

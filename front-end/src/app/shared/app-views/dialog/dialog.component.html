@@ -1,0 +1,17 @@
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-12 medium-8 medium-offset-2">
+            <div class="dialog-wrapper" [ngClass]="isVisible ? 'show' : ''">
+                <div class="title">{{title}}</div>
+                {{content}}
+                <ng-template #container></ng-template>
+
+                <div class="buttons">
+                    <button *ngFor="let button of buttons" [ngClass]="button.type" (click)="onAction(button)">
+                        {{button.label}}
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,7 @@
+<app-content header="Custom Bbcodes" [actions]="contentActions" (onAction)="onCreateNew()">
+    <app-table [headers]="headers" [rows]="editableTableRows" (onAction)="onAction($event)"></app-table>
+</app-content>
+
+<app-content header="System Bbcodes">
+    <app-table [headers]="headers" [rows]="systemTableRows" (onAction)="onAction($event)"></app-table>
+</app-content>

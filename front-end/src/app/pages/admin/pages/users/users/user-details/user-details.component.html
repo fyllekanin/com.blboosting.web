@@ -1,0 +1,25 @@
+<app-content [header]="'Editing: ' + data.username" [actions]="contentActions" (onAction)="onAction($event)">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="username" class="display-block">Username</label>
+            <input id="username" type="text" [(ngModel)]="data.username"/>
+        </div>
+        <div class="cell small-6">
+            <label for="habbo" class="display-block">Habbo</label>
+            <input id="habbo" type="text" [(ngModel)]="data.habbo"/>
+        </div>
+        <div class="cell small-12" *ngIf="canEditAdvanced">
+            <label for="role" class="display-block">Role</label>
+            <input id="role" type="text" [(ngModel)]="data.role"/>
+        </div>
+
+        <div class="cell small-6" *ngIf="canEditAdvanced">
+            <label for="password" class="display-block">Password</label>
+            <input id="password" type="password" [(ngModel)]="data.password"/>
+        </div>
+        <div class="cell small-6" *ngIf="canEditAdvanced">
+            <label for="repassword" class="display-block">Repassword</label>
+            <input id="repassword" type="password" [(ngModel)]="data.repassword"/>
+        </div>
+    </div>
+</app-content>

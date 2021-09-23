@@ -1,0 +1,63 @@
+<div class="pager">
+    <div class="grid-x">
+        <div class="cell small-1">
+            <button
+                class="previous"
+                [disabled]="!thereIsPrevious"
+                (click)="goToPrevious()">
+                «
+            </button>
+        </div>
+        <div class="cell small-10 numbers">
+            <div
+                class="items"
+                *ngFor="let item of backwardItems"
+                [ngClass]="item < 0 ? 'page-no-click' : ''">
+                <a
+                    [routerLink]="[getUrl(item)]"
+                    [queryParams]="queryParameters">
+                    {{ item < 0 ? '...' : item }}
+                </a>
+            </div>
+            <div
+                class="items"
+                *ngFor="let item of fillBackwardItems"
+                [ngClass]="item < 0 ? 'page-no-click' : ''">
+                <a
+                    [routerLink]="[getUrl(item)]"
+                    [queryParams]="queryParameters">
+                    {{ item < 0 ? '...' : item }}
+                </a>
+            </div>
+            <div class="page-no-click current items">{{ currentPage }}</div>
+            <div
+                class="items"
+                *ngFor="let item of fillForwardItems"
+                [ngClass]="item < 0 ? 'page-no-click' : ''">
+                <a
+                    [routerLink]="[getUrl(item)]"
+                    [queryParams]="queryParameters">
+                    {{ item < 0 ? '...' : item }}
+                </a>
+            </div>
+            <div
+                class="items"
+                *ngFor="let item of forwardItems"
+                [ngClass]="item < 0 ? 'page-no-click' : ''">
+                <a
+                    [routerLink]="[getUrl(item)]"
+                    [queryParams]="queryParameters">
+                    {{ item < 0 ? '...' : item }}
+                </a>
+            </div>
+        </div>
+        <div class="cell small-1">
+            <button
+                class="next"
+                [disabled]="!thereIsNext"
+                (click)="goToNext()">
+                »
+            </button>
+        </div>
+    </div>
+</div>

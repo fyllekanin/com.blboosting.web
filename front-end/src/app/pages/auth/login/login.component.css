@@ -1,0 +1,12 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+h3 {
+    color: #bdbdbd;
+}
+
+button[type="submit"] {
+    display: none;
+}

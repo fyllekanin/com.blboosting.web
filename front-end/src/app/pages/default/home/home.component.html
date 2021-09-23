@@ -1,0 +1,84 @@
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-12 medium-12 large-9">
+            <div class="is-desktop" *ngIf="images.length > 0">
+                <app-slide-show [images]="images"></app-slide-show>
+            </div>
+
+            <app-content header="Latest Habbo Guides" [actions]="contentActions" (onAction)="onSeeMore(0)">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-6 large-3" *ngFor="let article of data.guides">
+                        <app-slim-article [article]="article"></app-slim-article>
+                    </div>
+                </div>
+            </app-content>
+
+            <app-content header="Latest Habbo News" [actions]="contentActions" (onAction)="onSeeMore(1)">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-6 large-3" *ngFor="let article of data.habboNews">
+                        <app-slim-article [article]="article"></app-slim-article>
+                    </div>
+                </div>
+            </app-content>
+
+            <app-content header="Latest Site News" [actions]="contentActions" (onAction)="onSeeMore(2)">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-12 medium-6 large-3" *ngFor="let article of data.siteNews">
+                        <app-slim-article [article]="article"></app-slim-article>
+                    </div>
+                </div>
+            </app-content>
+        </div>
+        <div class="cell small-12 medium-12 large-3">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12">
+                    <app-content header="Upcoming Events">
+                        <div *ngIf="data.todayEvents.length === 0">
+                            No events upcoming
+                        </div>
+
+                        <div *ngFor="let event of slots" class="upcoming-event">
+                            {{event.user.username}} <br>
+                            Hosting {{event.event.name}} at {{event.displayHour}}
+                            <img
+                                [src]="'https://www.habbo.com/habbo-imaging/avatarimage?user=' + event.user.habbo + '&gesture=nrm&direction=6&head_direction=4&headonly=1'"/>
+                        </div>
+
+                    </app-content>
+                </div>
+                <div class="cell small-12">
+                    <app-content header="Latest Badges">
+                        <div class="grid-container no-padding">
+                            <div class="grid-x text-align-center">
+                                <div *ngFor="let badge of data.badges" class="cell small-6 medium-3">
+                                    <app-habbo-badge [badge]="badge"></app-habbo-badge>
+                                </div>
+                            </div>
+                        </div>
+                    </app-content>
+                </div>
+                <div class="cell small-12" *ngIf="data.starLight">
+                    <app-content header="Wish Staff Starlight">
+                        <div><strong>{{data.starLight.user.username}}</strong></div>
+                        <span>
+                            <img align="right"
+                                 [src]="'https://www.habbo.com/habbo-imaging/avatarimage?hb=image&user=' + data.starLight.user.habbo + '&headonly=0&direction=4&head_direction=2&action=wav&gesture=sml&size=m'"/>
+                            {{data.starLight.text}}
+                        </span>
+                    </app-content>
+                </div>
+                <div class="cell small-12">
+                    <app-content header="Twitter Feed">
+                        <div class="twitter-wrapper">
+                            <ngx-twitter-timeline
+                                [data]="{ sourceType: 'url', url: 'https://twitter.com/WishHabboCOM?ref_src=twsrc%5Etfw' }"
+                                [opts]="{ tweetLimit: 5 }"
+                            ></ngx-twitter-timeline>
+                        </div>
+                    </app-content>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

@@ -1,0 +1,21 @@
+:host {
+    margin-bottom: 15px;
+    display: block;
+    width: 100%;
+    border-bottom: 1px solid #c7c7c7;
+}
+
+.relative {
+    position: relative;
+}
+
+.tools {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 13px;
+}
+
+.tools i {
+    margin-right: 10px;
+}

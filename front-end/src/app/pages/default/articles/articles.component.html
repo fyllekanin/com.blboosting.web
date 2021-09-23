@@ -1,0 +1,59 @@
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell medium-9">
+            <app-content header="Articles">
+                <div class="grid-x grid-margin-x">
+                    <div class="cell small-3" *ngFor="let article of data.items">
+                        <app-slim-article [article]="article"></app-slim-article>
+                    </div>
+                </div>
+            </app-content>
+
+            <app-pagination [page]="data.page" [total]="data.total"></app-pagination>
+        </div>
+        <div class="cell medium-3">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12">
+                    <app-content header="Filters">
+                        <div>
+                            <label for="difficulty" class="display-block">Difficulty</label>
+                            <select id="difficulty" [(ngModel)]="params.difficulty"
+                                    (ngModelChange)="onFilterChange()">
+                                <option [ngValue]="undefined">Any</option>
+                                <option [ngValue]="'1'">Easy</option>
+                                <option [ngValue]="'2'">Medium</option>
+                                <option [ngValue]="'3'">Hard</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="type" class="display-block">Type</label>
+                            <select id="type" [(ngModel)]="params.type" (ngModelChange)="onFilterChange()">
+                                <option [ngValue]="undefined">Any</option>
+                                <option [ngValue]="'0'">Guide</option>
+                                <option [ngValue]="'1'">News</option>
+                                <option [ngValue]="'2'">Site News</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="isAvailable" class="display-block">Is Available</label>
+                            <select id="isAvailable" [(ngModel)]="params.isAvailable"
+                                    (ngModelChange)="onFilterChange()">
+                                <option [ngValue]="undefined">Any</option>
+                                <option [ngValue]="'1'">Yes</option>
+                                <option [ngValue]="'0'">No</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="isPaid" class="display-block">Is Paid</label>
+                            <select id="isPaid" [(ngModel)]="params.isPaid" (ngModelChange)="onFilterChange()">
+                                <option [ngValue]="undefined">Any</option>
+                                <option [ngValue]="'1'">Yes</option>
+                                <option [ngValue]="'0'">No</option>
+                            </select>
+                        </div>
+                    </app-content>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

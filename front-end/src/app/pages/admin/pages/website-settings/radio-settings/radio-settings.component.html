@@ -1,0 +1,82 @@
+<app-content header="Radio settings" [actions]="contentActions" (onAction)="onAction($event)">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="host" class="display-block">Host</label>
+            <input id="host" type="text" [(ngModel)]="data.host"/>
+        </div>
+        <div class="cell small-6">
+            <label for="port" class="display-block">Port</label>
+            <input id="port" type="number" [(ngModel)]="data.port"/>
+        </div>
+        <div class="cell small-6">
+            <label for="password" class="display-block">Password</label>
+            <input id="password" type="text" [(ngModel)]="data.password"/>
+        </div>
+        <div class="cell small-6">
+            <label for="adminPassword" class="display-block">Admin password</label>
+            <input id="adminPassword" type="text" [(ngModel)]="data.adminPassword"/>
+        </div>
+        <div class="cell small-6">
+            <label for="mountPoint" class="display-block">Mount point</label>
+            <input id="mountPoint" type="text" [(ngModel)]="data.mountPoint"/>
+        </div>
+        <div class="cell small-12">
+            <label>Server Type:</label>
+        </div>
+        <div class="cell small-3">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.serverType === serverType.SHOUTCAST_V1"
+                           (change)="data.serverType = serverType.SHOUTCAST_V1">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        ShoutCast V1
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-3">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.serverType === serverType.SHOUTCAST_V2"
+                           (change)="data.serverType = serverType.SHOUTCAST_V2">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        ShoutCast V2
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-3">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.serverType === serverType.ICECAST_V2"
+                           (change)="data.serverType = serverType.ICECAST_V2">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        IceCast V2
+                    </span>
+                </label>
+            </div>
+        </div>
+        <div class="cell small-12">
+            <label>Use AzuraCast API</label>
+        </div>
+        <div class="cell small-12">
+            <div class="checkbox-container">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="data.isAzuraCast"
+                           (change)="data.isAzuraCast = !data.isAzuraCast">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Use AzuraCast API
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+</app-content>

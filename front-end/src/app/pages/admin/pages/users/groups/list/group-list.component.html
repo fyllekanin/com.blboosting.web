@@ -1,0 +1,24 @@
+<app-content header="Groups" [actions]="contentActions" (onAction)="onCreateNew()">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-5">
+            <label class="display-block">Name</label>
+            <input type="text" [(ngModel)]="params.name" (ngModelChange)="onFilterChange()"/>
+        </div>
+        <div class="cell small-2">
+            <div class="checkbox-container checkbox-container-align-with-input">
+                <label class="checkbox-label">
+                    <input type="checkbox"
+                           [checked]="params.isExactSearch"
+                           (change)="params.isExactSearch = !params.isExactSearch; onFilterChange();">
+                    <span class="checkbox-custom"></span>
+                    <span class="label">
+                        Is exact search
+                    </span>
+                </label>
+            </div>
+        </div>
+    </div>
+    <app-table [headers]="headers" [rows]="rows" (onAction)="onAction($event)"></app-table>
+</app-content>
+
+<app-pagination [page]="data.page" [total]="data.total"></app-pagination>

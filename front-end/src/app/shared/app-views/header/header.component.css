@@ -1,0 +1,23 @@
+:host {
+    background-repeat: no-repeat;
+    width: 100%;
+    height: 220px;
+    display: block;
+    background-color: #434675;
+    background-image: linear-gradient(to right, #434675, #848894, rgb(53 81 119), rgb(50 72 103), #45224e);
+    padding-top: 3rem;
+}
+
+@media only screen and (max-width: 1023px) {
+    :host {
+        height: 12rem;
+    }
+}
+
+.title {
+    font-family: Lobster, serif;
+    color: #ffffff;
+    font-size: 45px;
+    margin-top: 45px;
+    text-shadow: 0 5px 0 #3B3B3B;
+}

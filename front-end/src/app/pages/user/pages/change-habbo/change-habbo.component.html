@@ -1,0 +1,19 @@
+<app-content header="Change Password" [actions]="contentActions" (onAction)="onSave()">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-12">
+            <strong>Information:</strong> <br/>
+            <ul>
+                <li>Your current habbo is: {{currentHabbo}}</li>
+            </ul>
+            Your new habbo need to follow the same rules as on registration, make sure you got the following: <br/>
+            <ul>
+                <li>You habbo is at least one week old</li>
+                <li>Your motto needs to be "wishhabbo-{{userId}}"</li>
+            </ul>
+        </div>
+        <div class="cell small-12">
+            <label for="habbo" class="display-block">Habbo</label>
+            <input id="habbo" [(ngModel)]="habbo" type="text" placeholder="Habbo"/>
+        </div>
+    </div>
+</app-content>

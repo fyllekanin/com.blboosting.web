@@ -1,0 +1,12 @@
+<div class="grid-container">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-12 medium-9">
+            <router-outlet></router-outlet>
+        </div>
+        <div class="cell small-12 medium-3">
+            <div *ngFor="let menu of menus">
+                <app-side-menu [model]="menu"></app-side-menu>
+            </div>
+        </div>
+    </div>
+</div>

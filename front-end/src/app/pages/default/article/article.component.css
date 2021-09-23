@@ -1,0 +1,8 @@
+:host {
+    display: block;
+    width: 100%;
+}
+
+.article-badges img[appHabboBadge] {
+    margin: 0 10px !important;
+}

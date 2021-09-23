@@ -1,0 +1,12 @@
+:host {
+    width: 100%;
+    display: block;
+}
+
+i {
+    margin-right: 5px;
+}
+
+a {
+    line-height: 20px;
+}

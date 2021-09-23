@@ -1,0 +1,50 @@
+<app-content header="Home page settings" [actions]="contentActions" (onAction)="onAction($event)">
+    These are the settings for the home page, for the home page you can control the following:
+    <br/>
+    <ul>
+        <li>Banner images and caption</li>
+        <li>Starlight</li>
+    </ul>
+</app-content>
+
+<app-content header="Banner" [actions]="addNewEntryAction" (onAction)="addNewEntry()">
+
+    <div *ngFor="let entry of data.bannerEntries; let index = index" class="banner-entry">
+        <div *ngIf="!entry.isDeleted">
+            <div>
+                <label for="caption" class="display-block">
+                    Caption
+                </label>
+                <input id="caption" type="text" [(ngModel)]="entry.caption" (ngModelChange)="onCaptionChange()"/>
+            </div>
+            <div>
+                <label for="entry{{index}}" class="display-block">
+                    Image <em *ngIf="!entry.isNew">(Leave empty to keep current)</em>
+                </label>
+                <input class="display-inline-block" #image id="entry{{index}}" type="file" accept="image/*"
+                       (change)="onFileChange($event, entry)"/>
+                <button class="red display-inline-block" (click)="deleteEntry(entry)">Remove</button>
+            </div>
+        </div>
+    </div>
+
+</app-content>
+
+<app-content header="Star light">
+    <div>
+        <label for="username" class="display-block">
+            Username
+        </label>
+        <input id="username" type="text" [(ngModel)]="data.starLight.user.username"/>
+    </div>
+
+    <div>
+        <label for="text" class="display-block">
+            Text
+        </label>
+        <textarea id="text" [(ngModel)]="data.starLight.text"></textarea>
+    </div>
+</app-content>
+
+
+<app-slide-show [images]="images"></app-slide-show>

@@ -1,0 +1,22 @@
+thead {
+    background: none;
+    border: none;
+}
+
+tbody {
+    border: none;
+}
+
+tbody tr:nth-child(even) {
+    border-bottom: 0;
+    background-color: #fbfbfb;
+}
+
+.action {
+    padding: 8px 12px;
+    border-radius: 50%;
+}
+
+.action:hover {
+    background-color: #c7c7c7;
+}

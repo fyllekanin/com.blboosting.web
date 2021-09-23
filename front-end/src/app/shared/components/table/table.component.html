@@ -1,0 +1,23 @@
+<table>
+    <thead>
+    <th *ngFor="let header of headers">{{header.label}}</th>
+    <th *ngIf="doAnyRowHaveActions" class="actions">Actions</th>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of rows">
+        <td *ngFor="let cell of row.cells">
+            {{cell.label}}
+        </td>
+
+        <td *ngIf="row.actions && row.actions.length > 0" class="actions">
+            <i class="fas fa-ellipsis-v action" tabindex="1"></i>
+            <div class="action-list">
+                <div *ngFor="let action of row.actions"
+                     (click)="onAction.emit({ row: row, action: action })">
+                    {{action.label}}
+                </div>
+            </div>
+        </td>
+    </tr>
+    </tbody>
+</table>

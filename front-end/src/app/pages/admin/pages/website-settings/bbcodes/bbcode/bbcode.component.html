@@ -1,0 +1,41 @@
+<app-content [header]="data.bbcodeId ? 'Editing: ' + data.name : 'Creating: ' + data.name " [actions]="contentActions"
+             (onAction)="onAction($event)">
+
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="name" class="display-block">Name</label>
+            <input id="name" type="text" [(ngModel)]="data.name"/>
+        </div>
+        <div class="cell small-6">
+            <label for="example" class="display-block">
+                Example
+            </label>
+            <input id="example" type="text" [(ngModel)]="data.example"/>
+        </div>
+        <div class="cell small-6">
+            <label for="pattern" class="display-block">
+                Pattern
+            </label>
+            <input id="pattern" type="text" [(ngModel)]="data.pattern"/>
+        </div>
+        <div class="cell small-6">
+            <label for="replacement" class="display-block">
+                Replacement
+            </label>
+            <input id="replacement" type="text" [(ngModel)]="data.replacement"/>
+        </div>
+
+        <div class="cell small-6">
+            <label for="editorPattern" class="display-block">
+                Editor pattern
+            </label>
+            <input id="editorPattern" type="text" [(ngModel)]="data.editorPattern"/>
+        </div>
+        <div class="cell small-6">
+            <label for="editorReplacement" class="display-block">
+                Editor replacement
+            </label>
+            <input id="editorReplacement" type="text" [(ngModel)]="data.editorReplacement"/>
+        </div>
+    </div>
+</app-content>

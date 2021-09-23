@@ -1,0 +1,12 @@
+<app-content header="Requests">
+    On this page you can see all the requests which have been sent in for the last two hours. <br />
+    If any request is bad / damaging etc, tell an admin etc to delete it for you!
+</app-content>
+
+<div *ngFor="let request of data">
+    <app-content [header]="'Request by ' + request.user.username + ', at: ' + request.createdAt"
+        [actions]="contentActions"
+        (onAction)="onDelete(request.radioRequestId)">
+        {{request.request}}
+    </app-content>
+</div>

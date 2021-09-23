@@ -1,0 +1,14 @@
+<img class="image" [src]="thumbnail"/>
+<div class="title">{{article?.title}}</div>
+<div class="author">By {{article?.user.username}}</div>
+
+<div class="badge-wrapper" *ngIf="badgeCount > 0">
+    <div class="badge-count">{{badgeCount}}</div>
+    <img appHabboBadge [code]="firstBadge"/>
+</div>
+
+<div class="tags">
+    <span class="green" *ngIf="article?.isAvailable">Available</span>
+    <span class="red" *ngIf="article?.isPaid">Paid</span>
+    <span [class]="difficulty?.color">{{difficulty?.name}}</span>
+</div>
