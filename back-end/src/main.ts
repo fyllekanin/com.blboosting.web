@@ -9,6 +9,7 @@ import compression from 'compression';
 import Database from './environments/database';
 import * as dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
+import { AuthenticationController } from './rest-services/authentication.controller';
 
 dotenv.config();
 
@@ -24,7 +25,7 @@ class MainServer extends Server {
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
         this.client = new Client({
-            intents: new Intents(Number(process.env.INTENTS))
+            intents: new Intents(Number(process.env.DISCORD_INTENTS))
         });
         this.client.login(process.env.DISCORD_TOKEN).catch(err => {
             throw new Error('Could not connect to discord, reason:' + err);
@@ -47,7 +48,8 @@ class MainServer extends Server {
     private setupControllers(): void {
         super.addControllers(
             [
-                new PageController()
+                new PageController(),
+                new AuthenticationController(this.client)
             ],
             null,
             INITIAL_MIDDLEWARE
@@ -56,4 +58,4 @@ class MainServer extends Server {
 }
 
 const server = new MainServer();
-server.start(3000);
+server.start(Number(process.env.APPLICATION_PORT));

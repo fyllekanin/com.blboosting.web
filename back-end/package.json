@@ -7,8 +7,9 @@
         "test": "jasmine-ts --config=jasmine.json",
         "clean": "node node_modules/rimraf/bin dist/*",
         "lint": "",
+        "copy-assets": "node scripts/copy-assets.js",
         "tsc": "node node_modules/typescript/bin/tsc",
-        "build": "node node_modules/npm-run-all/bin/npm-run-all/index clean tsc",
+        "build": "node node_modules/npm-run-all/bin/npm-run-all/index clean tsc copy-assets",
         "dev:start": "node node_modules/npm-run-all/bin/npm-run-all/index build start",
         "dev": "node node_modules/nodemon/bin/nodemon --watch src -e ts,ejs --exec npm run dev:start",
         "start": "node ."
