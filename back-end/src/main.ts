@@ -8,10 +8,12 @@ import * as express from 'express';
 import compression from 'compression';
 import Database from './environments/database';
 import * as dotenv from 'dotenv';
+import { Client, Intents } from 'discord.js';
 
 dotenv.config();
 
 class MainServer extends Server {
+    private readonly client: Client;
     private backgroundTaskHandler: BackgroundTaskHandler;
 
     constructor() {
@@ -21,6 +23,12 @@ class MainServer extends Server {
         this.app.use(compression());
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
+        this.client = new Client({
+            intents: new Intents(Number(process.env.INTENTS))
+        });
+        this.client.login(process.env.DISCORD_TOKEN).catch(err => {
+            throw new Error('Could not connect to discord, reason:' + err);
+        });
     }
 
     start(port: number): void {
