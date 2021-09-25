@@ -33,12 +33,10 @@ export class AuthenticationController {
         }
 
         const payload = member == null ? { error: ValidationError.NOT_IN_GUILD } : {
-            error: 0,
-            access_token: this.getAccessToken(user.id.toString()),
-            refresh_token: this.getRefreshToken(user.id.toString()),
-            user: {
-                username: discord.username
-            }
+            id: user.id,
+            accessToken: this.getAccessToken(user.id.toString()),
+            refreshToken: this.getRefreshToken(user.id.toString()),
+            username: discord.username
         };
         res.send(`
         <!DOCTYPE HTML>
