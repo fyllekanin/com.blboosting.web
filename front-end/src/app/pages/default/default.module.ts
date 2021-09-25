@@ -7,15 +7,13 @@ import { NotFoundComponent } from './not-found/not-found.component';
 import { DefaultComponent } from './default.component';
 import { ContentModule } from '../../shared/components/content/content.module';
 import { FormsModule } from '@angular/forms';
-import { PaginationModule } from '../../shared/components/pagination/pagination.module';
 
 @NgModule({
     imports: [
         RouterModule.forChild(defaultRoutes),
         CommonModule,
         ContentModule,
-        FormsModule,
-        PaginationModule
+        FormsModule
     ],
     declarations: [
         HomeComponent,

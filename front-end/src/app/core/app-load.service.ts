@@ -8,7 +8,7 @@ export class AppLoadService {
 
     load(): Promise<any> {
         return new Promise(resolve => {
-
+            resolve(null);
         });
     }
 

@@ -14,7 +14,7 @@ export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, ne
         next();
         return;
     }
-    const user = verify(token, process.env.TOKEN_SECRET) as { id: string };
+    const user = token ? verify(token, process.env.TOKEN_SECRET) as { id: string } : null;
 
     if (!user) {
         req.user = {

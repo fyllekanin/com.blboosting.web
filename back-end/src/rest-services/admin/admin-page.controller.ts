@@ -5,7 +5,7 @@ import { StatusCodes } from 'http-status-codes';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 
 @Controller('api/admin')
-export class PageController {
+export class AdminPageController {
 
     @Get('dashboard')
     @Middleware([AUTHORIZATION_MIDDLEWARE])

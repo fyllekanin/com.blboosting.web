@@ -8,11 +8,11 @@ export class AuthService {
     private authUser: AuthUser;
 
     getRefreshToken(): string {
-        return this.authUser.refreshToken;
+        return this.authUser?.refreshToken;
     }
 
     getAccessToken(): string {
-        return this.authUser.accessToken;
+        return this.authUser?.accessToken;
     }
 
     setAuthUser(payload: AuthUser): void {

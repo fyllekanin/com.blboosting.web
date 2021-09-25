@@ -34,16 +34,19 @@ export class AuthenticationController {
 
         const payload = member == null ? { error: ValidationError.NOT_IN_GUILD } : {
             id: user.id,
-            accessToken: this.getAccessToken(user.id.toString()),
-            refreshToken: this.getRefreshToken(user.id.toString()),
+            accessToken: this.getAccessToken(String(user.id)),
+            refreshToken: this.getRefreshToken(String(user.id)),
             username: discord.username
         };
         res.send(`
         <!DOCTYPE HTML>
         <html>
             <body>
+                <span id="test"></span>
                 <script type="application/javascript">
-                    window.parent.postMessage(${JSON.stringify(payload)}, '*');
+                    window.opener.postMessage(${JSON.stringify(payload)}, 'http://localhost:4200');
+                    window.parent.postMessage(${JSON.stringify(payload)}, 'http://localhost:4200');
+                    document.getElementById('test').innerText = 'apa';
                 </script>
             </body>
         </html>

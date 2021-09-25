@@ -27,14 +27,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     private isRefreshingToken = false;
     private tokenSubject: BehaviorSubject<string> = new BehaviorSubject<string>(null);
 
-    constructor (
+    constructor(
         private authService: AuthService,
         private router: Router,
         private siteNotificationSerivce: SiteNotificationService
     ) {
     }
 
-    intercept (req: HttpRequest<any>, next: HttpHandler):
+    intercept(req: HttpRequest<any>, next: HttpHandler):
         Observable<HttpSentEvent | HttpHeaderResponse | HttpProgressEvent | HttpResponse<any> | HttpUserEvent<any>> {
         return next.handle(this.addToken(req, this.authService.getAccessToken())).pipe(
             catchError(error => {
@@ -42,16 +42,12 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                     switch ((<HttpErrorResponse>error).status) {
                         case 401:
                             const response = <UnauthorizedResponse>error.error;
-                            if (response.isPermissionRelated) {
-                                this.router.navigateByUrl('/default/not-authorized');
-                                return of(null);
-                            }
                             if (response.isTokenExisting) {
                                 return this.handleAuthenticationRefresh(req, next);
                             } else {
                                 this.authService.setAuthUser(null);
                                 const path = this.router.routerState.snapshot.url;
-                                this.router.navigate(['auth', 'login'], {
+                                this.router.navigate(['auth'], {
                                     queryParams: {
                                         path: encodeURIComponent(path)
                                     }
@@ -75,15 +71,15 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             }));
     }
 
-    private addToken (req: HttpRequest<any>, token: string): HttpRequest<any> {
+    private addToken(req: HttpRequest<any>, token: string): HttpRequest<any> {
         return req.clone({
             setHeaders: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${token || ''}`
             }
         });
     }
 
-    private handleAuthenticationRefresh (req: HttpRequest<any>, next: HttpHandler) {
+    private handleAuthenticationRefresh(req: HttpRequest<any>, next: HttpHandler) {
         if (!this.isRefreshingToken) {
             this.isRefreshingToken = true;
             this.tokenSubject.next(null);
@@ -109,7 +105,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
         }
     }
 
-    private logoutUser (): Observable<any> {
+    private logoutUser(): Observable<any> {
         return observableThrowError('');
     }
 }

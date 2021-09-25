@@ -1,6 +1,7 @@
 import { Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
+import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
 
 export const adminRoutes: Routes = [
     {
@@ -10,7 +11,10 @@ export const adminRoutes: Routes = [
             {
                 path: '',
                 pathMatch: 'full',
-                component: DashboardComponent
+                component: DashboardComponent,
+                resolve: {
+                    data: DashboardResolver
+                }
             }
         ]
     }

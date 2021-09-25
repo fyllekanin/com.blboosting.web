@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { LoginComponent } from './pages/auth/login.component';
 
 export const appRoutes: Routes = [
     {
@@ -8,6 +9,10 @@ export const appRoutes: Routes = [
     {
         path: 'admin',
         loadChildren: () => import('./pages/admin/admin.module').then(m => m.AdminModule)
+    },
+    {
+        path: 'auth',
+        component: LoginComponent
     },
     {
         path: '',

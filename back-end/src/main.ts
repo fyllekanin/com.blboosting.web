@@ -10,6 +10,7 @@ import Database from './environments/database';
 import * as dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { AuthenticationController } from './rest-services/authentication.controller';
+import { AdminPageController } from './rest-services/admin/admin-page.controller';
 
 dotenv.config();
 
@@ -49,7 +50,8 @@ class MainServer extends Server {
         super.addControllers(
             [
                 new PageController(),
-                new AuthenticationController(this.client)
+                new AuthenticationController(this.client),
+                new AdminPageController()
             ],
             null,
             INITIAL_MIDDLEWARE
