@@ -4,6 +4,7 @@ import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 export interface IUserEntity {
     id?: ObjectID;
     discordId: string;
+    username: string;
 }
 
 @Entity('users')
@@ -12,6 +13,8 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     id?: ObjectID;
     @Column({ unique: true })
     discordId: string;
+    @Column()
+    username: string;
 
     constructor(builder: IUserEntity) {
         super();
@@ -21,6 +24,7 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 
         this.id = builder.id;
         this.discordId = builder.discordId;
+        this.username = builder.username;
     }
 
     newBuilderFromCurrent(): Builder {
@@ -35,7 +39,8 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 class Builder {
     private myData: IUserEntity = {
         id: undefined,
-        discordId: undefined
+        discordId: undefined,
+        username: undefined
     };
 
     constructor(entity?: UserEntity) {
@@ -49,6 +54,11 @@ class Builder {
 
     withDiscordId(discordId: string): Builder {
         this.myData.discordId = discordId;
+        return this;
+    }
+
+    withUsername(username: string): Builder {
+        this.myData.username = username;
         return this;
     }
 

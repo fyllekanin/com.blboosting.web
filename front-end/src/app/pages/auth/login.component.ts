@@ -1,4 +1,6 @@
 import { Component, HostListener } from '@angular/core';
+import { AuthService } from '../../core/auth/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
     selector: 'app-login',
@@ -8,7 +10,12 @@ import { Component, HostListener } from '@angular/core';
 export class LoginComponent {
     private loginWindow: WindowProxy;
 
-    username: string;
+    constructor(
+        private authService: AuthService,
+        private router: Router
+    ) {
+    }
+
 
     onLogin(): void {
         this.loginWindow = open('http://localhost:3000/api/oauth/discord', 'Login', 'height=750,width=400');
@@ -24,10 +31,9 @@ export class LoginComponent {
         if (value.error) {
             // Not in guild
         }
-        if (value.accessToken) {
-            this.username = value.username;
-        }
         this.loginWindow.close();
         this.loginWindow = null;
+        this.authService.setAuthUser(value);
+        this.router.navigateByUrl('/admin');
     }
 }

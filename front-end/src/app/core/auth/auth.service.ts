@@ -1,11 +1,22 @@
 import { Injectable } from '@angular/core';
 import { AuthUser } from './auth.model';
 import { LocalStorageKeys } from '../../shared/constants/local-storage.constants';
-import { NEVER, Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { HttpService } from '../http/http.service';
+import { catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
     private authUser: AuthUser;
+    private loginWindow: WindowProxy;
+
+    constructor(
+        private httpService: HttpService,
+        private router: Router
+    ) {
+        this.authUser = this.getAuthUser();
+    }
 
     getRefreshToken(): string {
         return this.authUser?.refreshToken;
@@ -21,8 +32,21 @@ export class AuthService {
     }
 
     refreshToken(): Observable<string> {
-        return NEVER;
+        return this.httpService.get('/oauth/refresh-token', {
+            headers: {
+                'RefreshAuthorization': this.getRefreshToken()
+            }
+        }).pipe(map((res: AuthUser) => {
+            this.authUser = res;
+            this.updateAuthUser();
+            return this.getAccessToken();
+        }), catchError(error => {
+            this.authUser = null;
+            this.updateAuthUser();
+            return throwError(error);
+        }));
     }
+
 
     private updateAuthUser(): void {
         localStorage.setItem(LocalStorageKeys.AUTH_USER, JSON.stringify(this.authUser));

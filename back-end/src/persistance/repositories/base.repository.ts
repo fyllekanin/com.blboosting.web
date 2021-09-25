@@ -32,7 +32,7 @@ export interface PaginationWhere {
 
 export abstract class BaseRepository<T> {
 
-    async get(id: number): Promise<T> {
+    async get(id: string): Promise<T> {
         return await this.getRepository().findOne(id);
     }
 
