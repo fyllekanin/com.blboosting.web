@@ -1,12 +1,5 @@
 <div class="title">
     <span>{{header}}</span>
-
-    <div *ngIf="actions && actions.length > 0 " class="actions">
-        <span *ngFor="let action of actions" class="action" [ngClass]="{active: action.isActive }"
-              (click)="onAction.emit(action)">
-            {{action.label}}
-        </span>
-    </div>
 </div>
 
 <div class="content">

@@ -26,12 +26,7 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
-                            "src/assets/editor/theme/default/wbbtheme.css",
                             "src/styles.css"
-                        ],
-                        "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
-                            "src/assets/editor/jquery.wysibb.js"
                         ]
                     },
                     "configurations": {
@@ -96,12 +91,7 @@
                         "styles": [
                             "src/assets/css/all.min.css",
                             "src/assets/css/foundation.css",
-                            "src/assets/editor/theme/default/wbbtheme.css",
                             "src/styles.css"
-                        ],
-                        "scripts": [
-                            "node_modules/jquery/dist/jquery.min.js",
-                            "src/assets/editor/jquery.wysibb.js"
                         ]
                     }
                 },

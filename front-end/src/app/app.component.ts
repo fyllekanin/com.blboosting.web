@@ -1,5 +1,4 @@
-import { AfterContentInit, Component, ElementRef, ViewChild } from '@angular/core';
-import { RadioService } from './core/common-services/radio.service';
+import { Component } from '@angular/core';
 import { ContinuesInformationService } from './core/common-services/continues-information.service';
 
 @Component({
@@ -7,21 +6,14 @@ import { ContinuesInformationService } from './core/common-services/continues-in
     templateUrl: './app.component.html',
     styleUrls: ['./app.component.css']
 })
-export class AppComponent implements AfterContentInit {
-    @ViewChild('radio', { static: true }) radioElement: ElementRef<HTMLAudioElement>;
-
-    constructor (
-        private radioService: RadioService,
+export class AppComponent {
+    constructor(
         private continuesInformationService: ContinuesInformationService
     ) {
         this.addActivityListeners();
     }
 
-    ngAfterContentInit (): void {
-        this.radioService.setRadioElement(this.radioElement.nativeElement);
-    }
-
-    private addActivityListeners (): void {
+    private addActivityListeners(): void {
         window.addEventListener('focus', () => {
             this.continuesInformationService.setUserState(true);
         });

@@ -1,5 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { UserAction } from '../../constants/common.interfaces';
+import { Component, Input } from '@angular/core';
 
 @Component({
     selector: 'app-content',
@@ -9,7 +8,4 @@ import { UserAction } from '../../constants/common.interfaces';
 export class ContentComponent {
     @Input() header: string;
     @Input() titleBackground = '#9a7993';
-    @Input() actions: Array<UserAction> = [];
-
-    @Output() onAction: EventEmitter<UserAction> = new EventEmitter();
 }
