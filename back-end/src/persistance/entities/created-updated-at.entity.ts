@@ -5,21 +5,21 @@ import { TimeUtility } from '../../utilities/time.utility';
 export class CreatedUpdatedAtEntity implements IEntity {
     @Column()
     @Index()
-    createdAt: number;
+    createdAt?: number;
 
     @Column()
     @Index()
-    updatedAt: number;
+    updatedAt?: number;
 
     @BeforeInsert()
-    async beforeInsert (): Promise<void> {
+    async beforeInsert(): Promise<void> {
         const time = TimeUtility.getCurrentTime();
         this.createdAt = time;
         this.updatedAt = time;
     }
 
     @BeforeUpdate()
-    async beforeUpdate (): Promise<void> {
+    async beforeUpdate(): Promise<void> {
         this.updatedAt = TimeUtility.getCurrentTime();
     }
 }

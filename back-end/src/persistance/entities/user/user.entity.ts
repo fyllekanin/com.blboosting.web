@@ -1,15 +1,15 @@
 import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
-interface IUserEntity {
-    id: ObjectID;
+export interface IUserEntity {
+    id?: ObjectID;
     discordId: string;
 }
 
 @Entity('users')
 export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     @ObjectIdColumn()
-    id: ObjectID;
+    id?: ObjectID;
     @Column({ unique: true })
     discordId: string;
 
