@@ -4,16 +4,13 @@ import { LocalStorageKeys } from '../../shared/constants/local-storage.constants
 import { Observable, throwError } from 'rxjs';
 import { HttpService } from '../http/http.service';
 import { catchError, map } from 'rxjs/operators';
-import { Router } from '@angular/router';
 
 @Injectable()
 export class AuthService {
     private authUser: AuthUser;
-    private loginWindow: WindowProxy;
 
     constructor(
-        private httpService: HttpService,
-        private router: Router
+        private httpService: HttpService
     ) {
         this.authUser = this.getAuthUser();
     }
@@ -29,6 +26,10 @@ export class AuthService {
     setAuthUser(payload: AuthUser): void {
         this.authUser = payload;
         this.updateAuthUser();
+    }
+
+    getUser(): AuthUser {
+        return { ...this.authUser };
     }
 
     refreshToken(): Observable<string> {

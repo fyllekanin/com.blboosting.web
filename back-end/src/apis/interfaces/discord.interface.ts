@@ -6,4 +6,5 @@ export interface DiscordOauth2 {
 export interface DiscordUser {
     id: string;
     username: string;
+    avatar: string;
 }

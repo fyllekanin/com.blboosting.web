@@ -1,15 +1,15 @@
-import { UserEntity } from '../../entities/user/user.entity';
+import { IUserEntity, UserEntity } from '../../entities/user/user.entity';
 import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from '../base.repository';
 
-export class UserRepository extends BaseRepository<UserEntity> {
+export class UserRepository extends BaseRepository<IUserEntity> {
     protected repository: Repository<UserEntity>;
 
     static newRepository(): UserRepository {
         return new UserRepository();
     }
 
-    async getUserByDiscordId(discordId: string): Promise<UserEntity> {
+    async getUserByDiscordId(discordId: string): Promise<IUserEntity> {
         return await this.getRepository()
             .findOne({ discordId: discordId });
     }

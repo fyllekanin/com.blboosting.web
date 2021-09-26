@@ -26,9 +26,11 @@ export class AuthenticationController {
         let user = await UserRepository.newRepository().get(jwt.id);
         res.status(StatusCodes.OK).json({
             id: user.id,
+            discordId: user.discordId,
             accessToken: this.getAccessToken(String(user.id)),
             refreshToken: this.getRefreshToken(String(user.id)),
-            username: user.username
+            username: user.username,
+            avatarHash: user.avatarHash
         });
     }
 
@@ -50,11 +52,16 @@ export class AuthenticationController {
             user = await userRepository.create(UserEntity.newBuilder()
                 .withDiscordId(discord.id)
                 .withUsername(discord.username)
+                .withAvatarHash(discord.avatar)
                 .build());
+        } else {
+            user = await userRepository.save(UserEntity.newBuilderFrom(user).withAvatarHash(discord.avatar).build());
         }
 
         const payload = member == null ? { error: ValidationError.NOT_IN_GUILD } : {
             id: user.id,
+            discordId: user.discordId,
+            avatarHash: discord.avatar,
             accessToken: this.getAccessToken(String(user.id)),
             refreshToken: this.getRefreshToken(String(user.id)),
             username: discord.username

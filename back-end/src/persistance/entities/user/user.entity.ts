@@ -5,6 +5,7 @@ export interface IUserEntity {
     id?: ObjectID;
     discordId: string;
     username: string;
+    avatarHash: string;
 }
 
 @Entity('users')
@@ -15,6 +16,8 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     discordId: string;
     @Column()
     username: string;
+    @Column()
+    avatarHash: string;
 
     constructor(builder: IUserEntity) {
         super();
@@ -25,6 +28,7 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
         this.id = builder.id;
         this.discordId = builder.discordId;
         this.username = builder.username;
+        this.avatarHash = builder.avatarHash;
     }
 
     newBuilderFromCurrent(): Builder {
@@ -34,16 +38,21 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     static newBuilder(): Builder {
         return new Builder();
     }
+
+    static newBuilderFrom(user: IUserEntity): Builder {
+        return new Builder(user);
+    }
 }
 
 class Builder {
     private myData: IUserEntity = {
         id: undefined,
         discordId: undefined,
-        username: undefined
+        username: undefined,
+        avatarHash: undefined
     };
 
-    constructor(entity?: UserEntity) {
+    constructor(entity?: IUserEntity) {
         Object.assign(this.myData, entity);
     }
 
@@ -59,6 +68,11 @@ class Builder {
 
     withUsername(username: string): Builder {
         this.myData.username = username;
+        return this;
+    }
+
+    withAvatarHash(avatarHash: string): Builder {
+        this.myData.avatarHash = avatarHash;
         return this;
     }
 
