@@ -1,0 +1,58 @@
+#box {
+    position: absolute;
+    left: 50%;
+    top: 30%;
+    -webkit-transform: translate(-50%, -50%);
+    transform: translate(-50%, -50%);
+    background: #0c1116;
+    border-radius: 5px;
+    padding: 10px;
+}
+
+#title {
+    color: #f0f0f0;
+    text-align: center;
+}
+
+span {
+    width: 250px;
+    display: inline-block;
+    font-size: 18px;
+}
+
+img {
+    width: 75px;
+    height: 75px;
+}
+
+#discord-button {
+    text-align: center;
+    padding-top: 50px;
+    border-top: 2px solid #323131;
+    margin-top: 20px;
+}
+
+#discord-button .icon {
+    width: 25px;
+    height: 25px;
+    margin-right: 15px;
+}
+
+#discord-button .icon svg {
+    fill: white;
+}
+
+#discord-button a {
+    color: white;
+    font-weight: bold;
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    padding: 10px 15px;
+    background-color: #1f2126;
+    text-decoration: none;
+}
+
+#discord-button a:hover {
+    background-color: #181a1e;
+}
