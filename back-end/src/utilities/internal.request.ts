@@ -1,7 +1,7 @@
 import { Request } from 'express';
 
 export interface InternalUser {
-    userId: string | null;
+    id: string | null;
     token: string | null;
 }
 

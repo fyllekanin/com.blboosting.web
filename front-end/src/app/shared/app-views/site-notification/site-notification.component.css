@@ -57,17 +57,17 @@
 }
 
 .site-notification-info {
-    background-color: #758eb3;
+    background-color: #154a5e;
 }
 
 .site-notification-warning {
-    background-color: #75b37b;
+    background-color: #996b27;
 }
 
 .site-notification-error {
-    background-color: #b37575;
+    background-color: #6e3d3d;
 }
 
 .site-notification-success {
-    background-color: #75b37b;
+    background-color: #3c7642;
 }

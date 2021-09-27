@@ -1,5 +1,6 @@
 import { InternalRequest } from './internal.request';
 import { PaginationWhere } from '../persistance/repositories/base.repository';
+import { verify } from 'jsonwebtoken';
 
 export interface PaginationValue {
     key: string;
@@ -22,5 +23,13 @@ export class RequestUtility {
             };
         })
             .filter(value => value);
+    }
+
+    static getJWTValue(token: string): { id: string } {
+        try {
+            return verify(token, process.env.TOKEN_SECRET) as { id: string };
+        } catch (_e) {
+            return null;
+        }
     }
 }

@@ -1,8 +1,8 @@
-import { Column, Entity, ObjectID, ObjectIdColumn } from 'typeorm';
+import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 export interface IUserEntity {
-    id?: ObjectID;
+    id: string;
     discordId: string;
     username: string;
     avatarHash: string;
@@ -11,7 +11,7 @@ export interface IUserEntity {
 @Entity('users')
 export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     @ObjectIdColumn()
-    id?: ObjectID;
+    id: string;
     @Column({ unique: true })
     discordId: string;
     @Column()
@@ -56,8 +56,8 @@ class Builder {
         Object.assign(this.myData, entity);
     }
 
-    withUserId(userId: ObjectID): Builder {
-        this.myData.id = userId;
+    withId(id: string): Builder {
+        this.myData.id = id;
         return this;
     }
 

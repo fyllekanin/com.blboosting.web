@@ -2,3 +2,64 @@
     display: block;
     width: 100%;
 }
+
+#navigation {
+    background: #0b1014;
+    min-height: 100vh;
+}
+
+#content {
+    padding-left: 20px;
+}
+
+#avatar {
+    text-align: center;
+    padding-top: 20px;
+}
+
+#avatar img {
+    width: 80px;
+    border-radius: 50%;
+}
+
+#avatar div {
+    margin-bottom: 5px;
+}
+
+#top-bar {
+    width: 100%;
+    height: 50px;
+}
+
+#settings {
+    float: right;
+    padding-right: 40px;
+    padding-top: 5px;
+    font-size: 18px;
+}
+
+#settings span {
+    margin-left: 20px;
+}
+
+#menu-title {
+    font-weight: bold;
+}
+
+nav {
+    margin-top: 20px;
+    padding-left: 20px;
+}
+
+ul {
+    list-style-type: none;
+    margin-left: 0;
+}
+
+ul li {
+    padding: 5px;
+}
+
+ul li i {
+    padding-right: 15px;
+}

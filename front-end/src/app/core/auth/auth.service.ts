@@ -4,13 +4,18 @@ import { LocalStorageKeys } from '../../shared/constants/local-storage.constants
 import { Observable, throwError } from 'rxjs';
 import { HttpService } from '../http/http.service';
 import { catchError, map } from 'rxjs/operators';
+import { Router } from '@angular/router';
+import { SiteNotificationService } from '../common-services/site-notification.service';
+import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
 
 @Injectable()
 export class AuthService {
     private authUser: AuthUser;
 
     constructor(
-        private httpService: HttpService
+        private httpService: HttpService,
+        private router: Router,
+        private siteNotificationService: SiteNotificationService
     ) {
         this.authUser = this.getAuthUser();
     }
@@ -30,6 +35,16 @@ export class AuthService {
 
     getUser(): AuthUser {
         return { ...this.authUser };
+    }
+
+    logout(): void {
+        this.setAuthUser(null);
+        this.siteNotificationService.create({
+            title: 'Logout',
+            message: 'You have logged out',
+            type: SiteNotificationType.INFO
+        });
+        this.router.navigateByUrl('/auth');
     }
 
     refreshToken(): Observable<string> {

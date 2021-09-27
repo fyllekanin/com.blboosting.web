@@ -1,13 +1,15 @@
-import { Controller, Get } from '@overnightjs/core';
+import { Controller, Get, Middleware } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest } from '../utilities/internal.request';
 import { Client } from 'discord.js';
 import { DiscordService } from '../apis/services/discord.service';
-import { sign, verify } from 'jsonwebtoken';
+import { sign } from 'jsonwebtoken';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
 import { UserEntity } from '../persistance/entities/user/user.entity';
 import { ValidationError } from '../constants/validation.error';
 import { StatusCodes } from 'http-status-codes';
+import { RequestUtility } from '../utilities/request.utility';
+import { AUTHORIZATION_MIDDLEWARE } from './middlewares/authorization.middleware';
 
 @Controller('api/oauth')
 export class AuthenticationController {
@@ -15,15 +17,28 @@ export class AuthenticationController {
     constructor(private client: Client) {
     }
 
+    @Get('initialize')
+    @Middleware([AUTHORIZATION_MIDDLEWARE])
+    async getInitialize(req: InternalRequest, res: Response): Promise<void> {
+        let user = await UserRepository.newRepository().get(req.user.id);
+        res.status(StatusCodes.OK).json({
+            discordId: user.discordId,
+            accessToken: this.getAccessToken(user.id),
+            refreshToken: this.getRefreshToken(user.id),
+            username: user.username,
+            avatarHash: user.avatarHash
+        });
+    }
+
     @Get('refresh-token')
     async getRefreshedTokens(req: InternalRequest, res: Response): Promise<void> {
         const refreshToken = req.header('RefreshAuthorization');
-        const jwt = refreshToken ? verify(refreshToken, process.env.TOKEN_SECRET) as { id: string } : null;
+        const jwt = RequestUtility.getJWTValue(refreshToken);
         if (!jwt) {
             res.status(StatusCodes.UNAUTHORIZED);
             return;
         }
-        let user = await UserRepository.newRepository().get(jwt.id);
+        let user = await UserRepository.newRepository().getUserByDiscordId(jwt.id);
         res.status(StatusCodes.OK).json({
             id: user.id,
             discordId: user.discordId,
@@ -49,7 +64,7 @@ export class AuthenticationController {
         const userRepository = new UserRepository();
         let user = await userRepository.getUserByDiscordId(discord.id);
         if (!user) {
-            user = await userRepository.create(UserEntity.newBuilder()
+            user = await userRepository.save(UserEntity.newBuilder()
                 .withDiscordId(discord.id)
                 .withUsername(discord.username)
                 .withAvatarHash(discord.avatar)
@@ -62,8 +77,8 @@ export class AuthenticationController {
             id: user.id,
             discordId: user.discordId,
             avatarHash: discord.avatar,
-            accessToken: this.getAccessToken(String(user.id)),
-            refreshToken: this.getRefreshToken(String(user.id)),
+            accessToken: this.getAccessToken(user.id),
+            refreshToken: this.getRefreshToken(user.id),
             username: discord.username
         };
         res.send(`

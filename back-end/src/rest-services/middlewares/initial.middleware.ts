@@ -1,6 +1,6 @@
 import { NextFunction, Response } from 'express';
 import { InternalRequest } from '../../utilities/internal.request';
-import { verify } from 'jsonwebtoken';
+import { RequestUtility } from '../../utilities/request.utility';
 
 export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, next: NextFunction) {
     const authHeader = req.header('authorization');
@@ -8,24 +8,24 @@ export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, ne
 
     if (!token) {
         req.user = {
-            userId: null,
+            id: null,
             token: null
         };
         next();
         return;
     }
-    const user = token ? verify(token, process.env.TOKEN_SECRET) as { id: string } : null;
+    const user = RequestUtility.getJWTValue(token);
 
     if (!user) {
         req.user = {
-            userId: null,
+            id: null,
             token: token
         };
         next();
         return;
     }
     req.user = {
-        userId: user.id,
+        id: user.id,
         token: token
     };
     next();

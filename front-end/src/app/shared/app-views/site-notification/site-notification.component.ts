@@ -5,7 +5,7 @@ import { SiteNotification, SiteNotificationType } from './site-notification.inte
 @Component({
     selector: 'app-site-notification',
     templateUrl: 'site-notification.component.html',
-    styleUrls: [ 'site-notification.component.css' ],
+    styleUrls: ['site-notification.component.css'],
     encapsulation: ViewEncapsulation.None
 })
 export class SiteNotificationComponent {
@@ -19,16 +19,16 @@ export class SiteNotificationComponent {
     };
     @ViewChild('wrapper', { static: true }) wrapper: ElementRef;
 
-    constructor (private ngZone: NgZone, service: SiteNotificationService) {
+    constructor(private ngZone: NgZone, service: SiteNotificationService) {
         service.onSiteNotification.subscribe(this.onNotification.bind(this));
     }
 
-    private onNotification (notification: SiteNotification): void {
+    private onNotification(notification: SiteNotification): void {
         const node = this.createElement(notification);
         this.wrapper.nativeElement.appendChild(node);
     }
 
-    private createElement (notification: SiteNotification): Node {
+    private createElement(notification: SiteNotification): Node {
         const node = document.createElement('div');
         node.className = `${SiteNotificationComponent.CLASS} ${SiteNotificationComponent.CLASS}-hidden ` +
             `${SiteNotificationComponent.CLASS}-${SiteNotificationComponent.TYPES[notification.type]}`;
@@ -59,7 +59,7 @@ export class SiteNotificationComponent {
         return node;
     }
 
-    private dismissNotification (node: HTMLElement): void {
+    private dismissNotification(node: HTMLElement): void {
         node.className = node.className + ` ${SiteNotificationComponent.CLASS}-hidden`;
         setTimeout(() => {
             node.style.display = 'none';
