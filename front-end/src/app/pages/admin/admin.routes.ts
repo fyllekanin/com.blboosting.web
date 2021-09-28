@@ -14,17 +14,23 @@ export const adminRoutes: Routes = [
                 pathMatch: 'full',
                 component: DashboardComponent,
                 resolve: {
-                    data: DashboardResolver
-                }
+                    data: DashboardResolver,
+                },
             },
             {
-                path: 'boosts/:id',
-                component: BoostComponent
+                path: 'boosts',
+                loadChildren: () =>
+                    import('./pages/boosts/boosts.module').then(
+                        (m) => m.BoostsModule
+                    ),
             },
             {
                 path: 'users',
-                loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule)
-            }
-        ]
-    }
+                loadChildren: () =>
+                    import('./pages/users/users.module').then(
+                        (m) => m.UsersModule
+                    ),
+            },
+        ],
+    },
 ];
