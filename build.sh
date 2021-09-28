@@ -9,3 +9,5 @@ cd back-end
 cp -R ../front-end/dist/* src/public
 npm install
 npm run build
+
+cd ..
