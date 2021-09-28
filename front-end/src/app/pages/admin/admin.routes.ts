@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
+import { BoostComponent } from './pages/boosts/boost/boost.component';
 
 export const adminRoutes: Routes = [
     {
@@ -15,6 +16,10 @@ export const adminRoutes: Routes = [
                 resolve: {
                     data: DashboardResolver
                 }
+            },
+            {
+                path: 'boosts/:id',
+                component: BoostComponent
             }
         ]
     }

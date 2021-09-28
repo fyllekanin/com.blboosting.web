@@ -39,11 +39,7 @@ export abstract class BaseRepository<T> {
     async save(entity: T): Promise<T> {
         return await this.getRepository().save(entity);
     }
-
-    async create(entity: T): Promise<T> {
-        return await this.getRepository().create(entity);
-    }
-
+    
     async delete(entity: T): Promise<DeleteResult> {
         return await this.getRepository().delete(entity);
     }
