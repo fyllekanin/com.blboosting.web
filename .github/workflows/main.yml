@@ -27,6 +27,6 @@ jobs:
       - name: Build the project
         run: ./build.sh
       # Runs a single command using the runners shell
-      #- name: Deploy the project
-      #  run: deploy.sh
+      - name: Deploy the project
+        run: ./deploy.sh
         
