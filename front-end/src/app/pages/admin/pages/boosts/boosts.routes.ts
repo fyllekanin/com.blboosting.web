@@ -10,12 +10,12 @@ export const boostsRoutes: Routes = [
         children: [
             {
                 path: 'page/:page',
-                component: BoostsListComponent,
+                component: BoostsListComponent
             },
             {
                 path: 'boost/:id',
-                component: BoostComponent,
-            },
-        ],
-    },
+                component: BoostComponent
+            }
+        ]
+    }
 ];

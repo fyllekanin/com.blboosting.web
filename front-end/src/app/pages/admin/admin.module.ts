@@ -6,14 +6,12 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { adminRoutes } from './admin.routes';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
-import { BoostsModule } from './pages/boosts/boosts.module';
 
 @NgModule({
     imports: [
         RouterModule.forChild(adminRoutes),
         CommonModule,
-        ContentModule,
-        BoostsModule
+        ContentModule
     ],
     declarations: [
         AdminComponent,

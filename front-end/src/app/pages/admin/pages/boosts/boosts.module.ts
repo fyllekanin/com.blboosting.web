@@ -8,8 +8,19 @@ import { BoostsListComponent } from './boosts-list/boosts-list.component';
 import { RouterModule } from '@angular/router';
 
 @NgModule({
-    imports: [CommonModule, ContentModule, RouterModule.forChild(boostsRoutes)],
-    declarations: [BoostComponent, BoostsComponent, BoostsListComponent],
-    exports: [RouterModule],
+    imports: [
+        RouterModule.forChild(boostsRoutes),
+        CommonModule,
+        ContentModule
+    ],
+    declarations: [
+        BoostComponent,
+        BoostsComponent,
+        BoostsListComponent
+    ],
+    exports: [
+        RouterModule
+    ]
 })
-export class BoostsModule {}
+export class BoostsModule {
+}
