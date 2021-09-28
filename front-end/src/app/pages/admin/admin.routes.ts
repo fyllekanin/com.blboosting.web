@@ -20,6 +20,10 @@ export const adminRoutes: Routes = [
             {
                 path: 'boosts/:id',
                 component: BoostComponent
+            },
+            {
+                path: 'users',
+                loadChildren: () => import('./pages/users/users.module').then(m => m.UsersModule)
             }
         ]
     }
