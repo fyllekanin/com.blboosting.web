@@ -3,7 +3,7 @@ import { InternalRequest } from '../../utilities/internal.request';
 import { StatusCodes } from 'http-status-codes';
 
 export const AUTHORIZATION_MIDDLEWARE = async (req: InternalRequest, res: Response, next: NextFunction) => {
-    if (!req.user || !req.user || !req.user.token) {
+    if (!req.user || !req.user.id || !req.user.token) {
         res.status(StatusCodes.UNAUTHORIZED).json({
             isTokenExisting: Boolean(req.user.token)
         });

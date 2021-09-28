@@ -52,7 +52,7 @@ export class AuthenticationController {
     @Get('discord')
     async getDiscord(req: InternalRequest, res: Response): Promise<void> {
         if (!req.query.code) {
-            res.redirect(process.env.DISCORD_OATH_LINK);
+            res.redirect(process.env.DISCORD_OAUTH_LINK);
             return;
         }
         const result = await DiscordService.getDiscordOathResult(req.query.code as string);
