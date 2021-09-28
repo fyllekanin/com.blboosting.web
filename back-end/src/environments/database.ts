@@ -1,9 +1,9 @@
 export = {
     useUnifiedTopology: true,
     type: 'mongodb',
-    host: '127.0.0.1',
-    port: 27017,
-    database: 'bloodlust',
+    host: process.env.MONGODB_HOST,
+    port: process.env.DATABASE_PORT,
+    database: process.env.MONGODB_DATABASE,
     synchronize: false,
     logging: false,
     name: 'default',
