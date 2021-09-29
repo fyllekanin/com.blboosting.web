@@ -12,9 +12,17 @@ export class BoostComponent {
             realm: '',
         },
     ];
+    keys = [
+        {
+            key: '',
+            userId: '',
+            role: '',
+        },
+    ];
+
+    totalPot = 0;
 
     realms = [
-        'Balance',
         'AeriePeak',
         'Aggra',
         'Aggramar',
@@ -264,7 +272,31 @@ export class BoostComponent {
         this.payments.push({ amount: 0, realm: '' });
     }
 
-    remove(payment: any): void {
+    removePaymentRow(payment: any): void {
         this.payments = this.payments.filter((item) => item !== payment);
+    }
+
+    addKeyRow(): void {
+        this.keys.push({
+            key: 'Any',
+            userId: '543556245437343244',
+            role: 'Tank',
+        });
+    }
+
+    removeKeyRow(key: any): void {
+        this.keys = this.keys.filter((item) => item !== key);
+    }
+
+    update(payment: any): void {
+        console.log(payment);
+        // this.payments.find(item => item === payment).amount
+    }
+
+    total(): void {
+        this.totalPot = this.payments.reduce(
+            (sum, current) => sum + current.amount,
+            0
+        );
     }
 }

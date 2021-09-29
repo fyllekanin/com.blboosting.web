@@ -1,5 +1,13 @@
 <div class="title">
-    <span>{{header}}</span>
+    <span>{{ header }}</span>
+    <span
+        class="info"
+        *ngIf="text"
+        [attr.tooltip]="text"
+        tooltip-position="top"
+    >
+        <i class="fas fa-info-circle"></i>
+    </span>
 </div>
 
 <div class="content">

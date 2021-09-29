@@ -17,6 +17,11 @@
     position: relative;
 }
 
+.info {
+    cursor: default;
+    margin-left: 5px;
+}
+
 .title > span {
     font-size: 13px;
     font-weight: bold;
@@ -42,6 +47,7 @@
     font-weight: normal;
 }
 
-.action:hover, .active {
+.action:hover,
+.active {
     font-weight: bold;
 }
