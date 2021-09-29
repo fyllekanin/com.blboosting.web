@@ -1,25 +1,25 @@
 import { Column, Entity, ObjectIdColumn } from 'typeorm';
-import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
+import { CreatedUpdatedAtEntity } from './created-updated-at.entity';
 
-export interface IUserEntity {
+export interface IRoleEntity {
     id: string;
     discordId: string;
-    username: string;
-    avatarHash: string;
+    name: string;
+    permissions: number;
 }
 
-@Entity('users')
-export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
+@Entity('roles')
+export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
     @ObjectIdColumn()
     readonly id: string;
     @Column({ unique: true })
     readonly discordId: string;
     @Column()
-    readonly username: string;
-    @Column()
-    readonly avatarHash: string;
+    readonly name: string;
+    @Column({ default: 0 })
+    readonly permissions: number;
 
-    constructor(builder: IUserEntity) {
+    constructor(builder: IRoleEntity) {
         super();
         if (!builder) {
             return;
@@ -27,8 +27,8 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 
         this.id = builder.id;
         this.discordId = builder.discordId;
-        this.username = builder.username;
-        this.avatarHash = builder.avatarHash;
+        this.name = builder.name;
+        this.permissions = builder.permissions;
     }
 
     newBuilderFromCurrent(): Builder {
@@ -39,20 +39,20 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
         return new Builder();
     }
 
-    static newBuilderFrom(user: IUserEntity): Builder {
+    static newBuilderFrom(user: IRoleEntity): Builder {
         return new Builder(user);
     }
 }
 
 class Builder {
-    private myData: IUserEntity = {
+    private myData: IRoleEntity = {
         id: undefined,
         discordId: undefined,
-        username: undefined,
-        avatarHash: undefined
+        name: undefined,
+        permissions: 0
     };
 
-    constructor(entity?: IUserEntity) {
+    constructor(entity?: IRoleEntity) {
         Object.assign(this.myData, entity);
     }
 
@@ -66,17 +66,17 @@ class Builder {
         return this;
     }
 
-    withUsername(username: string): Builder {
-        this.myData.username = username;
+    withName(name: string): Builder {
+        this.myData.name = name;
         return this;
     }
 
-    withAvatarHash(avatarHash: string): Builder {
-        this.myData.avatarHash = avatarHash;
+    withPermissions(permissions: number): Builder {
+        this.myData.permissions = permissions;
         return this;
     }
 
-    build(): UserEntity {
-        return new UserEntity(this.myData);
+    build(): RoleEntity {
+        return new RoleEntity(this.myData);
     }
 }
