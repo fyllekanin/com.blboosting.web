@@ -6,6 +6,7 @@ export interface IRoleEntity {
     discordId: string;
     name: string;
     permissions: number;
+    position: number;
 }
 
 @Entity('roles')
@@ -18,6 +19,8 @@ export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
     readonly name: string;
     @Column({ default: 0 })
     readonly permissions: number;
+    @Column()
+    readonly position: number;
 
     constructor(builder: IRoleEntity) {
         super();
@@ -29,6 +32,7 @@ export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
         this.discordId = builder.discordId;
         this.name = builder.name;
         this.permissions = builder.permissions;
+        this.position = builder.position;
     }
 
     newBuilderFromCurrent(): Builder {
@@ -49,7 +53,8 @@ class Builder {
         id: undefined,
         discordId: undefined,
         name: undefined,
-        permissions: 0
+        permissions: 0,
+        position: undefined
     };
 
     constructor(entity?: IRoleEntity) {
@@ -73,6 +78,11 @@ class Builder {
 
     withPermissions(permissions: number): Builder {
         this.myData.permissions = permissions;
+        return this;
+    }
+
+    withPosition(position: number): Builder {
+        this.myData.position = position;
         return this;
     }
 

@@ -1,12 +1,16 @@
 import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from './base.repository';
 import { IRoleEntity, RoleEntity } from '../entities/role.entity';
+import { Role } from 'discord.js';
 
 export class RoleRepository extends BaseRepository<IRoleEntity> {
     protected repository: Repository<RoleEntity>;
 
-    async updateName(discordId: string, name: string): Promise<void> {
-        await this.getRepository().update({ discordId: discordId }, { name: name });
+    async updateRole(role: Role): Promise<void> {
+        await this.getRepository().update({ discordId: role.id }, {
+            name: role.name,
+            position: role.position
+        });
     }
 
     async deleteDiscordId(discordId: string): Promise<void> {

@@ -45,8 +45,8 @@ export class DiscordListener {
         this.client.addListener(Event.ROLE_UPDATE, this.updateRole.bind(this));
     }
 
-    private async updateRole(oldRole: Role, newRole: Role): Promise<void> {
-        await this.repository.updateName(oldRole.id, newRole.name);
+    private async updateRole(_oldRole: Role, newRole: Role): Promise<void> {
+        await this.repository.updateRole(newRole);
     }
 
     private async removeRole(discordId: string): Promise<void> {
@@ -54,6 +54,10 @@ export class DiscordListener {
     }
 
     private async addRole(role: Role): Promise<IRoleEntity> {
-        return this.repository.save(RoleEntity.newBuilder().withDiscordId(role.id).withName(role.name).build());
+        return this.repository.save(RoleEntity.newBuilder()
+            .withDiscordId(role.id)
+            .withName(role.name)
+            .withPosition(role.position)
+            .build());
     }
 }
