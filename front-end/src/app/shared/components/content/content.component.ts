@@ -8,5 +8,5 @@ import { Component, Input } from '@angular/core';
 export class ContentComponent {
     @Input() header: string;
     @Input() titleBackground = '#9a7993';
-    @Input() text?: string;
+    @Input() tooltipText: string;
 }
