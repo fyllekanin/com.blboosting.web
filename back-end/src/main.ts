@@ -51,7 +51,6 @@ class MainServer extends Server {
         });
 
         console.log('Create database connection');
-        console.log(JSON.stringify(DatabaseConfig.getConfig()));
         await createConnection(DatabaseConfig.getConfig());
 
         console.log('Starting discord listener');

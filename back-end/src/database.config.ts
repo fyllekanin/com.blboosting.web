@@ -9,7 +9,7 @@ export class DatabaseConfig {
             host: process.env.MONGODB_HOST,
             port: Number(process.env.MONGODB_PORT),
             database: process.env.MONGODB_DATABASE,
-            synchronize: false,
+            synchronize: true,
             logging: false,
             name: 'default',
             entities: ['dist/persistance/entities/**/*.js'],
