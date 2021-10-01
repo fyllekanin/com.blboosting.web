@@ -1,6 +1,6 @@
 <app-content
     header="Contact character"
-    text="Character name-realm for boosters to whisper, typically the character you're currently on"
+    tooltipText="Character name-realm for boosters to whisper, typically the character you're currently on"
 >
     <div class="grid-x grid-margin-x">
         <div class="cell small-4">
@@ -16,120 +16,131 @@
     </div>
 </app-content>
 
-<app-content header="Source of client" text="Where you found the client">
-    <div class="cell small-4">
-        <label for="source">Source</label>
-        <select id="source">
-            <option>Trade chat</option>
-            <option>Ticket in-house</option>
-            <option>Ticket client</option>
-            <option>Discord</option>
-        </select>
-    </div>
+<app-content header="Source of client" tooltipText="Where you found the client">
+    <label for="source">Source</label>
+    <select id="source">
+        <option *ngFor="let source of sources">
+            {{ source.label }}
+        </option>
+    </select>
 </app-content>
 
 <app-content
     header="Source of payment(s)"
-    text="The amount(s) and realm(s) the client has paid on"
+    tooltipText="The amount(s) and realm(s) the client has paid on"
 >
-    <div class="cell small-12">
-        <div
-            *ngFor="let payment of payments; let index = index; let last = last"
-        >
-            <div class="grid-x grid-margin-x">
-                <div class="cell small-5">
-                    <label [for]="index + '-amount'">Amount</label>
-                    <input
-                        [id]="index + '-amount'"
-                        type="text"
-                        (change)="total()"
-                        (change)="update(payment)"
-                    />
-                </div>
-                <div class="cell small-5">
-                    <label [for]="index + '-realm'">Realm</label>
-                    <select [id]="index + '-realm'">
-                        <option *ngFor="let option of realms">
-                            {{ option }}
-                        </option>
-                    </select>
-                </div>
-                <div class="cell small-2">
-                    <i
-                        *ngIf="payments.length > 1"
-                        (click)="removePaymentRow(payment)"
-                        class="fas fa-minus"
-                    ></i>
-                    <i
-                        *ngIf="last && payments.length < 4"
-                        (click)="addPaymentRow()"
-                        class="fas fa-plus"
-                    ></i>
-                    <i *ngIf="!last" class="fas fa-plus" style="opacity: 0"></i>
-                    <i
-                        *ngIf="!last"
-                        (click)="addPaymentRow()"
-                        class="fas fa-plus"
-                        style="opacity: 0"
-                    ></i>
-                </div>
-            </div>
-        </div>
-    </div>
-</app-content>
-
-<app-content header="From balance" text="Amount paid from balance, if any">
-    <div class="cell small-12">
+    <div *ngFor="let payment of payments; let index = index; let last = last">
         <div class="grid-x grid-margin-x">
             <div class="cell small-5">
-                <label>Amount</label>
-                <input type="text" (change)="total()" />
+                <label [for]="index + '-amount'">Amount</label>
+                <input
+                    [id]="index + '-amount'"
+                    type="number"
+                    placeholder="Amount in k, e.g 100 or 100.5"
+                />
+            </div>
+            <div class="cell small-5">
+                <label [for]="index + '-realm'">Realm</label>
+                <select [id]="index + '-realm'">
+                    <option *ngFor="let option of realms">
+                        {{ option }}
+                    </option>
+                </select>
+            </div>
+            <div class="cell small-2">
+                <i
+                    *ngIf="payments.length > 1"
+                    (click)="removePaymentRow(payment)"
+                    class="fas fa-minus"
+                ></i>
+                <i
+                    *ngIf="last && payments.length < 4"
+                    (click)="addPaymentRow()"
+                    class="fas fa-plus"
+                ></i>
+                <i *ngIf="!last" class="fas fa-plus" style="opacity: 0"></i>
+                <i
+                    *ngIf="!last"
+                    (click)="addPaymentRow()"
+                    class="fas fa-plus"
+                    style="opacity: 0"
+                ></i>
             </div>
         </div>
     </div>
 </app-content>
 
 <app-content
-    header="Adv cut discount"
-    text="If you have given a discount from your cut"
+    header="From balance"
+    tooltipText="Amount paid from balance, if any"
 >
-    <div class="cell small-12">
-        <div class="grid-x grid-margin-x">
-            <div class="cell small-5">
-                <label>Amount</label>
-                <input type="text" (change)="total()" />
-            </div>
-        </div>
-    </div>
+    <label>Amount</label>
+    <input
+        type="number"
+        [(ngModel)]="total"
+        placeholder="Amount in k, e.g 100 or 100.5"
+    />
+</app-content>
+
+<app-content
+    header="Adv cut discount"
+    tooltipText="If you have given a discount from your cut"
+>
+    <label>Amount</label>
+    <input
+        type="number"
+        [(ngModel)]="discount"
+        placeholder="Amount in k, e.g 100 or 100.5"
+    />
 </app-content>
 
 <app-content header="Total pot">
-    <div class="cell small-5">
-        <p>{{ totalPot }}</p>
-    </div>
+    <p>{{ totalPot }}</p>
 </app-content>
 
-<app-content header="Bought key(s)" text="The key(s) that the client purchased">
+<app-content
+    header="Bought key(s)"
+    tooltipText="The key(s) that the client purchased"
+>
     <div class="cell small-12">
         <div *ngFor="let key of keys; let index = index; let last = last">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-5">
-                    <label [for]="index + '-amount'">Key</label>
-                    <input
-                        [id]="index + '-amount'"
-                        type="text"
-                        (change)="total()"
-                        (change)="update(payment)"
-                    />
-                </div>
-                <div class="cell small-5">
-                    <label [for]="index + '-realm'">Realm</label>
-                    <select [id]="index + '-realm'">
-                        <option *ngFor="let option of realms">
-                            {{ option }}
+                    <label [for]="index + '-key'">Dungeon</label>
+                    <select [id]="index + '-key'">
+                        <option *ngFor="let key of dungeons">
+                            {{ key.label }}
                         </option>
                     </select>
                 </div>
+
+                <div class="cell small-5">
+                    <label>Key level</label>
+                    <input type="number" />
+                </div>
+
+                <div class="cell small-5">
+                    <label [for]="index + '-key'">Keyholder</label>
+                    <select [id]="index + '-key'">
+                        <!-- Loop through all users with boosting roles that match the keystone level -->
+                        <option>Thedrunken-Kazzak</option>
+                        <option>Kelthuras-TwistingNether</option>
+                        <option>Fleqqyhunt-TarrenMill</option>
+                        <!-- <option *ngFor="let dungeon of dungeons">
+                            {{ dungeon.label }}
+                        </option> -->
+                    </select>
+                </div>
+
+                <div class="cell small-5">
+                    <label [for]="index + '-key'">Select keyholder role</label>
+                    <select [id]="index + '-key'">
+                        <option *ngFor="let role of roles">
+                            {{ role.label }}
+                        </option>
+                    </select>
+                </div>
+
                 <div class="cell small-2">
                     <i
                         *ngIf="keys.length > 1"
@@ -154,26 +165,66 @@
     </div>
 </app-content>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+<app-content
+    header="Stacks"
+    tooltipText="If the client purchased any armor / class stacks"
+>
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-5">
+            <label>Armor stack</label>
+            <select>
+                <option *ngFor="let type of armorStacks">
+                    {{ type.label }}
+                </option>
+            </select>
+        </div>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+        <div class="cell small-5">
+            <label>Class stack</label>
+            <select>
+                <option *ngFor="let type of classStacks">
+                    {{ type.label }}
+                </option>
+            </select>
+        </div>
+    </div>
+</app-content>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+<app-content
+    header="Timed / Untimed"
+    tooltipText="Whether the client purchased a timed or untimed run"
+>
+    <select>
+        <option>Timed</option>
+        <option>Untimed</option>
+        <!-- <option *ngFor="let keyState of keyStates">
+                    {{ keyState.label }}
+                </option> -->
+    </select>
+</app-content>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+<app-content
+    header="Play along"
+    tooltipText="If you as the advertiser plan on playing along"
+>
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-5">
+            <label>Playing along</label>
+            <input type="checkbox" [(ngModel)]="isChecked" />
+        </div>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+        <div class="cell small-5" *ngIf="isChecked">
+            <label>Select your role</label>
+            <select>
+                <option *ngFor="let role of roles">
+                    {{ role.label }}
+                </option>
+            </select>
+        </div>
+    </div>
+</app-content>
 
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
-
-<!-- <app-content header="Creating new boost"> Hello I'm lazy Lohan </app-content> -->
+<app-content header="Notes" tooltipText="If you have any additional notes">
+    <label>Note</label>
+    <input type="text" />
+</app-content>

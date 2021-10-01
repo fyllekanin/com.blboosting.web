@@ -2,8 +2,8 @@
     <span>{{ header }}</span>
     <span
         class="info"
-        *ngIf="text"
-        [attr.tooltip]="text"
+        *ngIf="tooltipText"
+        [attr.tooltip]="tooltipText"
         tooltip-position="top"
     >
         <i class="fas fa-info-circle"></i>
