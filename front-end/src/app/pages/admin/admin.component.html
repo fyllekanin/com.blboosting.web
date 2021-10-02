@@ -4,7 +4,7 @@
             <div id="navigation">
                 <div id="avatar">
                     <div><img [src]="avatarUrl"/></div>
-                    <div>{{name}}</div>
+                    <div>{{authUser.username}}</div>
                     <div class="lighter-color">${{amount}}</div>
                 </div>
                 <nav>
@@ -15,24 +15,15 @@
                                 <i class="fa fa-home" aria-hidden="true"></i> Dashboard
                             </a>
                         </li>
-                        <li>
+                        <li *ngIf="authUser.permissions.CAN_CREATE_BOOST">
                             <a routerLink="/admin/boosts/boost/new" routerLinkActive="router-active">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Create Boost
                             </a>
                         </li>
-                        <li>
-                            <a routerLink="/admin/users/page/1" routerLinkActive="router-active">
-                                <i class="fa fa-users" aria-hidden="true"></i> Users
+                        <li *ngIf="authUser.permissions.CAN_MANAGE_GROUPS">
+                            <a routerLink="/admin/boosts/boost/new" routerLinkActive="router-active">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Manage Groups
                             </a>
-                        </li>
-                        <li>
-                            <i class="fas fa-user-cog"></i> Bot Settings
-                        </li>
-                        <li>
-                            <i class="fa fa-bath" aria-hidden="true"></i> Make Hulk Green
-                        </li>
-                        <li>
-                            <i class="fa fa-briefcase" aria-hidden="true"></i> Philip Work
                         </li>
                     </ul>
                 </nav>

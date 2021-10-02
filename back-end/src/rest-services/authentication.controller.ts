@@ -10,6 +10,7 @@ import { ValidationError } from '../constants/validation.error';
 import { StatusCodes } from 'http-status-codes';
 import { RequestUtility } from '../utilities/request.utility';
 import { AUTHORIZATION_MIDDLEWARE } from './middlewares/authorization.middleware';
+import { RoleRepository } from '../persistance/repositories/role.repository';
 
 @Controller('api/oauth')
 export class AuthenticationController {
@@ -20,13 +21,15 @@ export class AuthenticationController {
     @Get('initialize')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
     async getInitialize(req: InternalRequest, res: Response): Promise<void> {
+
         let user = await UserRepository.newRepository().get(req.user.id);
         res.status(StatusCodes.OK).json({
             discordId: user.discordId,
             accessToken: this.getAccessToken(user.id),
             refreshToken: this.getRefreshToken(user.id),
             username: user.username,
-            avatarHash: user.avatarHash
+            avatarHash: user.avatarHash,
+            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
         });
     }
 
@@ -35,7 +38,7 @@ export class AuthenticationController {
         const refreshToken = req.header('RefreshAuthorization');
         const jwt = RequestUtility.getJWTValue(refreshToken);
         if (!jwt) {
-            res.status(StatusCodes.UNAUTHORIZED);
+            res.status(StatusCodes.UNAUTHORIZED).json();
             return;
         }
         let user = await UserRepository.newRepository().getUserByDiscordId(jwt.id);
@@ -45,7 +48,8 @@ export class AuthenticationController {
             accessToken: this.getAccessToken(String(user.id)),
             refreshToken: this.getRefreshToken(String(user.id)),
             username: user.username,
-            avatarHash: user.avatarHash
+            avatarHash: user.avatarHash,
+            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
         });
     }
 
@@ -79,7 +83,8 @@ export class AuthenticationController {
             avatarHash: discord.avatar,
             accessToken: this.getAccessToken(user.id),
             refreshToken: this.getRefreshToken(user.id),
-            username: discord.username
+            username: discord.username,
+            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
         };
         res.send(`
         <!DOCTYPE HTML>
@@ -91,6 +96,14 @@ export class AuthenticationController {
             </body>
         </html>
         `);
+    }
+
+    private getRoleIds(discordId: string): Array<string> {
+        const guild = this.client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
+        const member = guild.members.cache.get(discordId);
+        const roleIds: Array<string> = [];
+        member.roles.cache.forEach(role => roleIds.push(role.id));
+        return roleIds;
     }
 
     private getAccessToken(id: string): string {

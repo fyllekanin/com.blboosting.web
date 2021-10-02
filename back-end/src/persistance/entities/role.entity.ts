@@ -26,7 +26,7 @@ export class RolePermissions implements IRolePermissions {
     @Index()
     CAN_MANAGE_GROUPS: boolean;
 
-    constructor(builder: IRolePermissions) {
+    constructor(builder?: IRolePermissions) {
         if (!builder) {
             return;
         }
@@ -85,6 +85,7 @@ export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
     @ObjectIdColumn()
     readonly id: string;
     @Column({ unique: true })
+    @Index()
     readonly discordId: string;
     @Column()
     readonly name: string;

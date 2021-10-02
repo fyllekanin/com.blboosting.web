@@ -6,6 +6,7 @@
 #navigation {
     background: #0b1014;
     min-height: 100vh;
+    height: 100%;
 }
 
 #content {

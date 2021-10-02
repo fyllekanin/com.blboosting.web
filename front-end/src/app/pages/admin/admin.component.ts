@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
+import { AuthUser } from '../../core/auth/auth.model';
 
 @Component({
     selector: 'app-admin',
@@ -8,13 +9,12 @@ import { AuthService } from '../../core/auth/auth.service';
 })
 export class AdminComponent {
     avatarUrl: string;
-    name: string;
     amount: string;
+    authUser: AuthUser;
 
     constructor(private authService: AuthService) {
-        const authUser = this.authService.getUser();
-        this.avatarUrl = `https://cdn.discordapp.com/avatars/${authUser.discordId}/${authUser.avatarHash}.png?size=100`;
-        this.name = authUser.username;
+        this.authUser = this.authService.getUser();
+        this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
         this.amount = '127,342';
     }
 
