@@ -3,7 +3,7 @@
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 15px;
-    background: #0b1014;
+    background: #0b0d0e;
 }
 
 .title {
@@ -20,8 +20,7 @@
 
 .title > span {
     font-size: 13px;
-    font-weight: bold;
-    color: #636363;
+    color: #c7c7bb;
 }
 
 .content {

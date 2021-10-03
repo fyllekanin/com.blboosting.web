@@ -1,15 +1,33 @@
 thead {
     background: none;
     border: none;
+    color: #c7c7c7;
+}
+
+thead th {
+    font-weight: normal;
+    font-size: 13px;
 }
 
 tbody {
     border: none;
 }
 
+tbody tr {
+    color: #c7c7c7;
+}
+
 tbody tr:nth-child(even) {
     border-bottom: 0;
-    background-color: #fbfbfb;
+    background-color: #0b0d0e;
+}
+
+tbody tr:nth-child(odd) {
+    background-color: #161616;
+}
+
+td {
+    font-size: 13px;
 }
 
 .action {
