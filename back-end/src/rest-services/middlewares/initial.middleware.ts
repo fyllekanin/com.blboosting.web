@@ -9,6 +9,7 @@ export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, ne
     if (!token) {
         req.user = {
             id: null,
+            discordId: null,
             token: null
         };
         next();
@@ -19,6 +20,7 @@ export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, ne
     if (!user) {
         req.user = {
             id: null,
+            discordId: null,
             token: token
         };
         next();
@@ -26,6 +28,7 @@ export async function INITIAL_MIDDLEWARE(req: InternalRequest, res: Response, ne
     }
     req.user = {
         id: user.id,
+        discordId: user.discordId,
         token: token
     };
     next();

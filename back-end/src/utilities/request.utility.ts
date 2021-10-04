@@ -25,9 +25,9 @@ export class RequestUtility {
             .filter(value => value);
     }
 
-    static getJWTValue(token: string): { id: string } {
+    static getJWTValue(token: string): { id: string, discordId: string } {
         try {
-            return verify(token, process.env.TOKEN_SECRET) as { id: string };
+            return verify(token, process.env.TOKEN_SECRET) as { id: string, discordId: string };
         } catch (_e) {
             return null;
         }

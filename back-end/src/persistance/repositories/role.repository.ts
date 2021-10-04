@@ -1,9 +1,7 @@
 import { getConnection, Repository } from 'typeorm';
 import { BaseRepository } from './base.repository';
-import { IRoleEntity, RoleEntity, RolePermissions } from '../entities/role.entity';
+import { IRoleEntity, RoleEntity, RolePermission, RolePermissions } from '../entities/role.entity';
 import { Role } from 'discord.js';
-
-const SUPER_ADMINS: Array<string> = process.env.DISCORD_SUPER_ADMIN.split(',');
 
 export class RoleRepository extends BaseRepository<IRoleEntity> {
     protected repository: Repository<RoleEntity>;
@@ -19,10 +17,23 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
         await this.getRepository().delete({discordId: discordId});
     }
 
-    async getPermissions(userId: string, roleIds: Array<string>): Promise<RolePermissions> {
+
+    async doUserHavePermission(discordId: string, permission: RolePermission, roleIds: Array<string>): Promise<boolean> {
+        if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
+            return true;
+        }
+        const roles = await this.getRepository().find({
+            where: {
+                discordId: {$in: roleIds}
+            }
+        });
+        return roles.some(role => role.permissions[permission]);
+    }
+
+    async getPermissions(discordId: string, roleIds: Array<string>): Promise<RolePermissions> {
         const permissions = RolePermissions.newBuilder().build();
         const keys = Object.keys(permissions);
-        if (SUPER_ADMINS.includes(userId)) {
+        if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
             for (const key of keys) {
                 // @ts-ignore
                 permissions[key] = true;

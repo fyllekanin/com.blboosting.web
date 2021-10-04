@@ -12,6 +12,7 @@ import { Client, Intents } from 'discord.js';
 import { AuthenticationController } from './rest-services/authentication.controller';
 import { AdminPageController } from './rest-services/admin/admin-page.controller';
 import { DiscordListener } from './discord.listener';
+import { PermissionMiddleware } from './rest-services/middlewares/permission.middleware';
 
 dotenv.config();
 
@@ -56,6 +57,9 @@ class MainServer extends Server {
         console.log('Starting discord listener');
         this.discordListener = new DiscordListener();
         await this.discordListener.start(this.client);
+
+        console.log('Assign client to permission middleware');
+        PermissionMiddleware.client = this.client;
     }
 
     private setupControllers(): void {

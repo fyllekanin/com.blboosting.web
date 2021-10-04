@@ -1,10 +1,16 @@
 import { Column, Entity, Index, ObjectIdColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from './created-updated-at.entity';
 
+export enum RolePermission {
+    CAN_LOGIN = 'CAN_LOGIN',
+    CAN_CREATE_BOOST = 'CAN_CREATE_BOOST',
+    CAN_MANAGE_ROLES = 'CAN_MANAGE_ROLES'
+}
+
 export interface IRolePermissions {
     CAN_LOGIN: boolean;
     CAN_CREATE_BOOST: boolean;
-    CAN_MANAGE_GROUPS: boolean;
+    CAN_MANAGE_ROLES: boolean;
 }
 
 export interface IRoleEntity {
@@ -24,7 +30,7 @@ export class RolePermissions implements IRolePermissions {
     CAN_CREATE_BOOST: boolean;
     @Column()
     @Index()
-    CAN_MANAGE_GROUPS: boolean;
+    CAN_MANAGE_ROLES: boolean;
 
     constructor(builder?: IRolePermissions) {
         if (!builder) {
@@ -32,7 +38,7 @@ export class RolePermissions implements IRolePermissions {
         }
         this.CAN_LOGIN = builder.CAN_LOGIN;
         this.CAN_CREATE_BOOST = builder.CAN_CREATE_BOOST;
-        this.CAN_MANAGE_GROUPS = builder.CAN_MANAGE_GROUPS;
+        this.CAN_MANAGE_ROLES = builder.CAN_MANAGE_ROLES;
     }
 
 
@@ -53,7 +59,7 @@ class RolePermissionsBuilder {
     private myData: IRolePermissions = {
         CAN_LOGIN: false,
         CAN_CREATE_BOOST: false,
-        CAN_MANAGE_GROUPS: false
+        CAN_MANAGE_ROLES: false
     };
 
     constructor(entity?: IRolePermissions) {
@@ -71,7 +77,7 @@ class RolePermissionsBuilder {
     }
 
     withCanManageGroups(canManageGroups: boolean): RolePermissionsBuilder {
-        this.myData.CAN_MANAGE_GROUPS = canManageGroups;
+        this.myData.CAN_MANAGE_ROLES = canManageGroups;
         return this;
     }
 
@@ -84,7 +90,7 @@ class RolePermissionsBuilder {
 export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
     @ObjectIdColumn()
     readonly id: string;
-    @Column({ unique: true })
+    @Column({unique: true})
     @Index()
     readonly discordId: string;
     @Column()

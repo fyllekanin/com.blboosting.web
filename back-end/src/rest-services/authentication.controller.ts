@@ -25,11 +25,11 @@ export class AuthenticationController {
         let user = await UserRepository.newRepository().get(req.user.id);
         res.status(StatusCodes.OK).json({
             discordId: user.discordId,
-            accessToken: this.getAccessToken(user.id),
-            refreshToken: this.getRefreshToken(user.id),
+            accessToken: this.getAccessToken(user.id, user.discordId),
+            refreshToken: this.getRefreshToken(user.id, user.discordId),
             username: user.username,
             avatarHash: user.avatarHash,
-            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
+            permissions: await RoleRepository.newRepository().getPermissions(user.discordId, this.getRoleIds(user.discordId))
         });
     }
 
@@ -45,11 +45,11 @@ export class AuthenticationController {
         res.status(StatusCodes.OK).json({
             id: user.id,
             discordId: user.discordId,
-            accessToken: this.getAccessToken(String(user.id)),
-            refreshToken: this.getRefreshToken(String(user.id)),
+            accessToken: this.getAccessToken(String(user.id), user.discordId),
+            refreshToken: this.getRefreshToken(String(user.id), user.discordId),
             username: user.username,
             avatarHash: user.avatarHash,
-            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
+            permissions: await RoleRepository.newRepository().getPermissions(user.discordId, this.getRoleIds(user.discordId))
         });
     }
 
@@ -77,14 +77,14 @@ export class AuthenticationController {
             user = await userRepository.save(UserEntity.newBuilderFrom(user).withAvatarHash(discord.avatar).build());
         }
 
-        const payload = member == null ? { error: ValidationError.NOT_IN_GUILD } : {
+        const payload = member == null ? {error: ValidationError.NOT_IN_GUILD} : {
             id: user.id,
             discordId: user.discordId,
             avatarHash: discord.avatar,
-            accessToken: this.getAccessToken(user.id),
-            refreshToken: this.getRefreshToken(user.id),
+            accessToken: this.getAccessToken(user.id, user.discordId),
+            refreshToken: this.getRefreshToken(user.id, user.discordId),
             username: discord.username,
-            permissions: await RoleRepository.newRepository().getPermissions(this.getRoleIds(user.discordId))
+            permissions: await RoleRepository.newRepository().getPermissions(user.discordId, this.getRoleIds(user.discordId))
         };
         res.send(`
         <!DOCTYPE HTML>
@@ -106,11 +106,11 @@ export class AuthenticationController {
         return roleIds;
     }
 
-    private getAccessToken(id: string): string {
-        return sign({ id: id }, process.env.TOKEN_SECRET, { expiresIn: '2h' });
+    private getAccessToken(id: string, discordId: string): string {
+        return sign({id: id, discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2h'});
     }
 
-    private getRefreshToken(id: string): string {
-        return sign({ id: id }, process.env.TOKEN_SECRET, { expiresIn: '2d' });
+    private getRefreshToken(id: string, discordId: string): string {
+        return sign({id: id, discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2d'});
     }
 }
