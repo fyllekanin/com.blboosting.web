@@ -2,7 +2,7 @@ import { Column, Entity, ObjectIdColumn } from 'typeorm';
 import { CreatedUpdatedAtEntity } from '../created-updated-at.entity';
 
 export interface IUserEntity {
-    id: string;
+    _id: string;
     discordId: string;
     username: string;
     avatarHash: string;
@@ -11,8 +11,8 @@ export interface IUserEntity {
 @Entity('users')
 export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
     @ObjectIdColumn()
-    readonly id: string;
-    @Column({ unique: true })
+    readonly _id: string;
+    @Column({unique: true})
     readonly discordId: string;
     @Column()
     readonly username: string;
@@ -25,7 +25,7 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
             return;
         }
 
-        this.id = builder.id;
+        this._id = builder._id;
         this.discordId = builder.discordId;
         this.username = builder.username;
         this.avatarHash = builder.avatarHash;
@@ -46,7 +46,7 @@ export class UserEntity extends CreatedUpdatedAtEntity implements IUserEntity {
 
 class Builder {
     private myData: IUserEntity = {
-        id: undefined,
+        _id: undefined,
         discordId: undefined,
         username: undefined,
         avatarHash: undefined
@@ -57,7 +57,7 @@ class Builder {
     }
 
     withId(id: string): Builder {
-        this.myData.id = id;
+        this.myData._id = id;
         return this;
     }
 

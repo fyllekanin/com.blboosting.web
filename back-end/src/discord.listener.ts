@@ -27,7 +27,7 @@ export class DiscordListener {
             const promises: Array<Promise<IRoleEntity | void>> = [];
             existingRoles.forEach(role => {
                 if (!guild.roles.cache.get(role.discordId)) {
-                    promises.push(this.removeRole(role.id));
+                    promises.push(this.removeRole(role._id));
                 }
             });
             guild.roles.cache.forEach(role => {

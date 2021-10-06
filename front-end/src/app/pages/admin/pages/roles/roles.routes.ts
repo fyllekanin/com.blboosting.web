@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { RolesComponent } from './roles.component';
 import { RolesListComponent } from './roles-list/roles-list.component';
 import { RoleComponent } from './role/role.component';
+import { RolesListResolver } from './roles-list/roles-list.resolver';
 
 export const rolesRoutes: Routes = [
     {
@@ -10,7 +11,10 @@ export const rolesRoutes: Routes = [
         children: [
             {
                 path: 'page/:page',
-                component: RolesListComponent
+                component: RolesListComponent,
+                resolve: {
+                    data: RolesListResolver
+                }
             },
             {
                 path: 'role/:id',

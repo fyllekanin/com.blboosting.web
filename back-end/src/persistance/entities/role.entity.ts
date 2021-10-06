@@ -14,7 +14,7 @@ export interface IRolePermissions {
 }
 
 export interface IRoleEntity {
-    id: string;
+    _id: string;
     discordId: string;
     name: string;
     position: number;
@@ -89,7 +89,7 @@ class RolePermissionsBuilder {
 @Entity('roles')
 export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
     @ObjectIdColumn()
-    readonly id: string;
+    readonly _id: string;
     @Column({unique: true})
     @Index()
     readonly discordId: string;
@@ -106,7 +106,7 @@ export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
             return;
         }
 
-        this.id = builder.id;
+        this._id = builder._id;
         this.discordId = builder.discordId;
         this.name = builder.name;
         this.permissions = builder.permissions;
@@ -128,7 +128,7 @@ export class RoleEntity extends CreatedUpdatedAtEntity implements IRoleEntity {
 
 class RoleBuilder {
     private myData: IRoleEntity = {
-        id: undefined,
+        _id: undefined,
         discordId: undefined,
         name: undefined,
         permissions: RolePermissions.newBuilder().build(),
@@ -140,7 +140,7 @@ class RoleBuilder {
     }
 
     withId(id: string): RoleBuilder {
-        this.myData.id = id;
+        this.myData._id = id;
         return this;
     }
 

@@ -6,5 +6,6 @@ export interface UserAction {
 }
 
 export enum ValidationError {
-    NOT_IN_GUILD = 1
+    NOT_IN_GUILD = 1,
+    CAN_NOT_LOGIN = 2
 }

@@ -1,11 +1,13 @@
-import { DeleteResult, Repository, SelectQueryBuilder } from 'typeorm';
+import { DeleteResult, Repository } from 'typeorm';
 import { PaginationHelper } from '../../helpers/pagination.helper';
+import { FindConditions } from 'typeorm/find-options/FindConditions';
+import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
-interface PaginationOptions {
+interface PaginationOptions<T> {
     page: number;
     take: number;
-    orderBy?: { sort: string, order?: 'ASC' | 'DESC' };
-    where?: Array<PaginationWhere>;
+    orderBy?: { sort: keyof T, order?: 'ASC' | 'DESC' };
+    where?: FindConditions<T>[] | FindConditions<T> | ObjectLiteral | string;
 }
 
 interface IPaginationData<T> {
@@ -14,20 +16,9 @@ interface IPaginationData<T> {
     items: Array<T>;
 }
 
-export enum PaginationWhereOperators {
-    EQUALS = '=',
-    LIKE = 'LIKE',
-    NOT_EQUALS = '!=',
-    BIGGER = '>',
-    LESSER = '<'
-}
-
-export interface PaginationWhere {
-    key: string;
-    operator: PaginationWhereOperators;
+export interface PaginationWhere<T> {
+    key: keyof T;
     value: string | number | boolean | Array<string | number | boolean>;
-    isIn?: boolean;
-    isNotIn?: boolean;
 }
 
 export abstract class BaseRepository<T> {
@@ -52,48 +43,22 @@ export abstract class BaseRepository<T> {
         await this.getRepository().clear();
     }
 
-    async paginate(options: PaginationOptions): Promise<IPaginationData<T>> {
-        const query = this.getBaseQuery(options)
-            .take(options.take)
-            .skip(PaginationHelper.getSkip(options.page, options.take));
+    async paginate(options: PaginationOptions<T>): Promise<IPaginationData<T>> {
+        const result = await this.getRepository().find({
+            take: options.take,
+            skip: (options.take * options.page) - options.take,
+            order: options.orderBy ? <any><unknown>{
+                [options.orderBy.sort]: options.orderBy.order
+            } : null
+        });
 
-        if (options.orderBy) {
-            query.orderBy(options.orderBy.sort, options.orderBy.order);
-        }
-
-        const items = await query.getMany();
         return {
-            total: PaginationHelper.getTotalAmountOfPages(options.take, await query.getCount()),
+            total: PaginationHelper.getTotalAmountOfPages(options.take, await this.getRepository().count()),
             page: options.page,
-            items: items
+            items: result
         };
     }
 
     protected abstract getRepository(): Repository<T>;
 
-    private getBaseQuery(options: PaginationOptions): SelectQueryBuilder<T> {
-        const baseQuery = this.getRepository().createQueryBuilder();
-
-        const parameters: any = {};
-        (options.where || []).forEach((where, index) => {
-            if (where.isIn && where.isNotIn) {
-                throw new Error('Can not have both in and not in');
-            }
-            if ((Array.isArray(where.value) && where.value.length === 0) || !where.value) {
-                return;
-            }
-
-            const statement = where.isIn || where.isNotIn ?
-                `${where.key} ${where.isNotIn ? 'NOT' : ''} IN (:...${where.key})`
-                : `${where.key} ${where.operator} :${where.key}`;
-            if (index === 0) {
-                baseQuery.where(statement);
-            } else {
-                baseQuery.andWhere(statement);
-            }
-            parameters[where.key] = where.value;
-        });
-        baseQuery.setParameters(parameters);
-        return baseQuery;
-    }
 }

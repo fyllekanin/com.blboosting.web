@@ -17,8 +17,12 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
         await this.getRepository().delete({discordId: discordId});
     }
 
+    async getImmunity(discordId: string, roleIds: Array<string>): Promise<number> {
+        const result = await this.getRepository().findOne({order: {position: 'DESC'}})
+        return result.position;
+    }
 
-    async doUserHavePermission(discordId: string, permission: RolePermission, roleIds: Array<string>): Promise<boolean> {
+    async doUserHavePermission(discordId: string, permissions: Array<RolePermission>, roleIds: Array<string>): Promise<boolean> {
         if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
             return true;
         }
@@ -27,7 +31,7 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
                 discordId: {$in: roleIds}
             }
         });
-        return roles.some(role => role.permissions[permission]);
+        return permissions.every(permission => roles.some(role => role.permissions[permission]));
     }
 
     async getPermissions(discordId: string, roleIds: Array<string>): Promise<RolePermissions> {

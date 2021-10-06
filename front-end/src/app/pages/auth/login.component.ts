@@ -10,6 +10,9 @@ import { Router } from '@angular/router';
 export class LoginComponent {
     private loginWindow: WindowProxy;
 
+    isNotInGuild = false;
+    isNotAllowedToLogin = false;
+
     constructor(
         private authService: AuthService,
         private router: Router
@@ -29,7 +32,9 @@ export class LoginComponent {
         }
         const value = data.data;
         if (value.error) {
-            // Not in guild
+            this.isNotInGuild = value.error === 1;
+            this.isNotAllowedToLogin = value.error === 2;
+            return;
         }
         this.loginWindow.close();
         this.loginWindow = null;

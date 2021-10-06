@@ -10,7 +10,7 @@ import { RolePermission } from '../../persistance/entities/role.entity';
 export class AdminPageController {
 
     @Get('dashboard')
-    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware(RolePermission.CAN_LOGIN)])
+    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN])])
     async getDashboard(req: InternalRequest, res: Response): Promise<void> {
         res.status(StatusCodes.OK).json({message: 'Tjabba tjena hallå'});
     }

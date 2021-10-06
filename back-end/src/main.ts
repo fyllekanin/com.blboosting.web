@@ -5,6 +5,7 @@ import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
 import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middleware';
 import * as express from 'express';
+import { NextFunction, Response } from 'express';
 import compression from 'compression';
 import { DatabaseConfig } from './database.config';
 import * as dotenv from 'dotenv';
@@ -12,7 +13,8 @@ import { Client, Intents } from 'discord.js';
 import { AuthenticationController } from './rest-services/authentication.controller';
 import { AdminPageController } from './rest-services/admin/admin-page.controller';
 import { DiscordListener } from './discord.listener';
-import { PermissionMiddleware } from './rest-services/middlewares/permission.middleware';
+import { RolesController } from './rest-services/admin/roles.controller';
+import { InternalRequest } from './utilities/internal.request';
 
 dotenv.config();
 
@@ -57,20 +59,21 @@ class MainServer extends Server {
         console.log('Starting discord listener');
         this.discordListener = new DiscordListener();
         await this.discordListener.start(this.client);
-
-        console.log('Assign client to permission middleware');
-        PermissionMiddleware.client = this.client;
     }
 
     private setupControllers(): void {
         super.addControllers(
             [
                 new PageController(),
-                new AuthenticationController(this.client),
-                new AdminPageController()
+                new AuthenticationController(),
+                new AdminPageController(),
+                new RolesController()
             ],
             null,
-            INITIAL_MIDDLEWARE
+            async (req: InternalRequest, res: Response, next: NextFunction) => {
+                req.client = this.client;
+                await INITIAL_MIDDLEWARE(req, res, next)
+            },
         );
     }
 }

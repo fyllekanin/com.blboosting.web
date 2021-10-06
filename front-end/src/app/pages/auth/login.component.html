@@ -15,4 +15,7 @@
             <span>Login with Discord</span>
         </a>
     </div>
+
+    <span *ngIf="isNotInGuild">You need to be in the discord to login</span>
+    <span *ngIf="isNotAllowedToLogin">You do not have permission to login</span>
 </div>

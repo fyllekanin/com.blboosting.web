@@ -7,6 +7,7 @@ import { RolesListComponent } from './roles-list/roles-list.component';
 import { RoleComponent } from './role/role.component';
 import { TableModule } from '../../../../shared/components/table/table.module';
 import { ContentModule } from '../../../../shared/components/content/content.module';
+import { RolesListResolver } from './roles-list/roles-list.resolver';
 
 @NgModule({
     imports: [
@@ -19,6 +20,9 @@ import { ContentModule } from '../../../../shared/components/content/content.mod
         RolesComponent,
         RolesListComponent,
         RoleComponent
+    ],
+    providers: [
+        RolesListResolver
     ],
     exports: [
         RouterModule
