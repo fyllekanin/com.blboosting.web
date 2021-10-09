@@ -1,5 +1,5 @@
 import { MigrationTask } from '../task.interface';
-import { DatabaseService } from '../../database,service';
+import { DatabaseService } from '../../database.service';
 import { MigrationService } from '../migration.service';
 import { UserRepository } from '../../persistance/repositories/user/user.repository';
 import { IUserEntity } from '../../persistance/entities/user/user.entity';

@@ -1,6 +1,6 @@
 import { MigrationTask } from './task.interface';
 import { Task1633797391242 } from './tasks/task-1633797391242';
-import { DatabaseService } from '../database,service';
+import { DatabaseService } from '../database.service';
 import { Collection } from 'mongodb';
 
 interface IMigration {

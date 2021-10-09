@@ -6,7 +6,7 @@ import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middlewa
 import * as express from 'express';
 import { NextFunction, Response } from 'express';
 import compression from 'compression';
-import { DatabaseService } from './database,service';
+import { DatabaseService } from './database.service';
 import * as dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { AuthenticationController } from './rest-services/authentication.controller';

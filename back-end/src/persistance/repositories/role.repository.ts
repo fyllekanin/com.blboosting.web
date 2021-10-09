@@ -2,7 +2,7 @@ import { BaseRepository } from './base.repository';
 import { IRoleEntity, IRolePermissions, RolePermission } from '../entities/role.entity';
 import { Role } from 'discord.js';
 import { Collection } from 'mongodb';
-import { DatabaseService } from '../../database,service';
+import { DatabaseService } from '../../database.service';
 
 export class RoleRepository extends BaseRepository<IRoleEntity> {
     static readonly COLLECTION = 'roles';
