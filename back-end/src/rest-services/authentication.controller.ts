@@ -5,15 +5,16 @@ import { Client } from 'discord.js';
 import { DiscordService } from '../apis/services/discord.service';
 import { sign } from 'jsonwebtoken';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
-import { IUserEntity, UserEntity } from '../persistance/entities/user/user.entity';
+import { IUserEntity } from '../persistance/entities/user/user.entity';
 import { ValidationError } from '../constants/validation.error';
 import { StatusCodes } from 'http-status-codes';
 import { RequestUtility } from '../utilities/request.utility';
 import { AUTHORIZATION_MIDDLEWARE } from './middlewares/authorization.middleware';
 import { RoleRepository } from '../persistance/repositories/role.repository';
 import { DiscordUser } from '../apis/interfaces/discord.interface';
-import { RolePermissions } from '../persistance/entities/role.entity';
 import { DiscordUtility } from '../utilities/discord.utility';
+import { ObjectId } from 'mongodb';
+import { IRolePermissions } from '../persistance/entities/role.entity';
 
 interface AuthPayload {
     id: string;
@@ -22,7 +23,7 @@ interface AuthPayload {
     accessToken: string;
     refreshToken: string;
     username: string;
-    permissions: RolePermissions;
+    permissions: IRolePermissions;
 }
 
 interface ErrorPayload {
@@ -36,8 +37,9 @@ export class AuthenticationController {
     @Middleware([AUTHORIZATION_MIDDLEWARE])
     async getInitialize(req: InternalRequest, res: Response): Promise<void> {
 
-        let user = await UserRepository.newRepository().get(req.user.id);
+        let user = await UserRepository.newRepository().get(new ObjectId(req.user.id));
         res.status(StatusCodes.OK).json({
+            id: user._id.toString(),
             discordId: user.discordId,
             accessToken: this.getAccessToken(user._id, user.discordId),
             refreshToken: this.getRefreshToken(user._id, user.discordId),
@@ -57,10 +59,10 @@ export class AuthenticationController {
         }
         let user = await UserRepository.newRepository().getUserByDiscordId(jwt.id);
         res.status(StatusCodes.OK).json({
-            id: user._id,
+            id: user._id.toString(),
             discordId: user.discordId,
-            accessToken: this.getAccessToken(String(user._id), user.discordId),
-            refreshToken: this.getRefreshToken(String(user._id), user.discordId),
+            accessToken: this.getAccessToken(user._id, user.discordId),
+            refreshToken: this.getRefreshToken(user._id, user.discordId),
             username: user.username,
             avatarHash: user.avatarHash,
             permissions: await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(req.client, user.discordId))
@@ -79,13 +81,13 @@ export class AuthenticationController {
         const userRepository = new UserRepository();
         let user = await userRepository.getUserByDiscordId(discord.id);
         if (!user) {
-            user = await userRepository.save(UserEntity.newBuilder()
-                .withDiscordId(discord.id)
-                .withUsername(discord.username)
-                .withAvatarHash(discord.avatar)
-                .build());
+            user = await userRepository.insert({
+                discordId: discord.id,
+                username: discord.username,
+                avatarHash: discord.avatar
+            });
         } else {
-            user = await userRepository.save(UserEntity.newBuilderFrom(user).withAvatarHash(discord.avatar).build());
+            user = await userRepository.update({...user, ...{avatarHash: discord.avatar}});
         }
         res.send(`
         <!DOCTYPE HTML>
@@ -112,7 +114,7 @@ export class AuthenticationController {
         }
 
         return {
-            id: user._id,
+            id: user._id.toString(),
             discordId: user.discordId,
             avatarHash: discord.avatar,
             accessToken: this.getAccessToken(user._id, user.discordId),
@@ -122,11 +124,11 @@ export class AuthenticationController {
         };
     }
 
-    private getAccessToken(id: string, discordId: string): string {
-        return sign({id: id, discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2h'});
+    private getAccessToken(id: ObjectId, discordId: string): string {
+        return sign({id: id.toString(), discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2h'});
     }
 
-    private getRefreshToken(id: string, discordId: string): string {
-        return sign({id: id, discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2d'});
+    private getRefreshToken(id: ObjectId, discordId: string): string {
+        return sign({id: id.toString(), discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2d'});
     }
 }

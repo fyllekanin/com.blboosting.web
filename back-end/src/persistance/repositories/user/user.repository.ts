@@ -1,24 +1,26 @@
-import { IUserEntity, UserEntity } from '../../entities/user/user.entity';
-import { getConnection, Repository } from 'typeorm';
+import { IUserEntity } from '../../entities/user/user.entity';
 import { BaseRepository } from '../base.repository';
+import { Collection } from 'mongodb';
+import { DatabaseService } from '../../../database.service';
 
 export class UserRepository extends BaseRepository<IUserEntity> {
-    protected repository: Repository<UserEntity>;
+    static readonly COLLECTION = 'users';
+    protected repository: Collection<IUserEntity>;
 
     static newRepository(): UserRepository {
         return new UserRepository();
     }
 
     async getUserByDiscordId(discordId: string): Promise<IUserEntity> {
-        return await this.getRepository()
+        return await this.getCollection()
             .findOne({ discordId: discordId });
     }
 
-    protected getRepository(): Repository<UserEntity> {
+    protected getCollection(): Collection<IUserEntity> {
         if (this.repository) {
             return this.repository;
         }
-        this.repository = getConnection().getRepository(UserEntity);
+        this.repository = DatabaseService.getCollection(UserRepository.COLLECTION);
         return this.repository;
     }
 }
