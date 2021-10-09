@@ -1,13 +1,10 @@
-import { DeleteResult, Repository } from 'typeorm';
+import { Collection, DeleteResult, ObjectId, OptionalId } from 'mongodb';
 import { PaginationHelper } from '../../helpers/pagination.helper';
-import { FindConditions } from 'typeorm/find-options/FindConditions';
-import { ObjectLiteral } from 'typeorm/common/ObjectLiteral';
 
 interface PaginationOptions<T> {
     page: number;
     take: number;
     orderBy?: { sort: keyof T, order?: 'ASC' | 'DESC' };
-    where?: FindConditions<T>[] | FindConditions<T> | ObjectLiteral | string;
 }
 
 interface IPaginationData<T> {
@@ -21,44 +18,58 @@ export interface PaginationWhere<T> {
     value: string | number | boolean | Array<string | number | boolean>;
 }
 
-export abstract class BaseRepository<T> {
+export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: number, updatedAt?: number }> {
 
-    async get(id: string): Promise<T> {
-        return await this.getRepository().findOne(id);
+    async get(id: ObjectId): Promise<T> {
+        return await this.getCollection().findOne({ _id: id });
     }
 
-    async save(entity: T): Promise<T> {
-        return await this.getRepository().save(entity);
+    async insert(entity: T): Promise<T> {
+        entity.createdAt = new Date().getTime();
+        entity.updatedAt = new Date().getTime();
+
+        const result = await this.getCollection().insertOne(entity as OptionalId<T>);
+
+        entity._id = new ObjectId(result.insertedId);
+        return entity;
     }
 
-    async delete(entity: T): Promise<DeleteResult> {
-        return await this.getRepository().delete(entity);
+    async update(entity: T): Promise<T> {
+        entity.updatedAt = new Date().getTime();
+
+        await this.getCollection().updateOne({ _id: entity._id }, {
+            $set: entity
+        });
+        return entity;
+    }
+
+    async delete(entity: OptionalId<T>): Promise<DeleteResult> {
+        return await this.getCollection().deleteMany(entity);
     }
 
     async getAll(): Promise<Array<T>> {
-        return await this.getRepository().find();
+        return await this.getCollection().find().toArray();
     }
 
     async clear(): Promise<void> {
-        await this.getRepository().clear();
+        await this.getCollection().deleteMany({});
     }
 
     async paginate(options: PaginationOptions<T>): Promise<IPaginationData<T>> {
-        const result = await this.getRepository().find({
-            take: options.take,
+        const cursor = await this.getCollection().find<T>(null, {
+            limit: options.take,
             skip: (options.take * options.page) - options.take,
-            order: options.orderBy ? <any><unknown>{
+            sort: options.orderBy ? <any><unknown>{
                 [options.orderBy.sort]: options.orderBy.order
             } : null
         });
 
         return {
-            total: PaginationHelper.getTotalAmountOfPages(options.take, await this.getRepository().count()),
+            total: PaginationHelper.getTotalAmountOfPages(options.take, await cursor.count()),
             page: options.page,
-            items: result
+            items: await cursor.toArray()
         };
     }
 
-    protected abstract getRepository(): Repository<T>;
-
+    protected abstract getCollection(): Collection<T>;
 }

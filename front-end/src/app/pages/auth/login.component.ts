@@ -34,6 +34,7 @@ export class LoginComponent {
         if (value.error) {
             this.isNotInGuild = value.error === 1;
             this.isNotAllowedToLogin = value.error === 2;
+            this.loginWindow.close();
             return;
         }
         this.loginWindow.close();

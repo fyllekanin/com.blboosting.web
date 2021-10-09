@@ -1,6 +1,6 @@
 import { Client, Guild, Role } from 'discord.js';
 import { RoleRepository } from './persistance/repositories/role.repository';
-import { IRoleEntity, RoleEntity } from './persistance/entities/role.entity';
+import { IRoleEntity } from './persistance/entities/role.entity';
 
 enum Event {
     ROLE_CREATE = 'roleCreate',
@@ -27,7 +27,7 @@ export class DiscordListener {
             const promises: Array<Promise<IRoleEntity | void>> = [];
             existingRoles.forEach(role => {
                 if (!guild.roles.cache.get(role.discordId)) {
-                    promises.push(this.removeRole(role._id));
+                    promises.push(this.removeRole(role._id.toString()));
                 }
             });
             guild.roles.cache.forEach(role => {
@@ -54,10 +54,11 @@ export class DiscordListener {
     }
 
     private async addRole(role: Role): Promise<IRoleEntity> {
-        return this.repository.save(RoleEntity.newBuilder()
-            .withDiscordId(role.id)
-            .withName(role.name)
-            .withPosition(role.position)
-            .build());
+        return this.repository.insert({
+            discordId: role.id,
+            name: role.name,
+            position: role.position,
+            permissions: {}
+        });
     }
 }

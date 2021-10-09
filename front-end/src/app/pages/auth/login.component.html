@@ -16,6 +16,6 @@
         </a>
     </div>
 
-    <span *ngIf="isNotInGuild">You need to be in the discord to login</span>
-    <span *ngIf="isNotAllowedToLogin">You do not have permission to login</span>
+    <span class="error" *ngIf="isNotInGuild">You need to be in the discord to login</span>
+    <span class="error" *ngIf="isNotAllowedToLogin">You do not have permission to login</span>
 </div>

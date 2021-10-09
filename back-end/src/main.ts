@@ -1,5 +1,4 @@
 import 'reflect-metadata';
-import { createConnection } from 'typeorm';
 import { Server } from '@overnightjs/core';
 import { PageController } from './rest-services/page.controller';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
@@ -7,7 +6,7 @@ import { INITIAL_MIDDLEWARE } from './rest-services/middlewares/initial.middlewa
 import * as express from 'express';
 import { NextFunction, Response } from 'express';
 import compression from 'compression';
-import { DatabaseConfig } from './database.config';
+import { DatabaseService } from './database,service';
 import * as dotenv from 'dotenv';
 import { Client, Intents } from 'discord.js';
 import { AuthenticationController } from './rest-services/authentication.controller';
@@ -15,6 +14,7 @@ import { AdminPageController } from './rest-services/admin/admin-page.controller
 import { DiscordListener } from './discord.listener';
 import { RolesController } from './rest-services/admin/roles.controller';
 import { InternalRequest } from './utilities/internal.request';
+import { MigrationService } from './migrations/migration.service';
 
 dotenv.config();
 
@@ -54,7 +54,10 @@ class MainServer extends Server {
         });
 
         console.log('Create database connection');
-        await createConnection(DatabaseConfig.getConfig());
+        await DatabaseService.startup();
+
+        console.log('Run migrations');
+        await MigrationService.run();
 
         console.log('Starting discord listener');
         this.discordListener = new DiscordListener();

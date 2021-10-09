@@ -56,3 +56,9 @@ img {
 #discord-button a:hover {
     background-color: #181a1e;
 }
+
+.error {
+    font-size: 14px;
+    padding-top: 11px;
+    color: #6e3d3d;
+}
