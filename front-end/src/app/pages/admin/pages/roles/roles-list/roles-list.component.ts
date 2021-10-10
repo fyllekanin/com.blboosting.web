@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { TableHeader, TableRow } from '../../../../../shared/components/table/table.model';
+import { ActivatedRoute } from '@angular/router';
+import { RolesListEntry } from '../roles.interfaces';
 
 @Component({
     selector: 'app-admin-roles-list',
@@ -8,29 +10,22 @@ import { TableHeader, TableRow } from '../../../../../shared/components/table/ta
 })
 export class RolesListComponent {
     headers: Array<TableHeader> = [
-        {label: 'Name'},
-        {label: 'Position'}
+        { label: 'Name' },
+        { label: 'Position' }
     ];
-    rows: Array<TableRow> = [
-        {
-            rowId: '1',
+    rows: Array<TableRow> = [];
+
+    constructor(activatedRoute: ActivatedRoute) {
+        activatedRoute.data.subscribe(this.onData.bind(this));
+    }
+
+    private onData({ data }: { data: { total: number, page: number, items: Array<RolesListEntry> } }): void {
+        this.rows = data.items.map(item => ({
+            rowId: item._id,
             cells: [
-                {label: 'Plate'},
-                {label: '53'}
-            ],
-            actions: [
-                {label: 'Test', value: 'test'}
+                { label: item.name },
+                { label: item.position }
             ]
-        },
-        {
-            rowId: '1',
-            cells: [
-                {label: 'Plate'},
-                {label: '53'}
-            ],
-            actions: [
-                {label: 'Test', value: 'test'}
-            ]
-        }
-    ];
+        }));
+    }
 }

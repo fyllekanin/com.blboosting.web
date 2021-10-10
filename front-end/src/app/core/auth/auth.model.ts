@@ -1,7 +1,7 @@
 export interface AuthUserPermissions {
     CAN_LOGIN: boolean;
     CAN_CREATE_BOOST: boolean;
-    CAN_MANAGE_GROUPS: boolean;
+    CAN_MANAGE_ROLES: boolean;
 }
 
 export interface AuthUser {

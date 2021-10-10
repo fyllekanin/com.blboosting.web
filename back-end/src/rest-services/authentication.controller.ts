@@ -49,6 +49,7 @@ export class AuthenticationController {
         });
     }
 
+
     @Get('refresh-token')
     async getRefreshedTokens(req: InternalRequest, res: Response): Promise<void> {
         const refreshToken = req.header('RefreshAuthorization');
@@ -57,7 +58,7 @@ export class AuthenticationController {
             res.status(StatusCodes.UNAUTHORIZED).json();
             return;
         }
-        let user = await UserRepository.newRepository().getUserByDiscordId(jwt.id);
+        let user = await UserRepository.newRepository().getUserByDiscordId(jwt.discordId);
         res.status(StatusCodes.OK).json({
             id: user._id.toString(),
             discordId: user.discordId,
@@ -87,7 +88,7 @@ export class AuthenticationController {
                 avatarHash: discord.avatar
             });
         } else {
-            user = await userRepository.update({...user, ...{avatarHash: discord.avatar}});
+            user = await userRepository.update({ ...user, ...{ avatarHash: discord.avatar } });
         }
         res.send(`
         <!DOCTYPE HTML>
@@ -106,11 +107,11 @@ export class AuthenticationController {
         const member = guild.members.cache.get(discord.id);
 
         if (!member) {
-            return {error: ValidationError.NOT_IN_GUILD};
+            return { error: ValidationError.NOT_IN_GUILD };
         }
         const permissions = await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(client, user.discordId));
         if (!permissions.CAN_LOGIN) {
-            return {error: ValidationError.CAN_NOT_LOGIN};
+            return { error: ValidationError.CAN_NOT_LOGIN };
         }
 
         return {
@@ -125,10 +126,10 @@ export class AuthenticationController {
     }
 
     private getAccessToken(id: ObjectId, discordId: string): string {
-        return sign({id: id.toString(), discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2h'});
+        return sign({ id: id.toString(), discordId: discordId }, process.env.TOKEN_SECRET, { expiresIn: '1d' });
     }
 
     private getRefreshToken(id: ObjectId, discordId: string): string {
-        return sign({id: id.toString(), discordId: discordId}, process.env.TOKEN_SECRET, {expiresIn: '2d'});
+        return sign({ id: id.toString(), discordId: discordId }, process.env.TOKEN_SECRET, { expiresIn: '2d' });
     }
 }

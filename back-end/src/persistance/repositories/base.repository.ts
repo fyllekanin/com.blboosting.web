@@ -1,21 +1,17 @@
-import { Collection, DeleteResult, ObjectId, OptionalId } from 'mongodb';
+import { Collection, DeleteResult, Filter, ObjectId, OptionalId } from 'mongodb';
 import { PaginationHelper } from '../../helpers/pagination.helper';
 
 interface PaginationOptions<T> {
     page: number;
     take: number;
     orderBy?: { sort: keyof T, order?: 'ASC' | 'DESC' };
+    filter?: Filter<T>;
 }
 
 interface IPaginationData<T> {
     total: number;
     page: number;
     items: Array<T>;
-}
-
-export interface PaginationWhere<T> {
-    key: keyof T;
-    value: string | number | boolean | Array<string | number | boolean>;
 }
 
 export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: number, updatedAt?: number }> {
@@ -56,7 +52,7 @@ export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: num
     }
 
     async paginate(options: PaginationOptions<T>): Promise<IPaginationData<T>> {
-        const cursor = await this.getCollection().find<T>(null, {
+        const cursor = await this.getCollection().find<T>(options.filter, {
             limit: options.take,
             skip: (options.take * options.page) - options.take,
             sort: options.orderBy ? <any><unknown>{

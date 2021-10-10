@@ -21,20 +21,22 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
         await this.getCollection().deleteOne({ discordId: discordId });
     }
 
-    async getImmunity(roleIds: Array<string>): Promise<number> {
-        const result = await this.getCollection().findOne({
-            order: { position: 'DESC' },
-            where: {
-                discordId: { $in: roleIds }
+    async getImmunity(discordId: string, roleIds: Array<string>): Promise<number> {
+        if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+        const result = await this.getCollection().findOne({ discordId: { $in: roleIds } }, {
+            sort: {
+                position: 'desc'
             }
         })
         return result.position;
     }
 
     async doUserHavePermission(discordId: string, permissions: Array<RolePermission>, roleIds: Array<string>): Promise<boolean> {
-        /**if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
+        if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
             return true;
-        }*/
+        }
 
         const permissionObj = permissions.reduce((prev, curr) => {
             // @ts-ignore
@@ -50,13 +52,13 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
     async getPermissions(discordId: string, roleIds: Array<string>): Promise<IRolePermissions> {
         const permissions: IRolePermissions = {};
         const keys = Object.keys(RolePermission);
-        /**if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
+        if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
             for (const key of keys) {
                 // @ts-ignore
                 permissions[key] = true;
             }
             return permissions;
-        }*/
+        }
 
         const roles = await this.getCollection().find({ discordId: { $in: roleIds } }).toArray();
         for (const key of keys) {

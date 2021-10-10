@@ -1,5 +1,5 @@
 export interface RolesListEntry {
-    id: string;
+    _id: string;
     name: string;
     discordId: string;
     position: number;
