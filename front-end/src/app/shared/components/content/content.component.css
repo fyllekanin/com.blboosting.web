@@ -46,3 +46,7 @@
 .active {
     font-weight: bold;
 }
+
+.buttons {
+    float: right;
+}

@@ -7,13 +7,14 @@ import { RolePermission } from '../../persistance/entities/role.entity';
 import { RoleRepository } from '../../persistance/repositories/role.repository';
 import { StatusCodes } from 'http-status-codes';
 import { DiscordUtility } from '../../utilities/discord.utility';
+import { ObjectId } from 'mongodb';
 
 @Controller('api/admin/roles')
 export class RolesController {
 
     @Get('page/:page')
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
-    async getDashboard(req: InternalRequest, res: Response): Promise<void> {
+    async getList(req: InternalRequest, res: Response): Promise<void> {
         const position = await RoleRepository.newRepository()
             .getImmunity(req.user.discordId, DiscordUtility.getRoleIds(req.client, req.user.discordId));
 
@@ -28,5 +29,20 @@ export class RolesController {
                 position: { $lt: position }
             }
         }));
+    }
+
+    @Get('role/:id')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
+    async getRole(req: InternalRequest, res: Response): Promise<void> {
+        const position = await RoleRepository.newRepository()
+            .getImmunity(req.user.discordId, DiscordUtility.getRoleIds(req.client, req.user.discordId));
+
+        const role = await RoleRepository.newRepository().get(new ObjectId(req.params.id));
+        if (!role || role.position >= position) {
+            res.status(StatusCodes.NOT_FOUND).json();
+            return;
+        }
+
+        res.status(StatusCodes.OK).json(role);
     }
 }

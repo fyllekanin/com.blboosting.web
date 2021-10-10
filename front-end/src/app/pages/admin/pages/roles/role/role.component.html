@@ -1,0 +1,39 @@
+<app-content [header]="entity?._id ? 'Updating: ' + entity.name : 'Creating: ' + entity?.name"
+             [actions]="actions">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6">
+            <label for="name">Name</label>
+            <input id="name" type="text" disabled="disabled" [ngModel]="entity?.name"/>
+        </div>
+        <div class="cell small-6">
+            <label for="position">Position</label>
+            <input id="position" type="number" disabled="disabled" [ngModel]="entity?.position"/>
+        </div>
+    </div>
+</app-content>
+
+<app-content header="Permissions">
+    <div class="grid-x grid-margin-x">
+        <div class="cell small-6 checkbox">
+            <label class="container">Can login
+                <input type="checkbox" [disabled]="!user.permissions.CAN_LOGIN"
+                       [checked]="entity?.permissions.CAN_LOGIN">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div class="cell small-6 checkbox">
+            <label class="container">Can create boosts
+                <input type="checkbox" [disabled]="!user.permissions.CAN_CREATE_BOOST"
+                       [checked]="entity?.permissions.CAN_CREATE_BOOST">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+        <div class="cell small-6 checkbox">
+            <label class="container">Can manage roles
+                <input type="checkbox" [disabled]="!user.permissions.CAN_MANAGE_ROLES"
+                       [checked]="entity?.permissions.CAN_MANAGE_ROLES">
+                <span class="checkmark"></span>
+            </label>
+        </div>
+    </div>
+</app-content>

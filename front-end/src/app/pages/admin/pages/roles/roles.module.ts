@@ -9,6 +9,8 @@ import { TableModule } from '../../../../shared/components/table/table.module';
 import { ContentModule } from '../../../../shared/components/content/content.module';
 import { RolesListResolver } from './roles-list/roles-list.resolver';
 import { PaginationModule } from '../../../../shared/components/pagination/pagination.module';
+import { RoleService } from './role/role.service';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
     imports: [
@@ -16,7 +18,8 @@ import { PaginationModule } from '../../../../shared/components/pagination/pagin
         CommonModule,
         TableModule,
         ContentModule,
-        PaginationModule
+        PaginationModule,
+        FormsModule
     ],
     declarations: [
         RolesComponent,
@@ -24,7 +27,8 @@ import { PaginationModule } from '../../../../shared/components/pagination/pagin
         RoleComponent
     ],
     providers: [
-        RolesListResolver
+        RolesListResolver,
+        RoleService
     ],
     exports: [
         RouterModule

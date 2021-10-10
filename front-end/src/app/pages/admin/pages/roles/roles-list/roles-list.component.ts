@@ -1,25 +1,43 @@
-import { Component } from '@angular/core';
-import { TableHeader, TableRow } from '../../../../../shared/components/table/table.model';
-import { ActivatedRoute } from '@angular/router';
+import { Component, OnDestroy } from '@angular/core';
+import { TableActionResponse, TableHeader, TableRow } from '../../../../../shared/components/table/table.model';
+import { ActivatedRoute, Router } from '@angular/router';
 import { RolesListEntry } from '../roles.interfaces';
 import { ColorValue } from '../../../../../shared/constants/colors.constants';
 import { IPagination } from '../../../../../shared/components/pagination/pagination.interface';
+import { CombineSubscriptions, UnSub } from '../../../../../shared/decorators/unsub.decorator';
+import { Unsubscribable } from 'rxjs';
 
 @Component({
     selector: 'app-admin-roles-list',
     templateUrl: 'roles-list.component.html',
     styleUrls: ['roles-list.component.css']
 })
-export class RolesListComponent {
+@UnSub()
+export class RolesListComponent implements OnDestroy {
     pagination: IPagination<RolesListEntry>;
     headers: Array<TableHeader> = [
         { label: 'Name' },
         { label: 'Position' }
     ];
     rows: Array<TableRow> = [];
+    @CombineSubscriptions()
+    subscriber: Unsubscribable;
 
-    constructor(activatedRoute: ActivatedRoute) {
-        activatedRoute.data.subscribe(this.onData.bind(this));
+    constructor(
+        private router: Router,
+        activatedRoute: ActivatedRoute
+    ) {
+        this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
+    }
+
+    ngOnDestroy(): void {
+        // Empty
+    }
+
+    onAction(action: TableActionResponse): void {
+        if (action.action.value === 'edit') {
+            this.router.navigate([`/admin/roles/role/${action.row.rowId}`]);
+        }
     }
 
     private onData({ data }: { data: IPagination<RolesListEntry> }): void {
@@ -31,8 +49,7 @@ export class RolesListComponent {
                 { label: item.position }
             ],
             actions: [
-                { label: 'Edit', color: ColorValue.BLUE, value: 'edit', icon: 'fas fa-edit' },
-                { label: 'Delete', color: ColorValue.RED, value: 'delete', icon: 'fas fa-trash' }
+                { label: 'Edit', color: ColorValue.BLUE, value: 'edit', icon: 'fas fa-edit' }
             ]
         }));
     }

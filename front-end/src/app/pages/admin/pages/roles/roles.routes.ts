@@ -3,6 +3,7 @@ import { RolesComponent } from './roles.component';
 import { RolesListComponent } from './roles-list/roles-list.component';
 import { RoleComponent } from './role/role.component';
 import { RolesListResolver } from './roles-list/roles-list.resolver';
+import { RoleService } from './role/role.service';
 
 export const rolesRoutes: Routes = [
     {
@@ -18,7 +19,10 @@ export const rolesRoutes: Routes = [
             },
             {
                 path: 'role/:id',
-                component: RoleComponent
+                component: RoleComponent,
+                resolve: {
+                    data: RoleService
+                }
             }
         ]
     }

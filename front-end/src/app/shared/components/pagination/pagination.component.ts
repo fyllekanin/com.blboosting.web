@@ -61,8 +61,6 @@ export class PaginationComponent implements OnDestroy {
 
     private getUrl(page: number): string {
         return this._url.replace(':page', String(page));
-        /**const queryParameters = Object.keys(this.queryParameters).map(key => `${key}=${this.queryParameters[key]}`);
-         return `${url}?${queryParameters.join('?')}`;*/
     }
 
     private updateGaps(): void {

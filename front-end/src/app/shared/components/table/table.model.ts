@@ -16,4 +16,5 @@ export interface TableRow {
 
 export interface TableActionResponse {
     row: TableRow;
+    action: UserAction;
 }
