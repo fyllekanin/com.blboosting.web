@@ -10,13 +10,9 @@
         </td>
 
         <td *ngIf="row.actions && row.actions.length > 0" class="actions">
-            <i class="fas fa-ellipsis-v action" tabindex="1"></i>
-            <div class="action-list">
-                <div *ngFor="let action of row.actions"
-                     (click)="onAction.emit({ row: row, action: action })">
-                    {{action.label}}
-                </div>
-            </div>
+            <button *ngFor="let action of row.actions" [style]="{ background: action.color }">
+                <i [class]="action.icon"></i> {{action.label}}
+            </button>
         </td>
     </tr>
     </tbody>

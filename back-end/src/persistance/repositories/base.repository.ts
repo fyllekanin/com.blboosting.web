@@ -52,18 +52,18 @@ export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: num
     }
 
     async paginate(options: PaginationOptions<T>): Promise<IPaginationData<T>> {
-        const cursor = await this.getCollection().find<T>(options.filter, {
+        const items = await this.getCollection().find<T>(options.filter, {
             limit: options.take,
             skip: (options.take * options.page) - options.take,
             sort: options.orderBy ? <any><unknown>{
                 [options.orderBy.sort]: options.orderBy.order
             } : null
-        });
+        }).toArray();
 
         return {
-            total: PaginationHelper.getTotalAmountOfPages(options.take, await cursor.count()),
+            total: PaginationHelper.getTotalAmountOfPages(options.take, await this.getCollection().countDocuments(options.filter)),
             page: options.page,
-            items: await cursor.toArray()
+            items: items
         };
     }
 
