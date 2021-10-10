@@ -34,6 +34,12 @@ export class RoleComponent implements OnDestroy {
         this.subscriber = activatedRoute.data.subscribe(this.onData.bind(this));
     }
 
+    async onAction(action: UserAction): Promise<void> {
+        if (action.value === 'save') {
+            await this.roleService.update(this.entity);
+        }
+    }
+
     ngOnDestroy(): void {
         // Empty
     }

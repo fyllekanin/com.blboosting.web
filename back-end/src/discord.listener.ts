@@ -58,7 +58,11 @@ export class DiscordListener {
             discordId: role.id,
             name: role.name,
             position: role.position,
-            permissions: {}
+            permissions: {
+                CAN_LOGIN: false,
+                CAN_CREATE_BOOST: false,
+                CAN_MANAGE_ROLES: false
+            }
         });
     }
 }

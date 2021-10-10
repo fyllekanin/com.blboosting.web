@@ -18,7 +18,14 @@ export class RoleService implements Resolve<RoleEntry> {
 
     async update(entity: RoleEntry): Promise<void> {
         await this.httpService.put(`/admin/roles/role/${entity._id}`, entity)
-            .pipe(catchError((_error) => {
+            .pipe(map(() => {
+                this.siteNotificationService.create({
+                    title: 'Success',
+                    message: 'Role updated',
+                    type: SiteNotificationType.SUCCESS
+                });
+                return EMPTY;
+            }), catchError((_error) => {
                 this.siteNotificationService.create({
                     title: 'Ops',
                     message: 'Something went wrong',

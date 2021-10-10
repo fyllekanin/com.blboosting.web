@@ -32,9 +32,11 @@ export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: num
 
     async update(entity: T): Promise<T> {
         entity.updatedAt = new Date().getTime();
-
-        await this.getCollection().updateOne({ _id: entity._id }, {
-            $set: entity
+        const body = { ...entity };
+        delete body._id;
+        
+        await this.getCollection().updateOne({ _id: new ObjectId(entity._id) }, {
+            $set: body
         });
         return entity;
     }

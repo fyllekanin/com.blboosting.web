@@ -1,4 +1,4 @@
-import { Controller, Get, Middleware } from '@overnightjs/core';
+import { Controller, Get, Middleware, Put } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest } from '../../utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
@@ -42,6 +42,22 @@ export class RolesController {
             res.status(StatusCodes.NOT_FOUND).json();
             return;
         }
+
+        res.status(StatusCodes.OK).json(role);
+    }
+
+    @Put('role/:id')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
+    async updateRole(req: InternalRequest, res: Response): Promise<void> {
+        const position = await RoleRepository.newRepository()
+            .getImmunity(req.user.discordId, DiscordUtility.getRoleIds(req.client, req.user.discordId));
+        const role = await RoleRepository.newRepository().get(new ObjectId(req.params.id));
+        if (!role || role.position >= position) {
+            res.status(StatusCodes.NOT_FOUND).json();
+            return;
+        }
+
+        await RoleRepository.newRepository().update(req.body);
 
         res.status(StatusCodes.OK).json(role);
     }

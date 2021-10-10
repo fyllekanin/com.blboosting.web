@@ -1,5 +1,5 @@
 <app-content [header]="entity?._id ? 'Updating: ' + entity.name : 'Creating: ' + entity?.name"
-             [actions]="actions">
+             [actions]="actions" (onAction)="onAction($event)">
     <div class="grid-x grid-margin-x">
         <div class="cell small-6">
             <label for="name">Name</label>
@@ -15,21 +15,25 @@
 <app-content header="Permissions">
     <div class="grid-x grid-margin-x">
         <div class="cell small-6 checkbox">
-            <label class="container">Can login
+            <label class="container" (click)="entity?.permissions.CAN_LOGIN = !entity?.permissions.CAN_LOGIN">Can login
                 <input type="checkbox" [disabled]="!user.permissions.CAN_LOGIN"
                        [checked]="entity?.permissions.CAN_LOGIN">
                 <span class="checkmark"></span>
             </label>
         </div>
         <div class="cell small-6 checkbox">
-            <label class="container">Can create boosts
+            <label class="container"
+                   (click)="entity?.permissions.CAN_CREATE_BOOST = !entity?.permissions.CAN_CREATE_BOOST">Can create
+                boosts
                 <input type="checkbox" [disabled]="!user.permissions.CAN_CREATE_BOOST"
                        [checked]="entity?.permissions.CAN_CREATE_BOOST">
                 <span class="checkmark"></span>
             </label>
         </div>
         <div class="cell small-6 checkbox">
-            <label class="container">Can manage roles
+            <label class="container"
+                   (click)="entity?.permissions.CAN_MANAGE_ROLES = !entity?.permissions.CAN_MANAGE_ROLES">Can manage
+                roles
                 <input type="checkbox" [disabled]="!user.permissions.CAN_MANAGE_ROLES"
                        [checked]="entity?.permissions.CAN_MANAGE_ROLES">
                 <span class="checkmark"></span>
