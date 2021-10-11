@@ -6,10 +6,11 @@ npm run build:prod
 mv dist/front-end/* ../back-end/src/public/
 
 cd ../back-end
-npm install
+npm install --only=production
 npm run build
 
 mv dist/* ~/web/production-temp/
+mv node_modules ~/web/production-temp/
 mv .env ~/web/production-temp/
 mv ../integration/ecosystem.config.js ~/web/production-temp/
 
