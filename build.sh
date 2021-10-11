@@ -6,7 +6,7 @@ npm run build:prod
 mv dist/front-end/* ../back-end/src/public/
 
 cd ../back-end
-npm install --only=production
+npm install
 npm run build
 
 mv dist/* ~/web/production-temp/
