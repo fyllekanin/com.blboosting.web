@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { AuthService } from '../../core/auth/auth.service';
 import { Router } from '@angular/router';
+import { environment } from '../../../environments/environment';
 
 @Component({
     selector: 'app-login',
@@ -19,15 +20,14 @@ export class LoginComponent {
     ) {
     }
 
-
     onLogin(): void {
-        this.loginWindow = open('http://localhost:3000/api/oauth/discord', 'Login', 'height=750,width=400');
+        this.loginWindow = open(`${environment.server}/api/oauth/discord`, 'Login', 'height=750,width=400');
         this.loginWindow.focus();
     }
 
     @HostListener('window:message', ['$event'])
     onPostMessage(data: any) {
-        if (data.origin !== 'http://localhost:3000') {
+        if (data.origin !== environment.server) {
             return;
         }
         const value = data.data;

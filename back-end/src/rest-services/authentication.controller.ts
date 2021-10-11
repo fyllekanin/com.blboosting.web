@@ -95,7 +95,8 @@ export class AuthenticationController {
         <html>
             <body>
                 <script type="application/javascript">
-                    window.opener.postMessage(${JSON.stringify(await this.getPayload(req.client, user, discord))}, 'http://localhost:4200');
+                    window.opener.postMessage(${JSON.stringify(await this.getPayload(req.client, user, discord))},
+                    process.env.NODE_ENV === 'production' ? '' : 'http://localhost:4200');
                 </script>
             </body>
         </html>
