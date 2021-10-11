@@ -21,4 +21,5 @@ fi
 
 rm -Rf ./*
 mv ./../production-temp/* ./
+mv ./../production-temp/.env ./
 pm2 start ecosystem.config.js
