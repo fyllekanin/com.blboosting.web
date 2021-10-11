@@ -4,9 +4,7 @@
   "description": "",
   "main": "dist/main.js",
   "scripts": {
-    "start": "node .",
-    "re:migrate": "node drop-tables.js && node node_modules/typeorm/cli migration:run --config ./dist/environments/database",
-    "migrate": "node node_modules/typeorm/cli migration:run --config ./dist/environments/database"
+    "start": "node ."
   },
   "author": "",
   "license": "ISC",

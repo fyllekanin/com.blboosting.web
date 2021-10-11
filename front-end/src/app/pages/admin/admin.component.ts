@@ -14,7 +14,8 @@ export class AdminComponent {
 
     constructor(private authService: AuthService) {
         this.authUser = this.authService.getUser();
-        this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
+        // this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
+        this.avatarUrl = 'https://cdn.discordapp.com/attachments/769522185978511400/896824758673481770/BetaWeb.png';
         this.amount = '127,342';
     }
 
