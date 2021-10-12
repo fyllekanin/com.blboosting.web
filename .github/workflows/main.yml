@@ -1,31 +1,41 @@
-# This is a basic workflow to help you get started with Actions
-
 name: CI
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the main branch
   push:
     branches: [ main ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
   build:
-    # The type of runner that the job will run on
     runs-on: self-hosted
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v2
 
-      - name: Fix permission
-        run: chmod +x build.sh
-
-      # Runs a single command using the runners shell
-      - name: Build the project
-        run: ./build.sh
+      - name: Install front-end
+        working-directory: front-end
+        run: npm install
+        
+      - name: Build front-end
+        working-directory: front-end
+        run: npm run build:prod
+        
+      - name: Install back-end
+        working-directory: back-end
+        run: npm install
+        
+      - name: Build back-end
+        working-directory: back-end
+        run: npm run build
+        
+      - name: Combine front-end back-end
+        run: |
+          mkdir temp
+          mv back-end/dist/* temp/
+          mv back-end/node_modules temp/
+          mv -f front-end/dist/front-end/* temp/public/
+        
+      - name: List files
+        run: ls temp
+      - name: Create
