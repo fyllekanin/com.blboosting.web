@@ -72,5 +72,6 @@ jobs:
         run: mv temp /home/ubuntu/web/production
         
       - name: Start new production
-        working-directory: /home/ubuntu/web/production
-        run: pm2 start ecosystem.config.js
+        run: |
+          cd /home/ubuntu/web/production
+          pm2 start ecosystem.config.js
