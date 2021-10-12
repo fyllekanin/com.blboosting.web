@@ -54,5 +54,16 @@ jobs:
           echo "${{secrets.MONGODB_HOST}}" >> temp/.env
           echo "${{secrets.TOKEN_SECRET}}" >> temp/.env
           
-      - name: Show .env
-        run: cat temp/.env
+      - name: Stop current site if running
+        working-directory: ~/web/production
+        run: pm2 stop ecosystem.config.js
+      
+      - name: Remove current production code
+        run: rm -Rf ~/web/production
+        
+      - name: Move new files to production
+        run: mv temp ~/web/production
+        
+      - name: Start new production
+        working-directory: ~/web/production
+        run: pm2 start ecosystem.config.js
