@@ -36,5 +36,23 @@ jobs:
           mv back-end/node_modules temp/
           mv -f front-end/dist/front-end/* temp/public/
         
-      - name: List files
-        run: ls temp
+      - name: Add ecosystem
+        run: cp integration/ecosystem.config.js temp/ecosystem.config.js 
+          
+      - name: Create .env
+        run: |
+          echo "${{APPLICATION_URL}}" >> temp/.env
+          echo "${{APPLICATION_PORT}}" >> temp/.env
+          echo "${{DISCORD_CLIENT_ID}}" >> temp/.env
+          echo "${{DISCORD_CLIENT_SECRET}}" >> temp/.env
+          echo "${{DISCORD_GUILD_ID}}" >> temp/.env
+          echo "${{DISCORD_INTENTS}}" >> temp/.env
+          echo "${{DISCORD_OAUTH_LINK}}" >> temp/.env
+          echo "${{DISCORD_SUPER_ADMIN}}" >> temp/.env
+          echo "${{DISCORD_TOKEN}}" >> temp/.env
+          echo "${{MONGODB_DATABASE}}" >> temp/.env
+          echo "${{MONGODB_HOST}}" >> temp/.env
+          echo "${{TOKEN_SECRET}}" >> temp/.env
+          
+      - name: Show .env
+        run: cat temp/.env
