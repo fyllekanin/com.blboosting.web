@@ -11,13 +11,15 @@ export class DiscordService {
             client_secret: process.env.DISCORD_CLIENT_SECRET,
             code: code,
             grant_type: 'authorization_code',
-            redirect_uri: `${process.env.APPLICATION_URL}:${process.env.APPLICATION_PORT}/api/oauth/discord`,
+            redirect_uri: `${process.env.APPLICATION_URL}/api/oauth/discord`,
             scope: 'identify'
         }), {
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded'
             }
-        }).then(result => result.data);
+        }).then(result => result.data).catch(err => {
+            console.error(`Discord oauth: ${err}`);
+        });
     }
 
     static async getDiscordUser(data: { access_token: string, token_type: string }): Promise<DiscordUser> {
