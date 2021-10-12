@@ -58,19 +58,19 @@ jobs:
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
-          files: "~/web/production/ecosystem.config.js"
+          files: "/home/ubuntu/web/production/ecosystem.config.js"
           
       - name: Stop current site if existing
         if: steps.check_files.outputs.files_exists == 'true'
-        working-directory: ~/web/production
+        working-directory: /home/ubuntu/web/production
         run: pm2 stop ecosystem.config.js
       
       - name: Remove current production code
-        run: rm -Rf ~/web/production
+        run: rm -Rf /home/ubuntu/web/production
         
       - name: Move new files to production
-        run: mv temp ~/web/production
+        run: mv temp /home/ubuntu/web/production
         
       - name: Start new production
-        working-directory: ~/web/production
+        working-directory: /home/ubuntu/web/production
         run: pm2 start ecosystem.config.js
