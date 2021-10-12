@@ -17,6 +17,13 @@ jobs:
         working-directory: front-end
         run: npm install
         
+      - name: Update environment.prod.ts
+        uses: jacobtomlinson/gha-find-replace@v2
+        with:
+          find: "{{APPLICATION_URL}}"
+          replace: ${{secrets.APPLICATION_URL}}"
+          include: "front-end/src/environments/**"
+        
       - name: Build front-end
         working-directory: front-end
         run: npm run build:prod
