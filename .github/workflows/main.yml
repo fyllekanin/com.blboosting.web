@@ -54,7 +54,14 @@ jobs:
           echo "${{secrets.MONGODB_HOST}}" >> temp/.env
           echo "${{secrets.TOKEN_SECRET}}" >> temp/.env
           
-      - name: Stop current site if running
+      - name: Check if current production exists
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "~/web/production/ecosystem.config.js"
+          
+      - name: Stop current site if existing
+        if: steps.check_files.outputs.files_exists == 'true'
         working-directory: ~/web/production
         run: pm2 stop ecosystem.config.js
       
