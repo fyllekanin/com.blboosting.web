@@ -19,7 +19,7 @@ jobs:
         
       - name: Update environment.prod.ts
         working-directory: front-end/src/environments
-        run: sed -i 's@{{APPLICATION_URL}}@${{secrets.APPLICATION_URL}}@g' environment.prod.ts
+        run: sed -i 's@{{APPLICATION_URL}}@${{secrets.APPLICATION_URL_ONLY}}@g' environment.prod.ts
         
       - name: Build front-end
         working-directory: front-end
