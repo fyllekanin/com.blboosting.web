@@ -5,7 +5,7 @@ import { DiscordOauth2, DiscordUser } from '../interfaces/discord.interface';
 export class DiscordService {
     private static readonly BASE_URL = 'https://discord.com/api';
 
-    static async getDiscordOathResult(code: string): Promise<DiscordOauth2> {
+    static async getOauth(code: string): Promise<DiscordOauth2> {
         return await axios.post(`${DiscordService.BASE_URL}/oauth2/token`, new URLSearchParams({
             client_id: process.env.DISCORD_CLIENT_ID,
             client_secret: process.env.DISCORD_CLIENT_SECRET,

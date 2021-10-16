@@ -76,7 +76,7 @@ export class AuthenticationController {
             res.redirect(process.env.DISCORD_OAUTH_LINK);
             return;
         }
-        const result = await DiscordService.getDiscordOathResult(req.query.code as string);
+        const result = await DiscordService.getOauth(req.query.code as string);
         const discord = await DiscordService.getDiscordUser(result);
 
         const userRepository = new UserRepository();

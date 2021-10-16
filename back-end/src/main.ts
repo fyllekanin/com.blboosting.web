@@ -15,6 +15,7 @@ import { DiscordListener } from './discord.listener';
 import { RolesController } from './rest-services/admin/roles.controller';
 import { InternalRequest } from './utilities/internal.request';
 import { MigrationService } from './migrations/migration.service';
+import { BoostsController } from './rest-services/admin/boosts.controller';
 
 dotenv.config();
 
@@ -70,12 +71,13 @@ class MainServer extends Server {
                 new PageController(),
                 new AuthenticationController(),
                 new AdminPageController(),
-                new RolesController()
+                new RolesController(),
+                new BoostsController()
             ],
             null,
-            async (req: InternalRequest, res: Response, next: NextFunction) => {
+            (req: InternalRequest, res: Response, next: NextFunction) => {
                 req.client = this.client;
-                await INITIAL_MIDDLEWARE(req, res, next)
+                INITIAL_MIDDLEWARE(req, res, next)
             },
         );
     }
