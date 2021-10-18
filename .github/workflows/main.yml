@@ -4,13 +4,6 @@ on:
   push:
     branches: [ main ]
 
-  workflow_dispatch:
-    inputs:
-      numOctocats:
-        description: 'Test'
-        required: true
-        default: '1'
-
 jobs:
   build:
     runs-on: self-hosted
