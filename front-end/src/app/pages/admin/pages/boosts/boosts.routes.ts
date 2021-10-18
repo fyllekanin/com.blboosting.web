@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { BoostsComponent } from './boosts.component';
 import { BoostsListComponent } from './boosts-list/boosts-list.component';
 import { BoostComponent } from './boost/boost.component';
+import { BoostResolver } from './boost/boost.resolver';
 
 export const boostsRoutes: Routes = [
     {
@@ -14,7 +15,10 @@ export const boostsRoutes: Routes = [
             },
             {
                 path: 'boost/:id',
-                component: BoostComponent
+                component: BoostComponent,
+                resolve: {
+                    data: BoostResolver
+                }
             }
         ]
     }

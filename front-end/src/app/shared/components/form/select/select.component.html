@@ -1,0 +1,10 @@
+<div contenteditable="true" (focus)="onFocus()" class="input"
+     [attr.data-placeholder]="placeholder && !value ? placeholder : ''"
+     [textContent]="textContent"
+     (input)="onFilterInput($event.target.textContent)">
+</div>
+<div contenteditable="false" class="values" [ngClass]="isOpen ? 'open' : ''" *ngIf="isOpen">
+    <div class="item" *ngFor="let item of filteredItems" (click)="onValueChanged(item);">
+        {{item.label}}
+    </div>
+</div>

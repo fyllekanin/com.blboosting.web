@@ -6,6 +6,9 @@ export interface IRealmEntity extends CreatedUpdatedAtEntity {
     realmId: number;
     name: string;
     slug: string;
+    category: string;
+    timezone: string;
+    isTournament: boolean;
     connectedId: number;
     connectedTo: Array<number>;
 }

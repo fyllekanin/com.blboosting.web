@@ -2,7 +2,7 @@ import { IBackgroundTask } from '../background-task.interface';
 import { BattleNetRegions, BattleNetService } from '../../apis/services/battle-net.service';
 import { RealmRepository } from '../../persistance/repositories/battle-net/realm.repository';
 import { IRealmEntity } from '../../persistance/entities/battle-net/realm.entity';
-import { BattleNetConnectedRealm, BattleNetRealm } from '../../apis/interfaces/battle-net.interface';
+import { BattleNetConnectedRealm, SlimBattleNetRealm } from '../../apis/interfaces/battle-net.interface';
 
 export class BattleNetRealmsTask implements IBackgroundTask {
     getSchedule(): string {
@@ -27,13 +27,17 @@ export class BattleNetRealmsTask implements IBackgroundTask {
         await Promise.all(promises).then(() => console.log('Realm task done'));
     }
 
-    private async addRealm(repository: RealmRepository, realm: BattleNetRealm, connectedRealms: Array<BattleNetConnectedRealm>): Promise<void> {
-        const connected = connectedRealms.find(item => item.realms.some(child => child.id === realm.id));
+    private async addRealm(repository: RealmRepository, slimRealm: SlimBattleNetRealm, connectedRealms: Array<BattleNetConnectedRealm>): Promise<void> {
+        const connected = connectedRealms.find(item => item.realms.some(child => child.id === slimRealm.id));
+        const realm = await BattleNetService.getRealm(BattleNetRegions.EU, slimRealm.slug);
 
         const entity: IRealmEntity = {
-            realmId: realm.id,
-            slug: realm.slug,
-            name: realm.name,
+            realmId: slimRealm.id,
+            slug: slimRealm.slug,
+            name: slimRealm.name,
+            isTournament: realm.isTournament,
+            timezone: realm.timezone,
+            category: realm.category,
             connectedId: connected?.id,
             connectedTo: connected ? connected.realms.map(item => item.id) : []
         };

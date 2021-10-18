@@ -7,7 +7,8 @@ export interface InternalUser {
     token: string | null;
 }
 
-export interface InternalRequest extends Request {
+export interface InternalRequest<T = null> extends Request {
     user: InternalUser;
     client: Client;
+    body: T;
 }

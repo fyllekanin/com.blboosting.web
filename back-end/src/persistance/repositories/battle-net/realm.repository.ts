@@ -7,6 +7,10 @@ export class RealmRepository extends BaseRepository<IRealmEntity> {
     static readonly COLLECTION = 'realms';
     protected repository: Collection<IRealmEntity>;
 
+    static newRepository(): RealmRepository {
+        return new RealmRepository();
+    }
+
     protected getCollection(): Collection<IRealmEntity> {
         if (this.repository) {
             return this.repository;

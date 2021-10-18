@@ -1,5 +1,10 @@
 import axios from 'axios';
-import { BattleNetConnectedRealm, BattleNetOauth2, BattleNetRealms } from '../interfaces/battle-net.interface';
+import {
+    BattleNetConnectedRealm,
+    BattleNetOauth2,
+    BattleNetRealm,
+    BattleNetRealms
+} from '../interfaces/battle-net.interface';
 import { URLSearchParams } from 'url';
 
 export enum BattleNetRegions {
@@ -10,6 +15,14 @@ export class BattleNetService {
     private static ACCESS_TOKEN: string = null;
     private static readonly BASE_URL = 'https://{{REGION}}.api.blizzard.com';
     private static readonly AUTH_URL = 'https://eu.battle.net/oauth/token';
+
+    static async getRealm(region: BattleNetRegions, slug: string): Promise<BattleNetRealm> {
+        const queryParams = [
+            `namespace=dynamic-${region}`,
+            `locale=en_US`
+        ].join('&');
+        return await this.getData<BattleNetRealm>(region, `/data/wow/realm/${slug}`, queryParams);
+    }
 
     static async getRealmList(region: BattleNetRegions): Promise<BattleNetRealms> {
         const queryParams = [

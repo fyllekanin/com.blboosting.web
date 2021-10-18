@@ -5,24 +5,21 @@
     <div class="grid-x grid-margin-x">
         <div class="cell small-4">
             <label for="name">Name</label>
-            <input id="name" type="text" />
+            <input id="name" type="text" [(ngModel)]="boost.boost.name"/>
         </div>
         <div class="cell small-4">
-            <label for="realm">Realm</label>
-            <select id="realm">
-                <option *ngFor="let option of realms">{{ option }}</option>
+            <label for="name">Realm</label>
+            <app-form-select [items]="realms" [(value)]="boost.boost.realm"></app-form-select>
+        </div>
+        <div class="cell small-4">
+            <label for="source">Source</label>
+            <select id="source" [(ngModel)]="boost.boost.source">
+                <option *ngFor="let source of context.sources" [ngValue]="source">
+                    {{ source }}
+                </option>
             </select>
         </div>
     </div>
-</app-content>
-
-<app-content header="Source of client" tooltipText="Where you found the client">
-    <label for="source">Source</label>
-    <select id="source">
-        <option *ngFor="let source of sources">
-            {{ source.label }}
-        </option>
-    </select>
 </app-content>
 
 <app-content
@@ -31,7 +28,7 @@
 >
     <div *ngFor="let payment of payments; let index = index; let last = last">
         <div class="grid-x grid-margin-x">
-            <div class="cell small-5">
+            <div class="cell small-4">
                 <label [for]="index + '-amount'">Amount</label>
                 <input
                     [id]="index + '-amount'"
@@ -116,7 +113,7 @@
 
                 <div class="cell small-5">
                     <label>Key level</label>
-                    <input type="number" />
+                    <input type="number"/>
                 </div>
 
                 <div class="cell small-5">
@@ -135,8 +132,8 @@
                 <div class="cell small-5">
                     <label [for]="index + '-key'">Select keyholder role</label>
                     <select [id]="index + '-key'">
-                        <option *ngFor="let role of roles">
-                            {{ role.label }}
+                        <option *ngFor="let role of context.roles">
+                            {{ role }}
                         </option>
                     </select>
                 </div>
@@ -210,14 +207,14 @@
     <div class="grid-x grid-margin-x">
         <div class="cell small-5">
             <label>Playing along</label>
-            <input type="checkbox" [(ngModel)]="isChecked" />
+            <input type="checkbox" [(ngModel)]="isChecked"/>
         </div>
 
         <div class="cell small-5" *ngIf="isChecked">
             <label>Select your role</label>
             <select>
-                <option *ngFor="let role of roles">
-                    {{ role.label }}
+                <option *ngFor="let role of context.roles">
+                    {{ role }}
                 </option>
             </select>
         </div>
@@ -226,5 +223,5 @@
 
 <app-content header="Notes" tooltipText="If you have any additional notes">
     <label>Note</label>
-    <input type="text" />
+    <input type="text"/>
 </app-content>

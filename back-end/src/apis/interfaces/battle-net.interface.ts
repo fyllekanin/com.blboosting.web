@@ -7,13 +7,23 @@ export interface BattleNetRealm {
     name: string;
     id: number;
     slug: string;
+    timezone: string;
+    category: string;
+    isTournament: boolean;
+}
+
+
+export interface SlimBattleNetRealm {
+    name: string;
+    id: number;
+    slug: string;
 }
 
 export interface BattleNetRealms {
-    realms: Array<BattleNetRealm>;
+    realms: Array<SlimBattleNetRealm>;
 }
 
 export interface BattleNetConnectedRealm {
     id: number;
-    realms: Array<BattleNetRealm>
+    realms: Array<SlimBattleNetRealm>
 }

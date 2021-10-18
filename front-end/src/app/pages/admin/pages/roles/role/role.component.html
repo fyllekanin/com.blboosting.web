@@ -15,27 +15,29 @@
 <app-content header="Permissions">
     <div class="grid-x grid-margin-x">
         <div class="cell small-6 checkbox">
-            <label class="container" (click)="entity?.permissions.CAN_LOGIN = !entity?.permissions.CAN_LOGIN">Can login
+            <label class="container">
+                Can login
                 <input type="checkbox" [disabled]="!user.permissions.CAN_LOGIN"
-                       [checked]="entity?.permissions.CAN_LOGIN">
+                       [checked]="entity.permissions.CAN_LOGIN"
+                       (change)="entity.permissions.CAN_LOGIN = !entity.permissions.CAN_LOGIN">
                 <span class="checkmark"></span>
             </label>
         </div>
         <div class="cell small-6 checkbox">
-            <label class="container"
-                   (click)="entity?.permissions.CAN_CREATE_BOOST = !entity?.permissions.CAN_CREATE_BOOST">Can create
-                boosts
+            <label class="container">
+                Can create boosts
                 <input type="checkbox" [disabled]="!user.permissions.CAN_CREATE_BOOST"
-                       [checked]="entity?.permissions.CAN_CREATE_BOOST">
+                       [checked]="entity?.permissions.CAN_CREATE_BOOST"
+                       (change)="entity?.permissions.CAN_CREATE_BOOST = !entity?.permissions.CAN_CREATE_BOOST">
                 <span class="checkmark"></span>
             </label>
         </div>
         <div class="cell small-6 checkbox">
-            <label class="container"
-                   (click)="entity?.permissions.CAN_MANAGE_ROLES = !entity?.permissions.CAN_MANAGE_ROLES">Can manage
-                roles
+            <label class="container">
+                Can manage roles
                 <input type="checkbox" [disabled]="!user.permissions.CAN_MANAGE_ROLES"
-                       [checked]="entity?.permissions.CAN_MANAGE_ROLES">
+                       [checked]="entity?.permissions.CAN_MANAGE_ROLES"
+                       (change)="entity?.permissions.CAN_MANAGE_ROLES = !entity?.permissions.CAN_MANAGE_ROLES">
                 <span class="checkmark"></span>
             </label>
         </div>

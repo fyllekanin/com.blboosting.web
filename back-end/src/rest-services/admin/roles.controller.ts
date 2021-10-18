@@ -3,7 +3,7 @@ import { Response } from 'express';
 import { InternalRequest } from '../../utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 import { PermissionMiddleware } from '../middlewares/permission.middleware';
-import { RolePermission } from '../../persistance/entities/role.entity';
+import { IRoleEntity, IRolePermissions, RolePermission } from '../../persistance/entities/role.entity';
 import { RoleRepository } from '../../persistance/repositories/role.repository';
 import { StatusCodes } from 'http-status-codes';
 import { DiscordUtility } from '../../utilities/discord.utility';
@@ -46,17 +46,36 @@ export class RolesController {
     }
 
     @Put('role/:id')
-    async updateRole(req: InternalRequest, res: Response): Promise<void> {
+    async updateRole(req: InternalRequest<IRoleEntity>, res: Response): Promise<void> {
         const position = await RoleRepository.newRepository()
             .getImmunity(req.user.discordId, DiscordUtility.getRoleIds(req.client, req.user.discordId));
+        const permissions = await RoleRepository.newRepository()
+            .getPermissions(req.user.discordId, DiscordUtility.getRoleIds(req.client, req.user.discordId));
+
         const role = await RoleRepository.newRepository().get(new ObjectId(req.params.id));
         if (!role || role.position >= position) {
             res.status(StatusCodes.NOT_FOUND).json();
             return;
         }
+        req.body.permissions = this.getNewPermissions(role, req.body, permissions);
 
         await RoleRepository.newRepository().update(req.body);
 
         res.status(StatusCodes.OK).json(role);
+    }
+
+    private getNewPermissions(originalRole: IRoleEntity, updatedRole: IRoleEntity, permissions: IRolePermissions): IRolePermissions {
+        const newPermissions: IRolePermissions = {};
+        for (const key in RolePermission) {
+            // @ts-ignore
+            if (!permissions[key]) {
+                // @ts-ignore
+                newPermissions[key] = originalRole.permissions[key];
+            } else {
+                // @ts-ignore
+                newPermissions[key] = updatedRole.permissions[key];
+            }
+        }
+        return newPermissions;
     }
 }
