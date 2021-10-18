@@ -8,7 +8,7 @@ on:
     inputs:
       numOctocats:
         description: 'Test'
-        required: false
+        required: true
         default: '1'
 
 jobs:
