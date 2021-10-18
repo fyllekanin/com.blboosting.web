@@ -5,6 +5,11 @@ on:
     branches: [ main ]
 
   workflow_dispatch:
+    inputs:
+      numOctocats:
+        description: 'Test'
+        required: false
+        default: '1'
 
 jobs:
   build:
