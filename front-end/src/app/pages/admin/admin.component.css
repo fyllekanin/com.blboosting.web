@@ -9,6 +9,10 @@
     height: 1px;
 }
 
+#navigation-wrapper[data-open=true] {
+    width: 200px;
+}
+
 #navigation {
     position: fixed;
     width: 50px;
@@ -16,6 +20,10 @@
     background: var(--secondary-backround);
     padding-top: 90px;
     z-index: 1;
+}
+
+#navigation[data-open=true] {
+    width: 200px;
 }
 
 #navigation ul {
@@ -36,10 +44,6 @@
 
 #navigation ul li a i {
     margin-right: 15px;
-}
-
-#navigation[data-open=true] {
-    width: 200px;
 }
 
 #content {
