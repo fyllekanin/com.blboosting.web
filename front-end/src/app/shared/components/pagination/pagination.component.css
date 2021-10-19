@@ -11,25 +11,25 @@ a {
 }
 
 button {
-    padding: 12px;
+    background: var(--secondary-backround);
+    color: var(--secondary-text-color);
+    padding: 5px 12px 12px 12px;
     text-align: center;
     display: inline-block;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .18), inset 0 0 0 2px rgba(255, 255, 255, .18), 0 2px 0 rgba(0, 0, 0, 0.09);
     margin: 0;
-    font-size: 11px;
-    background-color: #70748b;
+    font-size: 20px;
     outline: 0;
-    color: white;
     cursor: pointer;
 }
 
-.current {
-    padding: 10px;
-    font-weight: bold;
+button:hover {
+    color: var(--main-text-color);
 }
 
 .items {
-    background: rgb(21, 74, 94);
+    background: var(--secondary-backround);
+    color: var(--secondary-text-color);
     text-align: center;
     display: inline-block;
     box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .18), inset 0 0 0 2px rgba(255, 255, 255, .18), 0 2px 0 rgba(0, 0, 0, 0.09);
@@ -37,6 +37,12 @@ button {
     font-size: 11px;
     border-radius: 3px;
     min-width: 30px;
+}
+
+.current {
+    padding: 10px;
+    font-weight: bold;
+    color: var(--main-text-color);
 }
 
 .numbers {
@@ -47,23 +53,17 @@ button {
     margin: 0 0 10px 0;
     float: left;
     cursor: pointer;
-    color: #ffffff;
 }
 
 .next {
     float: right;
+    margin: 0 0 10px 0;
+    cursor: pointer;
 }
 
-.previous:disabled {
+.previous:disabled, .next:disabled {
     cursor: no-drop !important;
     opacity: 0.6;
-    color: #ffffff;
-}
-
-.next:disabled {
-    cursor: no-drop !important;
-    opacity: 0.6;
-    color: #ffffff;
 }
 
 .pager {

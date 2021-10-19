@@ -1,4 +1,19 @@
 /** General styles **/
+:root {
+    --main-background: #151a30;
+    --main-text-color: #e3e3d5;
+
+    --secondary-backround: #222b45;
+    --secondary-text-color: #66718a;
+
+    --active-link-color: #3366ff;
+
+    --input-background: #192038;
+    --input-active-background: #222b45;
+
+    --primary-color: #36f;
+}
+
 @font-face {
     font-family: Roboto;
     src: url('./assets/fonts/Roboto-Regular.ttf');
@@ -14,8 +29,23 @@ html, body {
     padding: 0;
     font-family: Roboto, serif;
     overflow-x: hidden;
-    background: #36393f;
-    color: #c7c7c7;
+    background: var(--main-background);
+    color: var(--main-text-color);
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+body::-webkit-scrollbar {
+    display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+body {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+}
+
+.fas, .fa {
+    color: var(--secondary-text-color);
 }
 
 label {
@@ -142,30 +172,33 @@ label {
 
 /** INPUT **/
 input, input[type=text], input[type=number], select {
-    background: #36393f;
+    background: var(--input-background);
     outline: none;
     border: 1px solid #4e5358;
-    color: #c7c7c7;
+    color: var(--secondary-text-color);
 }
 
 input:focus, input[type=text]:focus, input[type=number]:focus, select:focus {
-    background: #22272c;
+    background: var(--input-active-background);
     outline: none;
     border: 1px solid #4e5358;
-    color: #c7c7c7;
+    color: var(--main-text-color);
 }
 
 button {
-    color: white;
+    color: var(--main-text-color);
     font-size: 11px;
     height: 30px;
     padding: 0px 15px 0 15px;
     margin-right: 5px;
-    text-shadow: 1px 1px 0 rgb(0 0 0 / 25%);
     border-radius: 2px;
     cursor: pointer;
     opacity: 0.7;
     transition: 0.5s;
+}
+
+button .fas, button.fa {
+    color: var(--main-text-color);
 }
 
 button:hover {
@@ -189,13 +222,10 @@ button:hover {
 .checkbox .container {
     display: block;
     position: relative;
-    padding-left: 35px;
+    padding-left: 26px;
     margin-bottom: 12px;
     cursor: pointer;
-    font-size: 16px;
     -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
@@ -211,10 +241,10 @@ button:hover {
 /* Create a custom checkbox */
 .checkbox .checkmark {
     position: absolute;
-    top: 0;
+    top: 4px;
     left: 0;
-    height: 25px;
-    width: 25px;
+    height: 15px;
+    width: 15px;
     background-color: #c7c7c7;
 }
 
@@ -225,7 +255,7 @@ button:hover {
 
 /* When the checkbox is checked, add a blue background */
 .checkbox .container input:checked ~ .checkmark {
-    background-color: #154a5e;
+    background-color: var(--primary-color);
 }
 
 /* Create the checkmark/indicator (hidden when not checked) */
@@ -242,10 +272,10 @@ button:hover {
 
 /* Style the checkmark/indicator */
 .checkbox .container .checkmark:after {
-    left: 10px;
-    top: 7px;
-    width: 5px;
-    height: 10px;
+    left: 6px;
+    top: 3px;
+    width: 3px;
+    height: 7px;
     border: solid white;
     border-width: 0 3px 3px 0;
     -webkit-transform: rotate(45deg);

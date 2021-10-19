@@ -3,7 +3,7 @@
     padding: 5px;
     border-radius: 5px;
     margin-bottom: 15px;
-    background: #2f3136;
+    background: var(--secondary-backround);
 }
 
 .title {

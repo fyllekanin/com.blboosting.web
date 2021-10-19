@@ -19,11 +19,11 @@ tbody tr {
 
 tbody tr:nth-child(even) {
     border-bottom: 0;
-    background-color: #0b0d0e;
+    background-color: var(--input-active-background);
 }
 
 tbody tr:nth-child(odd) {
-    background-color: #161616;
+    background-color: var(--input-background);
 }
 
 td {

@@ -4,7 +4,7 @@
     top: 30%;
     -webkit-transform: translate(-50%, -50%);
     transform: translate(-50%, -50%);
-    background: #2f3136;
+    background: var(--secondary-backround);
     border-radius: 5px;
     padding: 10px;
 }
@@ -49,12 +49,13 @@ img {
     display: inline-flex;
     align-items: center;
     padding: 10px 15px;
-    background-color: #5865f2;
+    background-color: #181a1e;
     text-decoration: none;
+    opacity: 0.7;
 }
 
 #discord-button a:hover {
-    background-color: #181a1e;
+    opacity: 1;
 }
 
 .error {

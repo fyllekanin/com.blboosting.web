@@ -56,7 +56,7 @@ export class PaginationComponent implements OnDestroy {
     }
 
     goToNext(): void {
-        this.router.navigate([this.getUrl(this.currentPage - 1)], this.queryParameters);
+        this.router.navigate([this.getUrl(this.currentPage + 1)], this.queryParameters);
     }
 
     private getUrl(page: number): string {
@@ -65,7 +65,7 @@ export class PaginationComponent implements OnDestroy {
 
     private updateGaps(): void {
         this.thereIsPrevious = this.currentPage > 1;
-        this.thereIsPrevious = this.currentPage < this._total;
+        this.thereIsNext = this.currentPage < this._total;
         this.fillBackwardItems = this.getFillBackwardItems();
         this.backwardItems = this.getBackwardItems();
         this.fillForwardItems = this.getFillForwardItems();

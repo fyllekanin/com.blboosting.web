@@ -12,11 +12,29 @@ export class AdminComponent {
     amount: string;
     authUser: AuthUser;
 
+    isCollapsed = true;
+
+    navigationItems = [
+        {
+            icon: 'fa fa-home',
+            label: 'Dashboard',
+            route: '/admin'
+        },
+        {
+            icon: 'fas fa-running',
+            label: 'Mythic+ Boost',
+            route: '/admin/boosts/page/1'
+        },
+        {
+            icon: 'fas fa-user-tag',
+            label: 'Manage Roles',
+            route: '/admin/roles/page/1'
+        }
+    ];
+
     constructor(private authService: AuthService) {
         this.authUser = this.authService.getUser();
-        // this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
-        this.avatarUrl = 'https://cdn.discordapp.com/attachments/769522185978511400/896824758673481770/BetaWeb.png';
-        this.amount = '127,342';
+        this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
     }
 
     onLogout(): void {
