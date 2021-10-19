@@ -90,12 +90,13 @@ export class AuthenticationController {
         } else {
             user = await userRepository.update({ ...user, ...{ avatarHash: discord.avatar } });
         }
+        const payload = JSON.stringify(await this.getPayload(req.client, user, discord));
         res.send(`
         <!DOCTYPE HTML>
         <html>
             <body>
                 <script type="application/javascript">
-                    window.opener.postMessage(${JSON.stringify(await this.getPayload(req.client, user, discord))}, '${process.env.NODE_ENV === 'production' ? process.env.APPLICATION_URL : 'http://localhost:4200'}');
+                    window.opener.postMessage('${payload}', '${process.env.NODE_ENV === 'production' ? process.env.APPLICATION_URL : 'http://localhost:4200'}');
                 </script>
             </body>
         </html>
