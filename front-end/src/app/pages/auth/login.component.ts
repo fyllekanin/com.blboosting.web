@@ -30,16 +30,20 @@ export class LoginComponent {
         if (data.origin !== environment.server) {
             return;
         }
-        const value = data.data;
-        if (value.error) {
-            this.isNotInGuild = value.error === 1;
-            this.isNotAllowedToLogin = value.error === 2;
+        const { payload } = data.data;
+        if (!payload) {
+            return;
+        }
+
+        if (payload.error) {
+            this.isNotInGuild = payload.error === 1;
+            this.isNotAllowedToLogin = payload.error === 2;
             this.loginWindow.close();
             return;
         }
         this.loginWindow.close();
         this.loginWindow = null;
-        this.authService.setAuthUser(value);
+        this.authService.setAuthUser(payload);
         this.router.navigateByUrl('/admin');
     }
 }

@@ -96,33 +96,35 @@ export class AuthenticationController {
         <html>
             <body>
                 <script type="application/javascript">
-                    window.opener.postMessage('${payload}', '${process.env.NODE_ENV === 'production' ? process.env.APPLICATION_URL : 'http://localhost:4200'}');
+                    window.opener.postMessage(${JSON.stringify(await this.getPayload(req.client, user, discord))}, '${process.env.NODE_ENV === 'production' ? process.env.APPLICATION_URL : 'http://localhost:4200'}');
                 </script>
             </body>
         </html>
         `);
     }
 
-    private async getPayload(client: Client, user: IUserEntity, discord: DiscordUser): Promise<AuthPayload | ErrorPayload> {
+    private async getPayload(client: Client, user: IUserEntity, discord: DiscordUser): Promise<{ payload: AuthPayload | ErrorPayload }> {
         const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
         const member = guild.members.cache.get(discord.id);
 
         if (!member) {
-            return { error: ValidationError.NOT_IN_GUILD };
+            return { payload: { error: ValidationError.NOT_IN_GUILD } };
         }
         const permissions = await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(client, user.discordId));
         if (!permissions.CAN_LOGIN) {
-            return { error: ValidationError.CAN_NOT_LOGIN };
+            return { payload: { error: ValidationError.CAN_NOT_LOGIN } };
         }
 
         return {
-            id: user._id.toString(),
-            discordId: user.discordId,
-            avatarHash: discord.avatar,
-            accessToken: this.getAccessToken(user._id, user.discordId),
-            refreshToken: this.getRefreshToken(user._id, user.discordId),
-            username: discord.username,
-            permissions: permissions
+            payload: {
+                id: user._id.toString(),
+                discordId: user.discordId,
+                avatarHash: discord.avatar,
+                accessToken: this.getAccessToken(user._id, user.discordId),
+                refreshToken: this.getRefreshToken(user._id, user.discordId),
+                username: discord.username,
+                permissions: permissions
+            }
         };
     }
 
