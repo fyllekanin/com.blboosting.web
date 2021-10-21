@@ -13,6 +13,7 @@ export class ContentComponent {
     @Input() tooltipText: string;
     @Input() actions: Array<UserAction> = [];
 
+
     @Output() onAction: EventEmitter<UserAction> = new EventEmitter();
 
     constructor(private router: Router) {

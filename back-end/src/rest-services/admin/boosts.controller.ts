@@ -11,6 +11,7 @@ import { Class } from '../../constants/classes.constant';
 import { Dungeon } from '../../constants/dungeons.constant';
 import { Armor } from '../../constants/armors.constant';
 import { Role } from '../../constants/roles.constant';
+import { Faction } from '../../constants/factions.constant';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
@@ -24,7 +25,8 @@ export class BoostsController {
             classes: Object.keys(Class).map(key => Class[key]),
             dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
             armors: Object.keys(Armor).map(key => Armor[key]),
-            roles: Object.keys(Role).map(key => Role[key])
+            roles: Object.keys(Role).map(key => Role[key]),
+            factions: Object.keys(Faction).map(key => Faction[key])
         });
     }
 }

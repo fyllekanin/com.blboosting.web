@@ -1,7 +1,9 @@
 import { Component } from '@angular/core';
-import { BoostContext, IBoost } from '../boosts.interface';
+import { BoostContext, IBoost, IBoostKey, IBoostPayment } from '../boosts.interface';
 import { ActivatedRoute } from '@angular/router';
 import { SelectItem } from '../../../../../shared/components/form/select/select.interface';
+import { UserAction } from '../../../../../shared/constants/common.interfaces';
+import { ColorValue } from '../../../../../shared/constants/colors.constants';
 
 @Component({
     selector: 'app-admin-boosts-boost',
@@ -10,72 +12,29 @@ import { SelectItem } from '../../../../../shared/components/form/select/select.
 })
 export class BoostComponent {
     context: BoostContext;
-    boost: IBoost = {
+    entity: IBoost = {
+        _id: null,
+        name: null,
         boost: {
             name: null,
             realm: null,
-            source: null
-        }
+            source: null,
+            armor: 'ANY',
+            class: 'ANY'
+        },
+        playAlong: {
+            name: null,
+            realm: null,
+            role: null
+        },
+        keys: [{ level: 0, dungeon: null, isTimed: false, keyHolder: { discordId: null, role: null } }],
+        payments: [{ realm: null, amount: 0, faction: null }]
     };
 
-    sources: Array<{ value: string; label: string }> = [
-        { label: 'TC', value: 'Trade Chat' },
-        { label: 'TCL', value: 'Ticket Client' },
-        { label: 'TIH', value: 'Ticket In-house' },
-        { label: 'D', value: 'Discord' },
+    actions: Array<UserAction> = [
+        { label: 'Save', color: ColorValue.GREEN, value: 'save' },
+        { label: 'Back', color: ColorValue.BLUE, link: '/admin/boosts/page/1' }
     ];
-    payments: Array<{ amount: number; realm: string }> = [
-        {
-            amount: 0,
-            realm: '',
-        },
-    ];
-    keys: Array<{ key: string; userId?: string; role?: string }> = [
-        {
-            key: '',
-            userId: '',
-            role: '',
-        },
-    ];
-    dungeons = [
-        { label: 'Any', value: 'Any' },
-        { label: 'De Other Side', value: 'DOS' },
-        { label: 'Halls of Atonement', value: 'HOA' },
-        { label: 'Mists of Tirna Scithe', value: 'MISTS' },
-        { label: 'Plaguefall', value: 'PLAGUE' },
-        { label: 'Sanguine Depths', value: 'SD' },
-        { label: 'Spires of Ascension', value: 'SD' },
-        { label: 'The Necrotic Wake', value: 'TNW' },
-        { label: 'Theater of Pain', value: 'TOP' },
-        { label: 'Tazavesh the Veiled Market', value: 'TAZ' },
-    ];
-    armorStacks = [
-        { label: 'Any', value: 'Any' },
-        { label: 'Leather', value: 'Leather' },
-        { label: 'Plate', value: 'Plate' },
-        { label: 'Mail', value: 'Mail' },
-        { label: 'Cloth', value: 'Cloth' },
-    ];
-    classStacks = [
-        { label: 'Any', value: 'Any' },
-        { label: 'Warrior', value: 'Warrior' },
-        { label: 'Paladin', value: 'Paladin' },
-        { label: 'Hunter', value: 'Hunter' },
-        { label: 'Rogue', value: 'Rogue' },
-        { label: 'Priest', value: 'Priest' },
-        { label: 'Shaman', value: 'Shaman' },
-        { label: 'Mage', value: 'Mage' },
-        { label: 'Warlock', value: 'Warlock' },
-        { label: 'Monk', value: 'Monk' },
-        { label: 'Druid', value: 'Druid' },
-        { label: 'Demon Hunter', value: 'Demon Hunter' },
-        { label: 'Death Knight', value: 'Death Knight' },
-    ];
-
-    isChecked: boolean;
-    amount: number;
-    totalPot: number;
-    discount: number;
 
     realms: Array<SelectItem> = [];
 
@@ -84,40 +43,42 @@ export class BoostComponent {
         this.realms = this.context.realms.map(realm => ({ label: realm.name, value: realm }));
     }
 
-    addPaymentRow(): void {
-        this.payments.push({ amount: 0, realm: '' });
+    async onAction(action: UserAction): Promise<void> {
+        if (action.value === 'save') {
+            // Do something
+        }
     }
 
-    removePaymentRow(payment: any): void {
-        this.payments = this.payments.filter((item) => item !== payment);
+    onAddPaymentRow(index: number): void {
+        if (this.entity.payments.length >= 4) {
+            return;
+        }
+        this.entity.payments.splice(index - 1, 0, { realm: null, amount: 0, faction: null });
     }
 
-    addKeyRow(): void {
-        this.keys.push({
-            key: 'Any',
-            userId: '543556245437343244',
-            role: 'Tank',
+    onRemovePaymentRow(payment: IBoostPayment): void {
+        if (this.entity.payments.length === 1) {
+            return;
+        }
+        this.entity.payments = this.entity.payments.filter(item => item !== payment);
+    }
+
+    onAddKeyRow(index: number): void {
+        if (this.entity.keys.length >= 4) {
+            return;
+        }
+        this.entity.keys.splice(index - 1, 0, {
+            level: 0,
+            dungeon: null,
+            isTimed: false,
+            keyHolder: { discordId: null, role: null }
         });
     }
 
-    removeKeyRow(key: any): void {
-        this.keys = this.keys.filter((item) => item !== key);
-    }
-
-    update(payment: any): void {
-        console.log(payment);
-        // this.payments.find(item => item === payment).amount
-    }
-
-    onChange(): void {
-        this.totalPot =
-            this.amount - ((this.amount * 100) / 100) * this.discount;
-    }
-
-    total(): void {
-        this.totalPot = this.payments.reduce(
-            (sum, current) => sum + current.amount,
-            0
-        );
+    onRemoveKeyRow(key: IBoostKey): void {
+        if (this.entity.keys.length === 1) {
+            return;
+        }
+        this.entity.keys = this.entity.keys.filter(item => item !== key);
     }
 }

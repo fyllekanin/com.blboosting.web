@@ -7,18 +7,20 @@
     background: var(--input-background);
     outline: none;
     border: 1px solid #4e5358;
-    color: #c7c7c7;
+    color: #5c6e8a;
     position: relative;
-    color: gray;
     display: block;
     height: 39px;
-    line-height: 1.42857143;
+    line-height: 1.1;
     margin-bottom: 2px !important;
     padding: 10px 12px;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     width: 100%;
     outline: 0;
     cursor: pointer;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .values {
@@ -38,6 +40,10 @@
     z-index: 9;
     max-height: 341px;
     overflow-y: scroll;
+}
+
+.values::-webkit-scrollbar {
+    display: none;
 }
 
 .values div {
@@ -61,6 +67,6 @@
 div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     content: attr(data-placeholder);
     float: left;
-    margin-top: -3px;
-    opacity: 0.7;
+    margin-left: -4px;
+    color: #5c6e8a;
 }

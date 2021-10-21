@@ -1,71 +1,190 @@
-<app-content
-    header="Contact character"
-    tooltipText="Character name-realm for boosters to whisper, typically the character you're currently on"
->
-    <div class="grid-x grid-margin-x">
-        <div class="cell small-4">
-            <label for="name">Name</label>
-            <input id="name" type="text" [(ngModel)]="boost.boost.name"/>
-        </div>
-        <div class="cell small-4">
-            <label for="name">Realm</label>
-            <app-form-select [items]="realms" [(value)]="boost.boost.realm"></app-form-select>
-        </div>
-        <div class="cell small-4">
-            <label for="source">Source</label>
-            <select id="source" [(ngModel)]="boost.boost.source">
-                <option *ngFor="let source of context.sources" [ngValue]="source">
-                    {{ source }}
-                </option>
-            </select>
-        </div>
+<div class="grid-x grid-margin-x">
+    <div class="cell small-12">
+        <app-content header="Creating Boost"
+                     [actions]="actions" (onAction)="onAction($event)">
+        </app-content>
     </div>
-</app-content>
+    <div class="cell small-12 large-6">
+        <app-content header="Contact Character" tooltipText="Character name-realm for boosters to whisper">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-4">
+                    <label for="name">Name</label>
+                    <input id="name" type="text" [(ngModel)]="entity.boost.name" placeholder="Contact character name"/>
+                </div>
+                <div class="cell small-4">
+                    <label for="name">Realm</label>
+                    <app-form-select [items]="realms" [(value)]="entity.boost.realm"></app-form-select>
+                </div>
+                <div class="cell small-4">
+                    <label for="source">Source</label>
+                    <select id="source" [(ngModel)]="entity.boost.source">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let source of context.sources" [ngValue]="source">
+                            {{ source }}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </app-content>
+    </div>
+    <div class="cell small-12 large-6">
+        <app-content header="Play Along"
+                     tooltipText="If you wish to play along in the key(s), if will be keyholder ignore this">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 large-4">
+                    <label for="advertiser-name">Name</label>
+                    <input id="advertiser-name" type="text" [(ngModel)]="entity.playAlong.name"
+                           placeholder="Character name"/>
+                </div>
+                <div class="cell small-12 large-4">
+                    <label for="advertiser-name">Realm</label>
+                    <app-form-select [items]="realms" [(value)]="entity.playAlong.realm"></app-form-select>
+                </div>
+                <div class="cell small-12 large-4">
+                    <label for="advertiser-role">Role</label>
+                    <select id="advertiser-role" [(ngModel)]="entity.playAlong.role">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.roles" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+            </div>
+        </app-content>
+    </div>
+    <div class="cell small-12 large-6">
+        <app-content header="Payments">
+            <div class="grid-x grid-margin-x" *ngFor="let item of entity.payments; let index = index">
+                <div class="cell small-12 large-3">
+                    <label [for]="index + '-payment-realm'">Realm</label>
+                    <app-form-select [items]="realms" [(value)]="item.realm"></app-form-select>
+                </div>
+                <div class="cell small-12 large-3">
+                    <label [for]="index + '-payment-amount'">Amount</label>
+                    <input [id]="index + '-payment-amount'" type="number" [(ngModel)]="item.amount"/>
+                </div>
+                <div class="cell small-12 large-3">
+                    <label [for]="index + '-payment-faction'">Faction</label>
+                    <select [id]="index + '-payment-faction'" [(ngModel)]="item.faction">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.factions" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="cell small-12 large-3">
+                    <span class="payment-option" (click)="onAddPaymentRow(index)"
+                          [attr.disabled]="entity.payments.length >= 4"><em
+                        class="fas fa-plus"></em></span>
+                    <span class="payment-option" (click)="onRemovePaymentRow(item)"
+                          [attr.disabled]="entity.payments.length === 1"><em
+                        class="fas fa-minus"></em></span>
+                </div>
+            </div>
+            <hr/>
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 large-6 balance-switch">
+                    <div class="toggle-container">
+                        <label class="toggle-control">
+                            <input type="checkbox"
+                                   [checked]="entity.balancePayment >= 0"
+                                   (change)="entity.balancePayment = entity.balancePayment >= 0 ? -1 : 0">
+                            <span class="control"></span>
+                        </label>
+                        <span>Is any payment from balance?</span>
+                    </div>
+                </div>
+                <div class="cell small-12 large-6" *ngIf="entity.balancePayment >= 0">
+                    <label for="payment-balance">Amount from balance</label>
+                    <input id="payment-balance" type="number" [ngModel]="entity.balancePayment"
+                           (ngModelChange)="entity.balancePayment = $event < 0 ? 0 : $event"/>
+                </div>
+            </div>
+        </app-content>
+    </div>
+    <div class="cell small-12 large-6">
+        <app-content header="Boost Information">
+            <div class="grid-x grid-margin-x">
+                <div class="cell small-12 large-4">
+                    <label for="boost-armor-stack">Armor Stack</label>
+                    <select id="boost-armor-stack" [(ngModel)]="entity.boost.armor">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.armors" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="cell small-12 large-4">
+                    <label for="boost-class-stack">Class Stack</label>
+                    <select id="boost-class-stack" [(ngModel)]="entity.boost.class">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.classes" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="cell small-12 large-4">
+                    <label for="boost-class-note">Class Stack</label>
+                    <input id="boost-class-note" type="text" [(ngModel)]="entity.boost.note"/>
+                </div>
+            </div>
+        </app-content>
+    </div>
+    <div class="cell small-12">
+        <app-content header="Keys">
+            <div class="grid-x grid-margin-x" *ngFor="let item of entity.keys; let index = index">
+                <div class="cell small-12 large-2">
+                    <label [for]="index + '-key-dungeon'">Dungeon</label>
+                    <select [id]="index + '-key-dungeon'" [(ngModel)]="item.dungeon">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.dungeons" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="cell small-12 large-2">
+                    <label [for]="index + '-key-level'">Level</label>
+                    <input [id]="index + '-key-level'" type="number" [(ngModel)]="item.level"/>
+                </div>
+                <div class="cell small-12 large-1 balance-switch">
+                    <div class="toggle-container">
+                        <label class="toggle-control">
+                            <input type="checkbox"
+                                   [checked]="item.isTimed"
+                                   (change)="item.isTimed = !item.isTimed">
+                            <span class="control"></span>
+                        </label>
+                        <span>Timed</span>
+                    </div>
+                </div>
+                <div class="cell small-12 large-2">
+                    <label [for]="index + '-key-realm'">Keyholder <em>(Leave empty if none)</em></label>
+                    <app-form-select [items]="realms" [(value)]="item.keyHolder.discordId"></app-form-select>
+                </div>
+                <div class="cell small-12 large-2">
+                    <label [for]="index + '-key-role'">Role</label>
+                    <select [id]="index + '-key-role'" [(ngModel)]="item.keyHolder.role">
+                        <option disabled="disabled" [ngValue]="null">Select...</option>
+                        <option *ngFor="let value of context.roles" [ngValue]="value">
+                            {{value}}
+                        </option>
+                    </select>
+                </div>
+                <div class="cell small-12 large-3">
+                    <span class="payment-option" (click)="onAddKeyRow(index)"
+                          [attr.disabled]="entity.keys.length >= 4"><em
+                        class="fas fa-plus"></em></span>
+                    <span class="payment-option" (click)="onRemoveKeyRow(item)"
+                          [attr.disabled]="entity.keys.length === 1"><em
+                        class="fas fa-minus"></em></span>
+                </div>
+            </div>
+        </app-content>
+    </div>
+</div>
 
-<app-content
-    header="Source of payment(s)"
-    tooltipText="The amount(s) and realm(s) the client has paid on"
->
-    <div *ngFor="let payment of payments; let index = index; let last = last">
-        <div class="grid-x grid-margin-x">
-            <div class="cell small-4">
-                <label [for]="index + '-amount'">Amount</label>
-                <input
-                    [id]="index + '-amount'"
-                    type="number"
-                    placeholder="Amount in k, e.g 100 or 100.5"
-                />
-            </div>
-            <div class="cell small-5">
-                <label [for]="index + '-realm'">Realm</label>
-                <select [id]="index + '-realm'">
-                    <option *ngFor="let option of realms">
-                        {{ option }}
-                    </option>
-                </select>
-            </div>
-            <div class="cell small-2">
-                <i
-                    *ngIf="payments.length > 1"
-                    (click)="removePaymentRow(payment)"
-                    class="fas fa-minus"
-                ></i>
-                <i
-                    *ngIf="last && payments.length < 4"
-                    (click)="addPaymentRow()"
-                    class="fas fa-plus"
-                ></i>
-                <i *ngIf="!last" class="fas fa-plus" style="opacity: 0"></i>
-                <i
-                    *ngIf="!last"
-                    (click)="addPaymentRow()"
-                    class="fas fa-plus"
-                    style="opacity: 0"
-                ></i>
-            </div>
-        </div>
-    </div>
-</app-content>
+
+<!--
 
 <app-content
     header="From balance"
@@ -119,13 +238,9 @@
                 <div class="cell small-5">
                     <label [for]="index + '-key'">Keyholder</label>
                     <select [id]="index + '-key'">
-                        <!-- Loop through all users with boosting roles that match the keystone level -->
                         <option>Thedrunken-Kazzak</option>
                         <option>Kelthuras-TwistingNether</option>
                         <option>Fleqqyhunt-TarrenMill</option>
-                        <!-- <option *ngFor="let dungeon of dungeons">
-                            {{ dungeon.label }}
-                        </option> -->
                     </select>
                 </div>
 
@@ -194,9 +309,6 @@
     <select>
         <option>Timed</option>
         <option>Untimed</option>
-        <!-- <option *ngFor="let keyState of keyStates">
-                    {{ keyState.label }}
-                </option> -->
     </select>
 </app-content>
 
@@ -225,3 +337,4 @@
     <label>Note</label>
     <input type="text"/>
 </app-content>
+-->
