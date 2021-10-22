@@ -8,7 +8,7 @@ import { ColorValue } from '../../../../../shared/constants/colors.constants';
 @Component({
     selector: 'app-admin-boosts-boost',
     templateUrl: 'boost.component.html',
-    styleUrls: ['boost.component.css'],
+    styleUrls: ['boost.component.scss'],
 })
 export class BoostComponent {
     context: BoostContext;

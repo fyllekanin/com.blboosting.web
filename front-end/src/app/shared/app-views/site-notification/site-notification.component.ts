@@ -5,7 +5,7 @@ import { SiteNotification, SiteNotificationType } from './site-notification.inte
 @Component({
     selector: 'app-site-notification',
     templateUrl: 'site-notification.component.html',
-    styleUrls: ['site-notification.component.css'],
+    styleUrls: ['site-notification.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class SiteNotificationComponent {

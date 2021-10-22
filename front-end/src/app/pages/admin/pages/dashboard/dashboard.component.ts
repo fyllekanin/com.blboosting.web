@@ -4,7 +4,7 @@ import { AuthService } from '../../../../core/auth/auth.service';
 @Component({
     selector: 'app-admin-dashboard',
     templateUrl: 'dashboard.component.html',
-    styleUrls: ['dashboard.component.css']
+    styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent {
     avatarUrl: string;

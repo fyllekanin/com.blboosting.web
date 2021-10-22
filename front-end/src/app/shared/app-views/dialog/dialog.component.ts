@@ -13,7 +13,7 @@ import { DialogButton } from './dialog.model';
 @Component({
     selector: 'app-dialog',
     templateUrl: 'dialog.component.html',
-    styleUrls: [ 'dialog.component.css' ]
+    styleUrls: [ 'dialog.component.scss' ]
 })
 export class DialogComponent<C> {
     private componentInstance: ComponentRef<C>;

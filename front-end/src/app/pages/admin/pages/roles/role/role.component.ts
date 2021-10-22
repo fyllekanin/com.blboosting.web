@@ -12,7 +12,7 @@ import { ColorValue } from '../../../../../shared/constants/colors.constants';
 @Component({
     selector: 'app-admin-roles-role',
     templateUrl: 'role.component.html',
-    styleUrls: ['role.component.css']
+    styleUrls: ['role.component.scss']
 })
 export class RoleComponent implements OnDestroy {
     entity: RoleEntry;

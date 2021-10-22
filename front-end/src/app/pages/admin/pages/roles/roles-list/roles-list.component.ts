@@ -10,7 +10,7 @@ import { Unsubscribable } from 'rxjs';
 @Component({
     selector: 'app-admin-roles-list',
     templateUrl: 'roles-list.component.html',
-    styleUrls: ['roles-list.component.css']
+    styleUrls: ['roles-list.component.scss']
 })
 @UnSub()
 export class RolesListComponent implements OnDestroy {
