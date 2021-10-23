@@ -19,8 +19,26 @@ export class BoostComponent {
             name: null,
             realm: null,
             source: null,
-            armor: 'ANY',
-            class: 'ANY'
+            armor: {
+                cloth: false,
+                leather: false,
+                mail: false,
+                plate: false
+            },
+            class: {
+                warrior: false,
+                paladin: false,
+                hunter: false,
+                rogue: false,
+                priest: false,
+                shaman: false,
+                mage: false,
+                warlock: false,
+                monk: false,
+                druid: false,
+                demonHunter: false,
+                deathKnight: false
+            }
         },
         playAlong: {
             name: null,
@@ -37,10 +55,18 @@ export class BoostComponent {
     ];
 
     realms: Array<SelectItem> = [];
+    factions: Array<SelectItem> = [];
+    sources: Array<SelectItem> = [];
+    roles: Array<SelectItem> = [];
+    dungeons: Array<SelectItem> = [];
 
     constructor(activatedRoute: ActivatedRoute) {
         this.context = activatedRoute.snapshot.data.data.context;
         this.realms = this.context.realms.map(realm => ({ label: realm.name, value: realm }));
+        this.factions = this.context.factions.map(faction => ({ label: faction, value: faction }));
+        this.sources = this.context.sources.map(source => ({ label: source, value: source }));
+        this.roles = this.context.roles.map(role => ({ label: role, value: role }));
+        this.dungeons = this.context.dungeons.map(dungeon => ({ label: dungeon, value: dungeon }));
     }
 
     async onAction(action: UserAction): Promise<void> {
@@ -53,7 +79,7 @@ export class BoostComponent {
         if (this.entity.payments.length >= 4) {
             return;
         }
-        this.entity.payments.splice(index - 1, 0, { realm: null, amount: 0, faction: null });
+        this.entity.payments.splice((index + 2) - 1, 0, { realm: null, amount: 0, faction: null });
     }
 
     onRemovePaymentRow(payment: IBoostPayment): void {
@@ -67,7 +93,7 @@ export class BoostComponent {
         if (this.entity.keys.length >= 4) {
             return;
         }
-        this.entity.keys.splice(index - 1, 0, {
+        this.entity.keys.splice((index + 2) - 1, 0, {
             level: 0,
             dungeon: null,
             isTimed: false,

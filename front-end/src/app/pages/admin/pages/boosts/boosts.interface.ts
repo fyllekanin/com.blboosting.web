@@ -13,16 +13,16 @@ export interface BoostContext {
 export interface IBoostPayment {
     realm: SelectItem;
     amount: number;
-    faction: string;
+    faction: SelectItem;
 }
 
 export interface IBoostKey {
     level: number | string;
-    dungeon: string;
+    dungeon: SelectItem;
     isTimed: boolean;
     keyHolder: {
         discordId: string;
-        role: string;
+        role: SelectItem;
     };
 }
 
@@ -32,15 +32,33 @@ export interface IBoost {
     boost: {
         name: string;
         realm: SelectItem;
-        source: string;
-        armor: string;
-        class: string;
+        source: SelectItem;
+        armor: {
+            cloth: boolean,
+            leather: boolean,
+            mail: boolean,
+            plate: boolean
+        };
+        class: {
+            warrior: boolean,
+            paladin: boolean,
+            hunter: boolean,
+            rogue: boolean,
+            priest: boolean,
+            shaman: boolean,
+            mage: boolean,
+            warlock: boolean,
+            monk: boolean,
+            druid: boolean,
+            demonHunter: boolean,
+            deathKnight: boolean
+        };
         note?: string;
     };
     playAlong: {
         name: string;
         realm: SelectItem;
-        role: string;
+        role: SelectItem;
     };
     keys: Array<IBoostKey>;
     balancePayment?: number;

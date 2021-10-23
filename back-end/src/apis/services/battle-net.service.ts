@@ -59,7 +59,7 @@ export class BattleNetService {
             }
         })
             .then(async result => result.data).catch(err => {
-                console.error(`BattleNet oauth: ${err}`);
+                console.error(`BattleNet getData error: ${err}`);
                 if (err.response.status === 401) {
                     BattleNetService.ACCESS_TOKEN = null;
                     return this.getRealmList(region);
