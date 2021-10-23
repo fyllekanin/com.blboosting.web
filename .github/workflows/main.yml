@@ -55,6 +55,8 @@ jobs:
           echo "${{secrets.MONGODB_DATABASE}}" >> temp/.env
           echo "${{secrets.MONGODB_HOST}}" >> temp/.env
           echo "${{secrets.TOKEN_SECRET}}" >> temp/.env
+          echo "${{secrets.BATTLE_NET_CLIENT_ID}}" >> temp/.env
+          echo "${{secrets.BATTLE_NET_CLIENT_SECRET}}" >> temp/.env
           
       - name: Check if current production exists
         id: check_files
