@@ -11,7 +11,7 @@
 
     <span *ngIf="actions.length > 0" class="buttons">
         <button *ngFor="let action of actions" [style]="{ background: action.color }"
-                (click)="action.link ? onLink(action) : onAction.emit(action)">
+                (click)="action.link ? onLink(action) : action.emit(action)">
                 <i [class]="action.icon"></i> {{action.label}}
             </button>
     </span>

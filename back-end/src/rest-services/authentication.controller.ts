@@ -37,7 +37,7 @@ export class AuthenticationController {
     @Middleware([AUTHORIZATION_MIDDLEWARE])
     async getInitialize(req: InternalRequest, res: Response): Promise<void> {
 
-        let user = await UserRepository.newRepository().get(new ObjectId(req.user.id));
+        const user = await UserRepository.newRepository().get(new ObjectId(req.user.id));
         res.status(StatusCodes.OK).json({
             id: user._id.toString(),
             discordId: user.discordId,
@@ -58,7 +58,7 @@ export class AuthenticationController {
             res.status(StatusCodes.UNAUTHORIZED).json();
             return;
         }
-        let user = await UserRepository.newRepository().getUserByDiscordId(jwt.discordId);
+        const user = await UserRepository.newRepository().getUserByDiscordId(jwt.discordId);
         res.status(StatusCodes.OK).json({
             id: user._id.toString(),
             discordId: user.discordId,
@@ -90,7 +90,6 @@ export class AuthenticationController {
         } else {
             user = await userRepository.update({ ...user, ...{ avatarHash: discord.avatar } });
         }
-        const payload = JSON.stringify(await this.getPayload(req.client, user, discord));
         res.send(`
         <!DOCTYPE HTML>
         <html>
