@@ -30,11 +30,19 @@ export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: num
         return entity;
     }
 
+    async insertMany(entities: Array<T>): Promise<void> {
+        entities.forEach(entity => {
+            entity.createdAt = new Date().getTime();
+            entity.updatedAt = new Date().getTime();
+        });
+        await this.getCollection().insertMany(entities as Array<OptionalId<T>>);
+    }
+
     async update(entity: T): Promise<T> {
         entity.updatedAt = new Date().getTime();
         const body = { ...entity };
         delete body._id;
-        
+
         await this.getCollection().updateOne({ _id: new ObjectId(entity._id) }, {
             $set: body
         });

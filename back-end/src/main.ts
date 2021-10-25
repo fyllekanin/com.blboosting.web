@@ -16,6 +16,7 @@ import { RolesController } from './rest-services/admin/roles.controller';
 import { InternalRequest } from './utilities/internal.request';
 import { MigrationService } from './migrations/migration.service';
 import { BoostsController } from './rest-services/admin/boosts.controller';
+import { Configuration } from './configuration';
 
 dotenv.config();
 
@@ -26,6 +27,7 @@ class MainServer extends Server {
 
     constructor() {
         super();
+        Configuration.loadConfig(process.env.ENVIRONMENT);
         this.backgroundTaskHandler = new BackgroundTaskHandler();
         this.app.use(express.json());
         this.app.use(compression());

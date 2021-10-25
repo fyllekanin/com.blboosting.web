@@ -36,7 +36,6 @@ export class AuthenticationController {
     @Get('initialize')
     @Middleware([AUTHORIZATION_MIDDLEWARE])
     async getInitialize(req: InternalRequest, res: Response): Promise<void> {
-
         const user = await UserRepository.newRepository().get(new ObjectId(req.user.id));
         res.status(StatusCodes.OK).json({
             id: user._id.toString(),

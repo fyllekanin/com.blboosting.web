@@ -1,13 +1,39 @@
 import { SelectItem } from '../../../../shared/components/form/select/select.interface';
 
+export interface IBooster {
+    discordId: string;
+    name: string;
+    armors: {
+        cloth: boolean,
+        leather: boolean,
+        mail: boolean,
+        plate: boolean
+    };
+    classes: {
+        priest: boolean,
+        warlock: boolean,
+        mage: boolean,
+        druid: boolean,
+        monk: boolean,
+        rogue: boolean,
+        demonHunter: boolean,
+        hunter: boolean,
+        shaman: boolean,
+        warrior: boolean,
+        deathKnight: boolean,
+        paladin: boolean
+    };
+}
+
 export interface BoostContext {
     realms: Array<{ realmId: number, name: string, category: string }>;
     sources: Array<string>;
-    classes: Array<string>;
+    classes: Array<{ label: string, value: string, discordId: string }>;
     dungeons: Array<string>;
-    armors: Array<string>;
+    armors: Array<{ label: string, value: string, discordId: string }>;
     roles: Array<string>;
     factions: Array<string>;
+    boosters: { low: Array<IBooster>, medium: Array<IBooster>, high: Array<IBooster>, elite: Array<IBooster> };
 }
 
 export interface IBoostPayment {
@@ -20,8 +46,9 @@ export interface IBoostKey {
     level: number | string;
     dungeon: SelectItem;
     isTimed: boolean;
+    availableBoosters: Array<SelectItem>;
     keyHolder: {
-        discordId: string;
+        user: SelectItem;
         role: SelectItem;
     };
 }

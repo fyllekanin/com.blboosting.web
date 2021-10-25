@@ -7,7 +7,7 @@
     background: var(--input-background);
     outline: none;
     border: 1px solid #4e5358;
-    color: #5c6e8a;
+    color: var(--secondary-text-color);
     position: relative;
     display: block;
     height: 39px;
@@ -68,5 +68,6 @@ div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     content: attr(data-placeholder);
     float: left;
     margin-left: -4px;
-    color: #5c6e8a;
+    color: var(--secondary-text-color);
+    opacity: 0.5;
 }

@@ -1,18 +1,14 @@
 import axios from 'axios';
-import {
-    BattleNetConnectedRealm,
-    BattleNetOauth2,
-    BattleNetRealm,
-    BattleNetRealms
-} from '../interfaces/battle-net.interface';
+import { BattleNetOauth2, BattleNetRealm, BattleNetRealms } from '../interfaces/battle-net.interface';
 import { URLSearchParams } from 'url';
 
 export enum BattleNetRegions {
     EU = 'eu'
 }
 
+let ACCESS_TOKEN: string = null
+
 export class BattleNetService {
-    private static ACCESS_TOKEN: string = null;
     private static readonly BASE_URL = 'https://{{REGION}}.api.blizzard.com';
     private static readonly AUTH_URL = 'https://eu.battle.net/oauth/token';
 
@@ -32,37 +28,22 @@ export class BattleNetService {
         return await this.getData<BattleNetRealms>(region, '/data/wow/realm/index', queryParams);
     }
 
-    static async getConnectedRealmList(region: BattleNetRegions): Promise<Array<BattleNetConnectedRealm>> {
-        const queryParams = [
-            `namespace=dynamic-${region}`,
-            `locale=en_US`
-        ].join('&');
-        const indexes = await this.getData<{ connected_realms: Array<{ href: string }> }>(region, '/data/wow/connected-realm/index', queryParams);
-        const indexIds = indexes.connected_realms.map(item => item.href.match(/([0-9]+)/)[0]);
-        const connectedRealms: Array<BattleNetConnectedRealm> = [];
-
-        for (const indexId of indexIds) {
-            connectedRealms.push(await this.getData<BattleNetConnectedRealm>(region, `/data/wow/connected-realm/${indexId}`, queryParams));
-        }
-        return connectedRealms;
-    }
-
     private static async getData<T>(region: BattleNetRegions, path: string, queryParameters: string): Promise<T> {
-        if (!BattleNetService.ACCESS_TOKEN) {
-            BattleNetService.ACCESS_TOKEN = `Bearer ${(await this.getOauth()).access_token}`;
+        if (!ACCESS_TOKEN) {
+            ACCESS_TOKEN = `Bearer ${(await this.getOauth()).access_token}`;
         }
         return await axios.get(`${BattleNetService.BASE_URL.replace('{{REGION}}', region)}${path}?${queryParameters}`, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
-                Authorization: BattleNetService.ACCESS_TOKEN
+                Authorization: ACCESS_TOKEN
             }
         })
             .then(async result => result.data).catch(err => {
                 console.error(`BattleNet getData error: ${err}`);
-                if (err.response.status === 401) {
-                    BattleNetService.ACCESS_TOKEN = null;
-                    return this.getRealmList(region);
+                if (err.response && err.response.status === 401) {
+                    ACCESS_TOKEN = null;
+                    return this.getData(region, path, queryParameters);
                 }
             });
     }

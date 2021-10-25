@@ -12,6 +12,14 @@ const promises = [
             }
             res();
         });
+    }),
+    new Promise(res => {
+        ncp('src/resources', 'dist/resources', function (err) {
+            if (err) {
+                return console.error(err);
+            }
+            res();
+        });
     })
 ];
 

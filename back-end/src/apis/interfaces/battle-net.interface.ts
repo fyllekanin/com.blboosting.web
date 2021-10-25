@@ -22,8 +22,3 @@ export interface SlimBattleNetRealm {
 export interface BattleNetRealms {
     realms: Array<SlimBattleNetRealm>;
 }
-
-export interface BattleNetConnectedRealm {
-    id: number;
-    realms: Array<SlimBattleNetRealm>
-}

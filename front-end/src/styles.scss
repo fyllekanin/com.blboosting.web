@@ -1,16 +1,12 @@
 /** General styles **/
 :root {
-    --main-background: #151a30;
-    --main-text-color: #e3e3d5;
-
-    --secondary-backround: #222b45;
-    --secondary-text-color: #66718a;
-
+    --main-background: #161616;
+    --main-text-color: #a5a5a5;
+    --secondary-backround: #1e1e1e;
+    --secondary-text-color: #4e4e4e;
     --active-link-color: #3366ff;
-
-    --input-background: #192038;
-    --input-active-background: #222b45;
-
+    --input-background: #161616;
+    --input-active-background: #1e1e1e;
     --primary-color: #154a5e;
     --abort-color: #6e3d3d;
     --success-color: #3c7642;
@@ -192,8 +188,7 @@ input:focus, input[type=text]:focus, input[type=number]:focus, select:focus {
 }
 
 input::placeholder {
-    color: #5c6e8a;
-    opacity: 1;
+    color: var(--secondary-text-color);
 }
 
 button {

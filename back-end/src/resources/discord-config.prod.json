@@ -1,0 +1,92 @@
+{
+    "ArmorRoles": {
+        "CLOTH": {
+            "label": "Cloth",
+            "value": "CLOTH",
+            "discordId": "697454495759859762"
+        },
+        "LEATHER": {
+            "label": "Leather",
+            "value": "LEATHER",
+            "discordId": "697454483395051530"
+        },
+        "MAIL": {
+            "label": "Mail",
+            "value": "MAIL",
+            "discordId": "697454466752053251"
+        },
+        "PLATE": {
+            "label": "Plate",
+            "value": "PLATE",
+            "discordId": "697454451086065684"
+        }
+    },
+    "ClassRoles": {
+        "PRIEST": {
+            "label": "Priest",
+            "value": "PRIEST",
+            "discordId": "701104413615456387"
+        },
+        "MAGE": {
+            "label": "Mage",
+            "value": "MAGE",
+            "discordId": "701104556905594901"
+        },
+        "WARLOCK": {
+            "label": "Warlock",
+            "value": "WARLOCK",
+            "discordId": "701104486990479431"
+        },
+        "DRUID": {
+            "label": "Druid",
+            "value": "DRUID",
+            "discordId": "701104290944647199"
+        },
+        "MONK": {
+            "label": "Monk",
+            "value": "MONK",
+            "discordId": "701104352890191893"
+        },
+        "ROGUE": {
+            "label": "Rogue",
+            "value": "ROGUE",
+            "discordId": "701104130499936297"
+        },
+        "DEMON_HUNTER": {
+            "label": "Demon Hunter",
+            "value": "DEMON_HUNTER",
+            "discordId": "701103712373833778"
+        },
+        "HUNTER": {
+            "label": "Hunter",
+            "value": "HUNTER",
+            "discordId": "701103603519062096"
+        },
+        "SHAMAN": {
+            "label": "Shaman",
+            "value": "Shaman",
+            "discordId": "701103674117849108"
+        },
+        "WARRIOR": {
+            "label": "Warrior",
+            "value": "WARRIOR",
+            "discordId": "701103062139535411"
+        },
+        "PALADIN": {
+            "label": "Paladin",
+            "value": "PALADIN",
+            "discordId": "701103133199433839"
+        },
+        "DEATH_KNIGHT": {
+            "label": "Death Knight",
+            "value": "DEATH_KNIGHT",
+            "discordId": "701103208738586724"
+        }
+    },
+    "BoosterRoles": {
+        "LOW_KEY_BOOSTER": "777514592074465282",
+        "MEDIUM_KEY_BOOSTER": "777515518411407381",
+        "HIGH_KEY_BOOSTER": "777515746942517268",
+        "ELITE_KEY_BOOSTER": "859197916479750155"
+    }
+}
