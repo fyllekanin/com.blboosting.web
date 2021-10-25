@@ -28,9 +28,7 @@ export interface IBooster {
 export interface BoostContext {
     realms: Array<{ realmId: number, name: string, category: string }>;
     sources: Array<string>;
-    classes: Array<{ label: string, value: string, discordId: string }>;
-    dungeons: Array<string>;
-    armors: Array<{ label: string, value: string, discordId: string }>;
+    dungeons: Array<{ name: string, value: string, levels: Array<SelectItem> }>;
     roles: Array<string>;
     factions: Array<string>;
     boosters: { low: Array<IBooster>, medium: Array<IBooster>, high: Array<IBooster>, elite: Array<IBooster> };
@@ -43,7 +41,7 @@ export interface IBoostPayment {
 }
 
 export interface IBoostKey {
-    level: number | string;
+    level: SelectItem;
     dungeon: SelectItem;
     isTimed: boolean;
     availableBoosters: Array<SelectItem>;

@@ -1,4 +1,4 @@
-import { Controller, Get, Middleware } from '@overnightjs/core';
+import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest } from '../../utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
@@ -10,7 +10,7 @@ import { BoostSource } from '../../constants/boost-source.constant';
 import { Dungeon } from '../../constants/dungeons.constant';
 import { Role } from '../../constants/roles.constant';
 import { Faction } from '../../constants/factions.constant';
-import { Client, GuildMember } from 'discord.js';
+import { Client, GuildMember, TextChannel } from 'discord.js';
 import { Configuration } from '../../configuration';
 
 interface IKeyBooster {
@@ -47,13 +47,36 @@ export class BoostsController {
         res.status(StatusCodes.OK).json({
             realms: await RealmRepository.newRepository().getAll(),
             sources: Object.keys(BoostSource).map(key => BoostSource[key]),
-            classes: Configuration.get().ClassRoles,
             dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
-            armors: Configuration.get().ArmorRoles,
             roles: Object.keys(Role).map(key => Role[key]),
             factions: Object.keys(Faction).map(key => Faction[key]),
             boosters: await this.getKeyBoosters(req.client)
         });
+    }
+
+    @Post()
+    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
+    async createBoost(req: InternalRequest, res: Response): Promise<void> {
+        const channel = <TextChannel>req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST);
+        if (req.body == null) {
+            return;
+        }
+
+        await channel.send(JSON.stringify({
+            name: req.body.boost.name,
+            realm: req.body.boost.realm.name,
+            source: req.body.boost.source.value,
+            payments: [],
+            discount: 0,
+            stack: [],
+            keys: [],
+            advertiser: {
+                playing: req.body.playAlong.name != null,
+                advertiserId: req.user.discordId,
+                role: req.body.playAlong.role.value
+            },
+            notes: req.body.boost.note
+        }));
     }
 
     private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBooster>, medium: Array<IKeyBooster>, high: Array<IKeyBooster>, elite: Array<IKeyBooster> }> {

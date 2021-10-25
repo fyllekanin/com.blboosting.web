@@ -47,7 +47,7 @@ export class BoostComponent {
             role: null
         },
         keys: [{
-            level: 0,
+            level: null,
             dungeon: null,
             isTimed: false,
             keyHolder: { user: null, role: null },
@@ -57,7 +57,7 @@ export class BoostComponent {
     };
 
     actions: Array<UserAction> = [
-        { label: 'Save', color: ColorValue.GREEN, value: 'save' },
+        { label: 'Submit', color: ColorValue.GREEN, value: 'submit' },
         { label: 'Back', color: ColorValue.BLUE, link: '/admin/boosts/page/1' }
     ];
 
@@ -76,7 +76,7 @@ export class BoostComponent {
         this.factions = this.context.factions.map(faction => ({ label: faction, value: faction }));
         this.sources = this.context.sources.map(source => ({ label: source, value: source }));
         this.roles = this.context.roles.map(role => ({ label: role, value: role }));
-        this.dungeons = this.context.dungeons.map(dungeon => ({ label: dungeon, value: dungeon }));
+        this.dungeons = this.context.dungeons.map(dungeon => ({ label: dungeon.name, value: dungeon }));
 
         this.entity.keys[0].availableBoosters = this.context.boosters.low.map(booster => ({
             label: booster.name,
@@ -85,7 +85,7 @@ export class BoostComponent {
     }
 
     async onAction(action: UserAction): Promise<void> {
-        if (action.value === 'save') {
+        if (action.value === 'submit') {
             // Do something
         }
     }
@@ -120,7 +120,7 @@ export class BoostComponent {
             return;
         }
         this.entity.keys.splice((index + 2) - 1, 0, {
-            level: 0,
+            level: null,
             dungeon: null,
             isTimed: false,
             availableBoosters: this.context.boosters.low.map(booster => ({
@@ -140,14 +140,18 @@ export class BoostComponent {
 
     private getAvailableBoosters(item: IBoostKey): Array<SelectItem> {
         let boosters: Array<IBooster> = this.context.boosters.low;
-        if (item.isTimed && item.level >= 16) {
-            boosters = this.context.boosters.elite;
-        }
-        if (item.isTimed && item.level >= 15) {
+        if (item.dungeon.value === 'TAZA') {
             boosters = this.context.boosters.high;
-        }
-        if ((item.isTimed && item.level >= 10) || item.level > 10) {
-            boosters = this.context.boosters.medium;
+        } else {
+            if (item.isTimed && item.level.value >= 16) {
+                boosters = this.context.boosters.elite;
+            }
+            if (item.isTimed && item.level.value >= 15) {
+                boosters = this.context.boosters.high;
+            }
+            if ((item.isTimed && item.level.value >= 10) || item.level.value > 10) {
+                boosters = this.context.boosters.medium;
+            }
         }
 
         boosters = this.getApplicableArmors(boosters);

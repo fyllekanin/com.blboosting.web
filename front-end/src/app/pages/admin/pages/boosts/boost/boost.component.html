@@ -304,12 +304,13 @@
                 <div class="cell small-12 large-2">
                     <label [for]="index + '-key-dungeon'">Dungeon</label>
                     <app-form-select [id]="index + '-key-dungeon'" [items]="dungeons"
-                                     [(value)]="item.dungeon"></app-form-select>
+                                     [(value)]="item.dungeon" (valueChange)="item.level = null"></app-form-select>
                 </div>
                 <div class="cell small-12 large-2">
                     <label [for]="index + '-key-level'">Level</label>
-                    <input [id]="index + '-key-level'" type="number" [ngModel]="item.level"
-                           (ngModelChange)="item.level = $event; onKeyChange(item)"/>
+                    <app-form-select *ngIf="item.dungeon" [items]="index + '-key-level'"
+                                     [items]="item.dungeon.value.levels" [value]="item.level"
+                                     (valueChange)="item.level = $event; onKeyChange(item)"></app-form-select>
                 </div>
                 <div class="cell small-12 large-1 balance-switch">
                     <div class="toggle-container">
