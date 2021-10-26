@@ -1,7 +1,7 @@
 <div class="grid-x grid-margin-x">
     <div class="cell small-12">
         <app-content [header]="entity?._id ? 'Updating: ' + entity.name : 'Creating: ' + entity?.name"
-                     [actions]="actions" (action)="onAction($event)">
+                     [actions]="actions" (actionChange)="onAction($event)">
         </app-content>
     </div>
     <div class="cell small-12 medium-6">

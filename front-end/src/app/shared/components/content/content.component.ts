@@ -14,7 +14,7 @@ export class ContentComponent {
     @Input() actions: Array<UserAction> = [];
 
 
-    @Output() action: EventEmitter<UserAction> = new EventEmitter();
+    @Output() actionChange: EventEmitter<UserAction> = new EventEmitter();
 
     constructor(private router: Router) {
     }

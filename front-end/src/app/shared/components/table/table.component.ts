@@ -11,7 +11,7 @@ export class TableComponent {
 
 
     @Input() headers: Array<TableHeader> = [];
-    @Output() action: EventEmitter<TableActionResponse> = new EventEmitter();
+    @Output() actionChange: EventEmitter<TableActionResponse> = new EventEmitter();
     doAnyRowHaveActions = false;
 
     @Input()

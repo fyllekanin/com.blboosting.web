@@ -1,7 +1,7 @@
 <app-pagination [total]="pagination?.total" [page]="pagination?.page"></app-pagination>
 
 <app-content header="Roles">
-    <app-table [headers]="headers" [rows]="rows" (action)="onAction($event)"></app-table>
+    <app-table [headers]="headers" [rows]="rows" (actionChange)="onAction($event)"></app-table>
 </app-content>
 
 <app-pagination [total]="pagination?.total" [page]="pagination?.page"></app-pagination>

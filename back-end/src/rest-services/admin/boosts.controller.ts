@@ -10,33 +10,9 @@ import { BoostSource } from '../../constants/boost-source.constant';
 import { Dungeon } from '../../constants/dungeons.constant';
 import { Role } from '../../constants/roles.constant';
 import { Faction } from '../../constants/factions.constant';
-import { Client, GuildMember, TextChannel } from 'discord.js';
+import { Client, GuildMember } from 'discord.js';
 import { Configuration } from '../../configuration';
-
-interface IKeyBooster {
-    discordId: string;
-    name: string;
-    armors: {
-        cloth: boolean,
-        leather: boolean,
-        mail: boolean,
-        plate: boolean
-    };
-    classes: {
-        priest: boolean,
-        warlock: boolean,
-        mage: boolean,
-        druid: boolean,
-        monk: boolean,
-        rogue: boolean,
-        demonHunter: boolean,
-        hunter: boolean,
-        shaman: boolean,
-        warrior: boolean,
-        deathKnight: boolean,
-        paladin: boolean
-    };
-}
+import { IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
@@ -57,38 +33,19 @@ export class BoostsController {
     @Post()
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async createBoost(req: InternalRequest, res: Response): Promise<void> {
-        const channel = <TextChannel>req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST);
-        if (req.body == null) {
-            return;
-        }
-
-        await channel.send(JSON.stringify({
-            name: req.body.boost.name,
-            realm: req.body.boost.realm.name,
-            source: req.body.boost.source.value,
-            payments: [],
-            discount: 0,
-            stack: [],
-            keys: [],
-            advertiser: {
-                playing: req.body.playAlong.name != null,
-                advertiserId: req.user.discordId,
-                role: req.body.playAlong.role.value
-            },
-            notes: req.body.boost.note
-        }));
+        // empty
     }
 
-    private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBooster>, medium: Array<IKeyBooster>, high: Array<IKeyBooster>, elite: Array<IKeyBooster> }> {
+    private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> }> {
         const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
-        const response: { low: Array<IKeyBooster>, medium: Array<IKeyBooster>, high: Array<IKeyBooster>, elite: Array<IKeyBooster> } = {
+        const response: { low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> } = {
             low: [],
             medium: [],
             high: [],
             elite: []
         };
         guild.roles.cache.get(Configuration.get().BoosterRoles.LOW_KEY_BOOSTER).members.forEach(item => {
-            const data: IKeyBooster = {
+            const data: IKeyBoosterView = {
                 discordId: item.id,
                 name: item.nickname ? item.nickname : item.displayName,
                 armors: this.getUserArmors(item),

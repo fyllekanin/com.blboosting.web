@@ -1,3 +1,11 @@
 .container {
     margin-top: 15px;
 }
+
+#loading-bar {
+    position: fixed;
+    z-index: 99;
+    height: 3px;
+    background: var(--primary-color);
+    transition: 1s;
+}
