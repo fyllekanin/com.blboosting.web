@@ -7,7 +7,7 @@ import { BoostsComponent } from './boosts.component';
 import { BoostsListComponent } from './boosts-list/boosts-list.component';
 import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
-import { BoostResolver } from './boost/boost.resolver';
+import { BoostService } from './boost/boost.service';
 import { SelectModule } from '../../../../shared/components/form/select/select.module';
 
 @NgModule({
@@ -24,7 +24,7 @@ import { SelectModule } from '../../../../shared/components/form/select/select.m
         BoostsListComponent
     ],
     providers: [
-        BoostResolver
+        BoostService
     ],
     exports: [RouterModule],
 })

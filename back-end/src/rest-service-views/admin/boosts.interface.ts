@@ -55,6 +55,7 @@ export interface IBoostView {
         name: string;
         realm: ILabelValue<IBoostRealm>;
         source: ILabelValue<string>;
+        discount: number;
         armor: {
             cloth: boolean,
             leather: boolean,

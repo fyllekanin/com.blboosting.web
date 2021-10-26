@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { BoostContext, IBoost, IBooster, IBoostKey, IBoostPayment } from '../boosts.interface';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from '../../../../../shared/components/form/select/select.interface';
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
 import { ColorValue } from '../../../../../shared/constants/colors.constants';
-import { DialogService } from '../../../../../core/common-services/dialog.service';
+import { BoostService } from './boost.service';
 
 @Component({
     selector: 'app-admin-boosts-boost',
@@ -20,6 +20,7 @@ export class BoostComponent {
             name: null,
             realm: null,
             source: null,
+            discount: 0,
             armor: {
                 cloth: false,
                 leather: false,
@@ -62,20 +63,15 @@ export class BoostComponent {
     ];
 
     realms: Array<SelectItem> = [];
-    factions: Array<SelectItem> = [];
-    sources: Array<SelectItem> = [];
-    roles: Array<SelectItem> = [];
     dungeons: Array<SelectItem> = [];
 
     constructor(
-        private dialogService: DialogService,
+        private boostService: BoostService,
+        private router: Router,
         activatedRoute: ActivatedRoute
     ) {
         this.context = activatedRoute.snapshot.data.data.context;
         this.realms = this.context.realms.map(realm => ({ label: realm.name, value: realm }));
-        this.factions = this.context.factions.map(faction => ({ label: faction, value: faction }));
-        this.sources = this.context.sources.map(source => ({ label: source, value: source }));
-        this.roles = this.context.roles.map(role => ({ label: role, value: role }));
         this.dungeons = this.context.dungeons.map(dungeon => ({ label: dungeon.name, value: dungeon }));
 
         this.entity.keys[0].availableBoosters = this.context.boosters.low.map(booster => ({
@@ -86,7 +82,15 @@ export class BoostComponent {
 
     async onAction(action: UserAction): Promise<void> {
         if (action.value === 'submit') {
-            // Do something
+            /**
+             * Validate here
+             * - playAlong + keyHolder can't be both set (yourself as keyholder and playAlong)
+             * - Some sort of payment (either balance or payments array)
+             * - No negative numbers
+             * - Try to validate matches of armor stack etc
+             */
+            await this.boostService.submitBoost(this.entity);
+            await this.router.navigateByUrl('/admin/boosts/page/1');
         }
     }
 
@@ -96,7 +100,7 @@ export class BoostComponent {
 
     onKeyChange(item: IBoostKey): void {
         item.availableBoosters = this.getAvailableBoosters(item);
-        if (!item.availableBoosters.every(booster => booster.value !== item.keyHolder.user.value)) {
+        if (!item.keyHolder || !item.availableBoosters.every(booster => booster.value !== item.keyHolder.user.value)) {
             item.keyHolder.user = null;
         }
     }

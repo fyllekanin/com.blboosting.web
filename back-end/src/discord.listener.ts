@@ -30,7 +30,7 @@ export class DiscordListener {
                     promises.push(this.removeRole(role._id.toString()));
                 }
             });
-            guild.roles.cache.forEach(role => {
+            (await guild.roles.fetch()).forEach(role => {
                 if (existingRoles.every(item => item.discordId !== role.id)) {
                     promises.push(this.addRole(role));
                 }

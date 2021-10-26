@@ -27,10 +27,10 @@ export interface IBooster {
 
 export interface BoostContext {
     realms: Array<{ realmId: number, name: string, category: string }>;
-    sources: Array<string>;
+    sources: Array<SelectItem<string>>;
     dungeons: Array<{ name: string, value: string, levels: Array<SelectItem> }>;
-    roles: Array<string>;
-    factions: Array<string>;
+    roles: Array<SelectItem<string>>;
+    factions: Array<SelectItem<string>>;
     boosters: { low: Array<IBooster>, medium: Array<IBooster>, high: Array<IBooster>, elite: Array<IBooster> };
 }
 
@@ -58,6 +58,7 @@ export interface IBoost {
         name: string;
         realm: SelectItem;
         source: SelectItem;
+        discount: number;
         armor: {
             cloth: boolean,
             leather: boolean,

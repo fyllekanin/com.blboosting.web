@@ -10,9 +10,9 @@ import { BoostSource } from '../../constants/boost-source.constant';
 import { Dungeon } from '../../constants/dungeons.constant';
 import { Role } from '../../constants/roles.constant';
 import { Faction } from '../../constants/factions.constant';
-import { Client, GuildMember } from 'discord.js';
+import { Client, GuildMember, TextChannel } from 'discord.js';
 import { Configuration } from '../../configuration';
-import { IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
+import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
@@ -32,8 +32,19 @@ export class BoostsController {
 
     @Post()
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
-    async createBoost(req: InternalRequest, res: Response): Promise<void> {
-        // empty
+    async createBoost(req: InternalRequest<IBoostView>, res: Response): Promise<void> {
+        /**
+         * Validate here
+         * - playAlong + keyHolder can't be both set (yourself as keyholder and playAlong)
+         * - Some sort of payment (either balance or payments array)
+         * - No negative numbers
+         * - Try to validate matches of armor stack etc
+         */
+
+        const payload = JSON.stringify({});
+        await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel).send(`!boost ${payload}`);
+
+        res.status(StatusCodes.OK).json();
     }
 
     private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> }> {
@@ -44,7 +55,7 @@ export class BoostsController {
             high: [],
             elite: []
         };
-        guild.roles.cache.get(Configuration.get().BoosterRoles.LOW_KEY_BOOSTER).members.forEach(item => {
+        (await guild.roles.fetch(Configuration.get().BoosterRoles.LOW_KEY_BOOSTER)).members.forEach(item => {
             const data: IKeyBoosterView = {
                 discordId: item.id,
                 name: item.nickname ? item.nickname : item.displayName,

@@ -17,7 +17,8 @@
                 </div>
                 <div class="cell small-4">
                     <label for="source">Source</label>
-                    <app-form-select id="source" [items]="sources" [(value)]="entity.boost.source"></app-form-select>
+                    <app-form-select id="source" [items]="context.sources"
+                                     [(value)]="entity.boost.source"></app-form-select>
                 </div>
             </div>
         </app-content>
@@ -37,7 +38,7 @@
                 </div>
                 <div class="cell small-12 large-4">
                     <label for="advertiser-role">Role</label>
-                    <app-form-select id="advertiser-role" [items]="roles"
+                    <app-form-select id="advertiser-role" [items]="context.roles"
                                      [(value)]="entity.playAlong.role"></app-form-select>
                 </div>
             </div>
@@ -56,7 +57,7 @@
                 </div>
                 <div class="cell small-12 large-3">
                     <label [for]="index + '-payment-faction'">Faction</label>
-                    <app-form-select [items]="factions" [(value)]="item.faction"></app-form-select>
+                    <app-form-select [items]="context.factions" [(value)]="item.faction"></app-form-select>
                 </div>
                 <div class="cell small-12 large-3">
                     <span class="payment-option" (click)="onAddPaymentRow(index)"
@@ -69,7 +70,11 @@
             </div>
             <hr/>
             <div class="grid-x grid-margin-x">
-                <div class="cell small-12 large-6 balance-switch">
+                <div class="cell small-12 large-4">
+                    <label for="payment-discount">Discount</label>
+                    <input id="payment-discount" type="number" [(ngModel)]="entity.boost.discount"/>
+                </div>
+                <div class="cell small-12 large-4 balance-switch">
                     <div class="toggle-container">
                         <label class="toggle-control">
                             <input type="checkbox"
@@ -80,7 +85,7 @@
                         <span>Is any payment from balance?</span>
                     </div>
                 </div>
-                <div class="cell small-12 large-6" *ngIf="entity.balancePayment >= 0">
+                <div class="cell small-12 large-4" *ngIf="entity.balancePayment >= 0">
                     <label for="payment-balance">Amount from balance</label>
                     <input id="payment-balance" type="number" [ngModel]="entity.balancePayment"
                            (ngModelChange)="entity.balancePayment = $event < 0 ? 0 : $event"/>
@@ -329,7 +334,7 @@
                 </div>
                 <div class="cell small-12 large-2">
                     <label [for]="index + '-key-role'">Role</label>
-                    <app-form-select [id]="index + '-key-role'" [items]="roles"
+                    <app-form-select [id]="index + '-key-role'" [items]="context.roles"
                                      [(value)]="item.keyHolder.role"></app-form-select>
                 </div>
                 <div class="cell small-12 large-3">
