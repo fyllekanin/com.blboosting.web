@@ -27,7 +27,7 @@ export const Dungeon: StringKeyValue<{ name: string, value: string, levels: Arra
     },
     PF: {
         name: 'Plaguefall',
-        value: 'PF',
+        value: 'PLEAGUE',
         levels: keyLevels
     },
     SD: {
