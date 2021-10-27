@@ -38,14 +38,8 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
     }
 
     private async validatePlayAlong(req: InternalRequest<IBoostView>, entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
-        if (!entity.playAlong.name) {
+        if (!entity.playAlong.isPlaying) {
             return;
-        }
-        if (!entity.playAlong.realm) {
-            errors.push({
-                code: ValidationError.KEY_PLAY_ALONG_REALM,
-                message: 'You need to fill in realm for play along'
-            });
         }
         if (!entity.playAlong.role) {
             errors.push({

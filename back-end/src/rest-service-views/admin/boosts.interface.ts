@@ -79,6 +79,7 @@ export interface IBoostView {
         note?: string;
     };
     playAlong: {
+        isPlaying: boolean;
         name: string;
         realm: ILabelValue<IBoostRealm>;
         role: ILabelValue<string>;

@@ -67,7 +67,7 @@ export class BoostsController {
             stack: this.getStacks(entity),
             advertiser: {
                 advertiserId: user.discordId,
-                playing: Boolean(entity.playAlong.name),
+                playing: entity.playAlong.isPlaying,
                 role: entity.playAlong.role ? entity.playAlong.role.value : null
             },
             notes: entity.boost.note,

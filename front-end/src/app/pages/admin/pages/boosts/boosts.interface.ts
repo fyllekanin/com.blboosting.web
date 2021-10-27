@@ -82,8 +82,7 @@ export interface IBoost {
         note?: string;
     };
     playAlong: {
-        name: string;
-        realm: SelectItem;
+        isPlaying: boolean;
         role: SelectItem;
     };
     keys: Array<IBoostKey>;

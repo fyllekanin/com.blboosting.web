@@ -27,16 +27,18 @@
         <app-content header="Play Along"
                      tooltipText="If you wish to play along in the key(s), if will be keyholder ignore this">
             <div class="grid-x grid-margin-x">
-                <div class="cell small-12 large-4">
-                    <label for="advertiser-name">Name</label>
-                    <input id="advertiser-name" type="text" [(ngModel)]="entity.playAlong.name"
-                           placeholder="Character name"/>
+                <div class="cell small-12 large-4 balance-switch">
+                    <div class="toggle-container">
+                        <label class="toggle-control">
+                            <input type="checkbox"
+                                   [checked]="entity.playAlong.isPlaying"
+                                   (change)="entity.playAlong.isPlaying = !entity.playAlong.isPlaying">
+                            <span class="control"></span>
+                        </label>
+                        <span>Are you playing along?</span>
+                    </div>
                 </div>
-                <div class="cell small-12 large-4">
-                    <label for="advertiser-name">Realm</label>
-                    <app-form-select [items]="realms" [(value)]="entity.playAlong.realm"></app-form-select>
-                </div>
-                <div class="cell small-12 large-4">
+                <div class="cell small-12 large-8" *ngIf="entity.playAlong.isPlaying">
                     <label for="advertiser-role">Role</label>
                     <app-form-select id="advertiser-role" [items]="context.roles"
                                      [(value)]="entity.playAlong.role"></app-form-select>

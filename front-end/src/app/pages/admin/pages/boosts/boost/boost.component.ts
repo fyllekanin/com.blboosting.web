@@ -43,8 +43,7 @@ export class BoostComponent {
             }
         },
         playAlong: {
-            name: null,
-            realm: null,
+            isPlaying: false,
             role: null
         },
         keys: [{
