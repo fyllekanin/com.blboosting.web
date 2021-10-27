@@ -104,5 +104,6 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 });
             }
         }
+        
     }
 }
