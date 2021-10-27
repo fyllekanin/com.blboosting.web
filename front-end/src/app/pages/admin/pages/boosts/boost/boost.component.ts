@@ -21,7 +21,7 @@ export class BoostComponent {
             name: null,
             realm: null,
             source: null,
-            discount: 0,
+            discount: null,
             armor: {
                 cloth: false,
                 leather: false,
@@ -54,7 +54,7 @@ export class BoostComponent {
             keyHolder: { user: null, role: null },
             availableBoosters: []
         }],
-        payments: [{ realm: null, amount: 0, faction: null }]
+        payments: [{ realm: null, amount: null, faction: null }]
     };
 
     actions: Array<UserAction> = [
@@ -107,10 +107,7 @@ export class BoostComponent {
     }
 
     onAddPaymentRow(index: number): void {
-        if (this.entity.payments.length >= 4) {
-            return;
-        }
-        this.entity.payments.splice((index + 2) - 1, 0, { realm: null, amount: 0, faction: null });
+        this.entity.payments.splice((index + 2) - 1, 0, { realm: null, amount: null, faction: null });
     }
 
     onRemovePaymentRow(payment: IBoostPayment): void {

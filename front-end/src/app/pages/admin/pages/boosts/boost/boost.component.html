@@ -55,15 +55,15 @@
                 </div>
                 <div class="cell small-12 large-3">
                     <label [for]="index + '-payment-amount'">Amount</label>
-                    <input [id]="index + '-payment-amount'" type="number" [(ngModel)]="item.amount"/>
+                    <input [id]="index + '-payment-amount'" type="number" [(ngModel)]="item.amount"
+                           placeholder="Amount"/>
                 </div>
                 <div class="cell small-12 large-3">
                     <label [for]="index + '-payment-faction'">Faction</label>
                     <app-form-select [items]="context.factions" [(value)]="item.faction"></app-form-select>
                 </div>
                 <div class="cell small-12 large-3">
-                    <span class="payment-option" (click)="onAddPaymentRow(index)"
-                          [attr.disabled]="entity.payments.length >= 4"><em
+                    <span class="payment-option" (click)="onAddPaymentRow(index)"><em
                         class="fas fa-plus"></em></span>
                     <span class="payment-option" (click)="onRemovePaymentRow(item)"
                           [attr.disabled]="entity.payments.length === 1"><em
@@ -74,7 +74,8 @@
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12 large-4">
                     <label for="payment-discount">Discount</label>
-                    <input id="payment-discount" type="number" [(ngModel)]="entity.boost.discount"/>
+                    <input id="payment-discount" type="number" placeholder="Discount"
+                           [(ngModel)]="entity.boost.discount"/>
                 </div>
                 <div class="cell small-12 large-4 balance-switch">
                     <div class="toggle-container">
@@ -90,6 +91,7 @@
                 <div class="cell small-12 large-4" *ngIf="entity.balancePayment >= 0">
                     <label for="payment-balance">Amount from balance</label>
                     <input id="payment-balance" type="number" [ngModel]="entity.balancePayment"
+                           placeholder="Payment from balance"
                            (ngModelChange)="entity.balancePayment = $event < 0 ? 0 : $event"/>
                 </div>
             </div>
