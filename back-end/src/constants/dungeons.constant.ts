@@ -52,7 +52,7 @@ export const Dungeon: StringKeyValue<{ name: string, value: string, levels: Arra
     },
     TAZA: {
         name: 'Tazavesh, the Veiled Market',
-        value: 'TAZA',
+        value: 'TAZ',
         levels: [
             { label: 'Mythic', value: 'MYTHIC' },
             { label: 'Hard mode', value: 'HARD_MODE' }
