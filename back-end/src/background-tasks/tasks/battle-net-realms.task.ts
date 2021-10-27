@@ -21,23 +21,22 @@ export class BattleNetRealmsTask implements IBackgroundTask {
                 newRealms.push(await this.getNewRealmEntity(realm));
             }
         }
-        if (newRealms.length > 0) {
-            await repository.insertMany(newRealms).then(() => console.log('Realm task done'));
+        const realmsToInsert = newRealms.filter(item => item);
+        if (realmsToInsert.length > 0) {
+            for (const realm of realmsToInsert) {
+                await repository.insert(realm);
+            }
+            console.log('Realm task done');
         } else {
             console.log('Realm task done');
         }
     }
 
     private async getNewRealmEntity(slimRealm: SlimBattleNetRealm): Promise<IRealmEntity> {
-        const realm = await BattleNetService.getRealm(BattleNetRegions.EU, slimRealm.slug);
-
         return {
             realmId: slimRealm.id,
             slug: slimRealm.slug,
-            name: slimRealm.name,
-            isTournament: realm.isTournament,
-            timezone: realm.timezone,
-            category: realm.category
+            name: slimRealm.name
         };
     }
 }

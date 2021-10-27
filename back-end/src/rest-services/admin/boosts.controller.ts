@@ -1,6 +1,6 @@
 import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
-import { InternalRequest } from '../../utilities/internal.request';
+import { InternalRequest, InternalUser } from '../../utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
 import { PermissionMiddleware } from '../middlewares/permission.middleware';
 import { RolePermission } from '../../persistance/entities/role.entity';
@@ -13,38 +13,97 @@ import { Faction } from '../../constants/factions.constant';
 import { Client, GuildMember, TextChannel } from 'discord.js';
 import { Configuration } from '../../configuration';
 import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
+import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
+    private static readonly BOOSTERS_CACHE_KEY = 'KEY_BOOSTERS';
 
     @Get('context')
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async getContext(req: InternalRequest, res: Response): Promise<void> {
+        let boosters = Configuration.getCache().has(BoostsController.BOOSTERS_CACHE_KEY) ? Configuration.getCache().get(BoostsController.BOOSTERS_CACHE_KEY) : null;
+        if (!boosters) {
+            boosters = await this.getKeyBoosters(req.client);
+            Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
+        }
         res.status(StatusCodes.OK).json({
             realms: await RealmRepository.newRepository().getAll(),
             sources: Object.keys(BoostSource).map(key => BoostSource[key]),
             dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
             roles: Object.keys(Role).map(key => Role[key]),
             factions: Object.keys(Faction).map(key => Faction[key]),
-            boosters: await this.getKeyBoosters(req.client)
+            boosters: boosters
         });
     }
 
     @Post()
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async createBoost(req: InternalRequest<IBoostView>, res: Response): Promise<void> {
-        /**
-         * Validate here
-         * - playAlong + keyHolder can't be both set (yourself as keyholder and playAlong)
-         * - Some sort of payment (either balance or payments array)
-         * - No negative numbers
-         * - Try to validate matches of armor stack etc
-         */
+        const errors = await (new KeyBoostValidator()).run(req, req.body);
+        if (errors.length > 0) {
+            res.status(StatusCodes.BAD_REQUEST).json(errors);
+            return;
+        }
 
-        const payload = JSON.stringify({});
-        await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel).send(`!boost ${payload}`);
+        await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel).send(`!boost ${await this.getConvertedPayload(req.user, req.body)}`);
 
         res.status(StatusCodes.OK).json();
+    }
+
+    private getConvertedPayload(user: InternalUser, entity: IBoostView): string {
+
+        return JSON.stringify({
+            name: entity.boost.name,
+            realm: entity.boost.realm.value.name,
+            source: entity.boost.source,
+            payments: entity.payments.map(payment => !payment.realm ? null : ({
+                amount: payment.amount,
+                realm: payment.realm.value.name,
+                faction: payment.faction.value
+            })).filter(item => item),
+            paidBalance: entity.balancePayment || 0,
+            discount: entity.boost.discount,
+            stack: this.getStacks(entity),
+            advertiser: {
+                advertiserId: user.discordId,
+                playing: Boolean(entity.playAlong.name),
+                role: entity.playAlong.role ? entity.playAlong.role.value : null
+            },
+            notes: entity.boost.note,
+            keys: entity.keys.map(key => ({
+                dungeon: key.dungeon.value.value,
+                level: key.level.value,
+                timed: key.isTimed,
+                booster: key.keyHolder && key.keyHolder.user ? {
+                    boosterId: key.keyHolder.user.value.discordId,
+                    role: key.keyHolder.role.value
+                } : null
+            }))
+        });
+    }
+
+    private getStacks(entity: IBoostView): Array<string> {
+        const stacks = [];
+        if (entity.boost.armor.cloth) stacks.push('Cloth');
+        if (entity.boost.armor.leather) stacks.push('Leather');
+        if (entity.boost.armor.mail) stacks.push('Mail');
+        if (entity.boost.armor.plate) stacks.push('Plate');
+
+        if (entity.boost.class.mage) stacks.push('Mage');
+        if (entity.boost.class.warlock) stacks.push('Warlock');
+        if (entity.boost.class.priest) stacks.push('Priest');
+        if (entity.boost.class.druid) stacks.push('Druid');
+        if (entity.boost.class.monk) stacks.push('Monk');
+        if (entity.boost.class.demonHunter) stacks.push('Demon Hunter');
+        if (entity.boost.class.rogue) stacks.push('Rogue');
+        if (entity.boost.class.hunter) stacks.push('Hunter');
+        if (entity.boost.class.shaman) stacks.push('Shaman');
+        if (entity.boost.class.warrior) stacks.push('Warrior');
+        if (entity.boost.class.paladin) stacks.push('Paladin');
+        if (entity.boost.class.deathKnight) stacks.push('Death Knight');
+
+        return stacks.length > 0 ? stacks : ['Any'];
     }
 
     private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> }> {

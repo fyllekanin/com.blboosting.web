@@ -1,3 +1,5 @@
+import NodeCache from 'node-cache';
+
 interface IValue {
     label: string;
     value: string;
@@ -35,6 +37,7 @@ interface IConfiguration {
 
 export class Configuration {
     private static config: IConfiguration;
+    private static cache = new NodeCache({ stdTTL: 3600 });
 
     static loadConfig(environment: string): void {
         if (this.config) {
@@ -48,5 +51,9 @@ export class Configuration {
             throw new Error('Configuration is not loaded');
         }
         return Configuration.config;
+    }
+    
+    static getCache(): NodeCache {
+        return this.cache;
     }
 }

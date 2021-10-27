@@ -3,18 +3,18 @@ import { StringKeyValue } from '../utilities/object.interface';
 export const BoostSource: StringKeyValue<{ label: string, value: string }> = {
     TRADE_CHAT: {
         label: 'Trade Chat',
-        value: 'TRADE_CHAT'
+        value: 'TC'
     },
     TICKET_IN_HOUSE: {
         label: 'Ticket In-house',
-        value: 'TICKET_IN_HOUSE'
+        value: 'TCH'
     },
     TICKET_CLIENT: {
         label: 'Ticket Client',
-        value: 'TICKET_CLIENT'
+        value: 'TC'
     },
     DISCORD: {
         label: 'Discord',
-        value: 'DISCORD'
+        value: 'discord'
     }
 }

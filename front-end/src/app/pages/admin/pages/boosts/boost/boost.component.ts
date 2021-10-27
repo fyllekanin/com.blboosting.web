@@ -82,15 +82,10 @@ export class BoostComponent {
 
     async onAction(action: UserAction): Promise<void> {
         if (action.value === 'submit') {
-            /**
-             * Validate here
-             * - playAlong + keyHolder can't be both set (yourself as keyholder and playAlong)
-             * - Some sort of payment (either balance or payments array)
-             * - No negative numbers
-             * - Try to validate matches of armor stack etc
-             */
-            await this.boostService.submitBoost(this.entity);
-            await this.router.navigateByUrl('/admin/boosts/page/1');
+            const isSuccess = await this.boostService.submitBoost(this.entity);
+            if (isSuccess) {
+                await this.router.navigateByUrl('/admin/boosts/page/1');
+            }
         }
     }
 
