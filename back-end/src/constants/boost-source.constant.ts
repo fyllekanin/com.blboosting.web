@@ -11,10 +11,10 @@ export const BoostSource: StringKeyValue<{ label: string, value: string }> = {
     },
     TICKET_CLIENT: {
         label: 'Ticket Client',
-        value: 'TC'
+        value: 'TCL'
     },
     DISCORD: {
         label: 'Discord',
-        value: 'discord'
+        value: 'D'
     }
 }
