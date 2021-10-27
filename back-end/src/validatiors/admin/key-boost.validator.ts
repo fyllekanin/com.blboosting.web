@@ -2,6 +2,7 @@ import { IValidationError, IValidator } from '../validator.interface';
 import { IBoostView } from '../../rest-service-views/admin/boosts.interface';
 import { InternalRequest } from '../../utilities/internal.request';
 import { ValidationError } from '../../constants/validation.error';
+import { Role } from '../../constants/roles.constant';
 
 export class KeyBoostValidator implements IValidator<IBoostView> {
 
@@ -45,6 +46,13 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
             errors.push({
                 code: ValidationError.KEY_PLAY_ALONG_ROLE,
                 message: 'You need to fill in role for play along'
+            });
+        }
+        if ([Role.TANK.value, Role.HEALER.value].includes(entity.playAlong.role.value) &&
+            entity.keys.some(key => key.keyHolder && key.keyHolder.user && key.keyHolder.role.value === entity.playAlong.role.value)) {
+            errors.push({
+                code: ValidationError.KEY_SAME_ROLE_TWICE,
+                message: 'You can not be tank or healer if a key holder is this role'
             });
         }
         if (entity.keys.some(key => key.keyHolder && key.keyHolder.user && key.keyHolder.user.value.discordId === req.user.discordId)) {
