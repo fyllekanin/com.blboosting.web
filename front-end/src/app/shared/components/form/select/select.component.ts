@@ -66,6 +66,7 @@ export class SelectComponent {
         console.log(`filter: ${this.filter}`);
         if (this.filter === '') {
             this.value = null;
+            this.valueChange.emit(null);
         }
     }
 }

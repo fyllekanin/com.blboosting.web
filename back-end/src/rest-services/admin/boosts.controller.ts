@@ -56,7 +56,7 @@ export class BoostsController {
         return JSON.stringify({
             name: entity.boost.name,
             realm: entity.boost.realm.value.name,
-            source: entity.boost.source,
+            source: entity.boost.source.value,
             payments: entity.payments.map(payment => !payment.realm ? null : ({
                 amount: payment.amount,
                 realm: payment.realm.value.name,
