@@ -145,9 +145,9 @@ export class BoostComponent {
 
     private getAvailableBoosters(item: IBoostKey): Array<SelectItem> {
         let boosters: Array<IBooster> = this.context.boosters.low;
-        if (item.dungeon.value === 'TAZA') {
+        if (item.dungeon && item.dungeon.value === 'TAZA') {
             boosters = this.context.boosters.high;
-        } else if (item.level) {
+        } else if (item.dungeon && item.level) {
             if (item.isTimed && item.level.value >= 16) {
                 boosters = this.context.boosters.elite;
             }
