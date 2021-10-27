@@ -1,16 +1,9 @@
 import { Type } from '@angular/core';
 
-export enum ButtonTypes {
-    GREEN = 'green',
-    BLUE = 'blue',
-    RED = 'red',
-    GRAY = 'gray'
-}
-
 export interface DialogButton {
     label: string;
     action: string;
-    type: string;
+    type: 'button-red' | 'button-green' | 'button-blue' | 'button-gray';
     isClosing?: boolean;
 }
 

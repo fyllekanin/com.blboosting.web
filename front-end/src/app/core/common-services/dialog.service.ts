@@ -1,5 +1,5 @@
 import { ComponentRef, Injectable } from '@angular/core';
-import { ButtonTypes, DialogButton, DialogConfiguration } from '../../shared/app-views/dialog/dialog.model';
+import { DialogButton, DialogConfiguration } from '../../shared/app-views/dialog/dialog.model';
 import { Subject } from 'rxjs';
 import { take } from 'rxjs/operators';
 
@@ -38,15 +38,15 @@ export class DialogService {
                 content: message,
                 buttons: [
                     {
-                        label: 'Cancel',
-                        action: 'cancel',
-                        type: ButtonTypes.GRAY,
-                        isClosing: true
-                    },
-                    {
                         label: 'Yes',
                         action: 'yes',
-                        type: ButtonTypes.GREEN
+                        type: 'button-green'
+                    },
+                    {
+                        label: 'Cancel',
+                        action: 'cancel',
+                        type: 'button-gray',
+                        isClosing: true
                     }
                 ]
             });

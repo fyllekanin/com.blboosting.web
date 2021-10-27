@@ -223,6 +223,10 @@ button:hover {
     background: var(--success-color);
 }
 
+.button-gray {
+    background: var(--main-background);
+}
+
 /** Toggle **/
 .toggle-container span {
     display: inline-block;

@@ -5,6 +5,7 @@ import { SelectItem } from '../../../../../shared/components/form/select/select.
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
 import { ColorValue } from '../../../../../shared/constants/colors.constants';
 import { BoostService } from './boost.service';
+import { DialogService } from '../../../../../core/common-services/dialog.service';
 
 @Component({
     selector: 'app-admin-boosts-boost',
@@ -67,6 +68,7 @@ export class BoostComponent {
     constructor(
         private boostService: BoostService,
         private router: Router,
+        private dialogService: DialogService,
         activatedRoute: ActivatedRoute
     ) {
         this.context = activatedRoute.snapshot.data.data.context;
@@ -81,10 +83,15 @@ export class BoostComponent {
 
     async onAction(action: UserAction): Promise<void> {
         if (action.value === 'submit') {
-            const isSuccess = await this.boostService.submitBoost(this.entity);
-            if (isSuccess) {
-                await this.router.navigateByUrl('/admin/boosts/page/1');
-            }
+            this.dialogService.confirm('Are you sure that you wanna post this boost?').then(async answer => {
+                if (!answer) {
+                    return;
+                }
+                const isSuccess = await this.boostService.submitBoost(this.entity);
+                if (isSuccess) {
+                    await this.router.navigateByUrl('/admin/boosts/page/1');
+                }
+            });
         }
     }
 
