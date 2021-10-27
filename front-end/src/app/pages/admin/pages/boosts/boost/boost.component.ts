@@ -147,7 +147,7 @@ export class BoostComponent {
         let boosters: Array<IBooster> = this.context.boosters.low;
         if (item.dungeon.value === 'TAZA') {
             boosters = this.context.boosters.high;
-        } else {
+        } else if (item.level) {
             if (item.isTimed && item.level.value >= 16) {
                 boosters = this.context.boosters.elite;
             }
