@@ -1,5 +1,5 @@
 <div contenteditable="true" (focus)="onFocus()" class="input"
-     [attr.data-placeholder]="placeholder && !value ? placeholder : ''"
+     [attr.data-placeholder]="placeholder && !value && _items.length > 0 ? placeholder : ''"
      [textContent]="textContent"
      (input)="onFilterInput($event.target.textContent)">
 </div>

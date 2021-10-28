@@ -7,7 +7,7 @@ import { SelectItem } from './select.interface';
     styleUrls: ['select.component.scss']
 })
 export class SelectComponent {
-    private _items: Array<SelectItem> = [];
+    _items: Array<SelectItem> = [];
 
     @Input()
     disabled: boolean;
