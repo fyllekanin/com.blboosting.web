@@ -21,5 +21,5 @@ export enum ValidationError {
     KEY_KEY_DUNGEON = 13,
     KEY_KEY_HOLDER = 14,
     KEY_PAYMENT_BALANCE = 15,
-    KEY_SAME_ROLE_TWICE = 16
+    KEY_MULTIPLE_SAME_ROLE = 16
 }

@@ -1,6 +1,6 @@
 import { IValidationError, IValidator } from '../validator.interface';
 import { IBoostView } from '../../rest-service-views/admin/boosts.interface';
-import { InternalRequest } from '../../utilities/internal.request';
+import { InternalRequest, InternalUser } from '../../utilities/internal.request';
 import { ValidationError } from '../../constants/validation.error';
 import { Role } from '../../constants/roles.constant';
 
@@ -13,8 +13,44 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         await this.validatePlayAlong(req, entity, errors);
         await this.validatePayments(entity, errors);
         await this.validateKeys(entity, errors);
+        await this.validateRoles(req.user, entity, errors);
 
         return errors;
+    }
+
+    private async validateRoles(user: InternalUser, entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
+        const playAlongRole = entity.playAlong.isPlaying ? entity.playAlong.role.value : null;
+        const tanks = new Set(entity.keys
+            .filter(key => key.keyHolder && key.keyHolder.user && key.keyHolder.role && key.keyHolder.role.value === Role.TANK.value)
+            .map(key => key.keyHolder.user.value.discordId));
+        const healers = new Set(entity.keys
+            .filter(key => key.keyHolder && key.keyHolder.user && key.keyHolder.role && key.keyHolder.role.value === Role.HEALER.value)
+            .map(key => key.keyHolder.user.value.discordId));
+        const dps = new Set(entity.keys
+            .filter(key => key.keyHolder && key.keyHolder.user && key.keyHolder.role && key.keyHolder.role.value === Role.DPS.value)
+            .map(key => key.keyHolder.user.value.discordId));
+        if (playAlongRole === Role.TANK.value) tanks.add(user.discordId);
+        if (playAlongRole === Role.HEALER.value) healers.add(user.discordId);
+        if (playAlongRole === Role.DPS.value) dps.add(user.discordId);
+
+        if (tanks.size > 1) {
+            errors.push({
+                code: ValidationError.KEY_MULTIPLE_SAME_ROLE,
+                message: 'Only one user can be tank'
+            });
+        }
+        if (healers.size > 1) {
+            errors.push({
+                code: ValidationError.KEY_MULTIPLE_SAME_ROLE,
+                message: 'Only one user can be healer'
+            });
+        }
+        if (dps.size > 2) {
+            errors.push({
+                code: ValidationError.KEY_MULTIPLE_SAME_ROLE,
+                message: 'Only two users can be DPS'
+            });
+        }
     }
 
     private async validateContactCharacter(entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
@@ -104,6 +140,6 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 });
             }
         }
-        
+
     }
 }
