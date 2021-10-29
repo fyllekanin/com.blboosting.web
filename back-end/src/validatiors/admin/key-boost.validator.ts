@@ -87,7 +87,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         if ([Role.TANK.value, Role.HEALER.value].includes(entity.playAlong.role.value) &&
             entity.keys.some(key => key.keyHolder && key.keyHolder.user && key.keyHolder.role.value === entity.playAlong.role.value)) {
             errors.push({
-                code: ValidationError.KEY_SAME_ROLE_TWICE,
+                code: ValidationError.KEY_MULTIPLE_SAME_ROLE,
                 message: 'You can not be tank or healer if a key holder is this role'
             });
         }
