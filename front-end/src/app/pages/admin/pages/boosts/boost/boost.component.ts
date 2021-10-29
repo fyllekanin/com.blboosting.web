@@ -159,34 +159,22 @@ export class BoostComponent {
             }
         }
 
-        boosters = this.getApplicableArmors(boosters);
-        boosters = this.getApplicableClasses(boosters);
-
-        return boosters.map(booster => ({
+        return this.getApplicableArmorsAndClasses(boosters).map(booster => ({
             label: booster.name,
             value: booster
         }));
     }
 
-    private getApplicableArmors(boosters: Array<IBooster>): Array<IBooster> {
+    private getApplicableArmorsAndClasses(boosters: Array<IBooster>): Array<IBooster> {
         const activeArmors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]);
-        if (activeArmors.length === 0) {
-            return boosters;
-        }
-        return boosters.filter(booster => {
-            const boosterArmors = Object.keys(booster.armors).filter(key => booster.armors[key]);
-            return activeArmors.some(key => boosterArmors.includes(key));
-        });
-    }
-
-    private getApplicableClasses(boosters: Array<IBooster>): Array<IBooster> {
         const activeClasses = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]);
-        if (activeClasses.length === 0) {
+        if (activeClasses.length === 0 && activeArmors.length === 0) {
             return boosters;
         }
         return boosters.filter(booster => {
             const boosterClasses = Object.keys(booster.classes).filter(key => booster.classes[key]);
-            return activeClasses.some(key => boosterClasses.includes(key));
+            const boosterArmors = Object.keys(booster.armors).filter(key => booster.armors[key]);
+            return activeClasses.some(key => boosterClasses.includes(key)) || activeArmors.some(key => boosterArmors.includes(key));;
         });
     }
 }
