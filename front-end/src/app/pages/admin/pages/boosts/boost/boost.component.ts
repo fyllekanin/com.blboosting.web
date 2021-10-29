@@ -104,7 +104,7 @@ export class BoostComponent {
         if (!item.keyHolder.user) {
             return;
         }
-        if (!item.keyHolder || !item.availableBoosters.every(booster => booster.value !== item.keyHolder.user.value)) {
+        if (!item.keyHolder || !item.availableBoosters.every(booster => booster.value.discordId !== item.keyHolder.user.value.discordId)) {
             item.keyHolder.user = null;
         }
     }
@@ -164,7 +164,7 @@ export class BoostComponent {
 
         return boosters.map(booster => ({
             label: booster.name,
-            value: booster.discordId
+            value: booster
         }));
     }
 
