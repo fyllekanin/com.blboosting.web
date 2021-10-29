@@ -101,6 +101,9 @@ export class BoostComponent {
 
     onKeyChange(item: IBoostKey): void {
         item.availableBoosters = this.getAvailableBoosters(item);
+        if (!item.keyHolder.user) {
+            return;
+        }
         if (!item.keyHolder || !item.availableBoosters.every(booster => booster.value !== item.keyHolder.user.value)) {
             item.keyHolder.user = null;
         }
