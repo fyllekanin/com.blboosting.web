@@ -8,15 +8,15 @@
         <app-content header="Contact Character" tooltipText="Character name-realm for boosters to whisper">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12 large-4">
-                    <label for="name">Name</label>
+                    <label for="name" required>Name</label>
                     <input id="name" type="text" [(ngModel)]="entity.boost.name" placeholder="Contact character name"/>
                 </div>
                 <div class="cell small-12 large-4">
-                    <label for="realm">Realm</label>
+                    <label for="realm" required>Realm</label>
                     <app-form-select id="realm" [items]="realms" [(value)]="entity.boost.realm"></app-form-select>
                 </div>
                 <div class="cell small-12 large-4">
-                    <label for="source">Source</label>
+                    <label for="source" required>Source</label>
                     <app-form-select id="source" [items]="context.sources"
                                      [(value)]="entity.boost.source"></app-form-select>
                 </div>
@@ -311,12 +311,13 @@
         <app-content header="Keys">
             <div class="grid-x grid-margin-x" *ngFor="let item of entity.keys; let index = index">
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-dungeon'">Dungeon</label>
+                    <label [for]="index + '-key-dungeon'" required>Dungeon</label>
                     <app-form-select [id]="index + '-key-dungeon'" [items]="dungeons"
-                                     [(value)]="item.dungeon" (valueChange)="item.level = null"></app-form-select>
+                                     [(value)]="item.dungeon"
+                                     (valueChange)="item.level = null; onKeyChange(item)"></app-form-select>
                 </div>
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-level'">Level</label>
+                    <label [for]="index + '-key-level'" required>Level</label>
                     <app-form-select *ngIf="item.dungeon" [items]="index + '-key-level'"
                                      [items]="item.dungeon.value.levels" [value]="item.level"
                                      (valueChange)="item.level = $event; onKeyChange(item)"></app-form-select>
@@ -325,6 +326,7 @@
                     <div class="toggle-container">
                         <label class="toggle-control">
                             <input type="checkbox"
+                                   [disabled]="item.isTimedDisabled"
                                    [checked]="item.isTimed"
                                    (change)="item.isTimed = !item.isTimed; onKeyChange(item)">
                             <span class="control"></span>

@@ -44,6 +44,7 @@ export interface IBoostKey {
     level: SelectItem;
     dungeon: SelectItem;
     isTimed: boolean;
+    isTimedDisabled?: boolean;
     availableBoosters: Array<SelectItem>;
     keyHolder: {
         user: SelectItem;

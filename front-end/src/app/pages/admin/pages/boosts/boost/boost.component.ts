@@ -100,6 +100,13 @@ export class BoostComponent {
     }
 
     onKeyChange(item: IBoostKey): void {
+        if (item.dungeon.value.value === 'TAZ' || item.level.value === 0) {
+            item.isTimed = false;
+            item.isTimedDisabled = true;
+        } else {
+            item.isTimedDisabled = false;
+        }
+
         item.availableBoosters = this.getAvailableBoosters(item);
         if (!item.keyHolder.user) {
             return;
@@ -145,7 +152,7 @@ export class BoostComponent {
 
     private getAvailableBoosters(item: IBoostKey): Array<SelectItem> {
         let boosters: Array<IBooster> = this.context.boosters.low;
-        if (item.dungeon && item.dungeon.value === 'TAZA') {
+        if (item.dungeon && item.dungeon.value.value === 'TAZ') {
             boosters = this.context.boosters.high;
         } else if (item.dungeon && item.level) {
             if (item.isTimed && item.level.value >= 16) {
@@ -174,7 +181,8 @@ export class BoostComponent {
         return boosters.filter(booster => {
             const boosterClasses = Object.keys(booster.classes).filter(key => booster.classes[key]);
             const boosterArmors = Object.keys(booster.armors).filter(key => booster.armors[key]);
-            return activeClasses.some(key => boosterClasses.includes(key)) || activeArmors.some(key => boosterArmors.includes(key));;
+            return activeClasses.some(key => boosterClasses.includes(key)) || activeArmors.some(key => boosterArmors.includes(key));
+            ;
         });
     }
 }
