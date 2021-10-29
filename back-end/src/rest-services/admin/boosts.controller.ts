@@ -62,15 +62,15 @@ export class BoostsController {
                 realm: payment.realm.value.name,
                 faction: payment.faction.value
             })).filter(item => item),
-            paidBalance: entity.balancePayment || 0,
-            discount: entity.boost.discount,
+            paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
+            discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
             stack: this.getStacks(entity),
             advertiser: {
                 advertiserId: user.discordId,
                 playing: entity.playAlong.isPlaying,
                 role: entity.playAlong.role ? entity.playAlong.role.value : null
             },
-            notes: entity.boost.note,
+            notes: entity.boost.note || '',
             keys: entity.keys.map(key => ({
                 dungeon: key.dungeon.value.value,
                 level: key.level.value,
