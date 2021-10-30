@@ -54,15 +54,16 @@
                     <app-form-select [items]="realms" [(value)]="item.realm"></app-form-select>
                 </div>
                 <div class="cell small-12 large-3" *ngIf="context.isTrialAdvertiser">
-                    <label [for]="index + '-payment-collector'" required>Collector</label>
+                    <label [for]="index + '-payment-collector'"
+                           [attr.required]="context.isTrialAdvertiser">Collector</label>
                     <app-form-select [items]="context.collectors" [(value)]="item.collector"></app-form-select>
                 </div>
-                <div class="cell small-12" [ngClass]="context.isTrialAdvertiser ? 'large-2' : 'large-3'">
+                <div class="cell small-12 large-2">
                     <label [for]="index + '-payment-amount'">Amount</label>
                     <input [id]="index + '-payment-amount'" type="number" [(ngModel)]="item.amount"
                            placeholder="Amount"/>
                 </div>
-                <div class="cell small-12" [ngClass]="context.isTrialAdvertiser ? 'large-2' : 'large-3'">
+                <div class="cell small-12 large-2">
                     <label [for]="index + '-payment-faction'">Faction</label>
                     <app-form-select [items]="context.factions" [(value)]="item.faction"></app-form-select>
                 </div>
