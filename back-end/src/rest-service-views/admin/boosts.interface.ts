@@ -35,6 +35,7 @@ export interface IBoostPaymentView {
     realm: ILabelValue<IBoostRealm>;
     amount: number;
     faction: ILabelValue<string>;
+    collector: ILabelValue<string>;
 }
 
 export interface IBoostKeyView {

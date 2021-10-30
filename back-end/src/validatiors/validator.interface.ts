@@ -1,4 +1,5 @@
-import { InternalRequest } from '../utilities/internal.request';
+import { InternalUser } from '../utilities/internal.request';
+import { Client } from 'discord.js';
 
 export interface IValidationError {
     code: number;
@@ -6,5 +7,5 @@ export interface IValidationError {
 }
 
 export interface IValidator<T> {
-    run(req: InternalRequest, entity: T): Promise<Array<IValidationError>>
+    run(user: InternalUser, entity: T, client?: Client): Promise<Array<IValidationError>>
 }

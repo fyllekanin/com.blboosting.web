@@ -1,7 +1,7 @@
 import { BaseRepository } from './base.repository';
 import { IRoleEntity, IRolePermissions, RolePermission } from '../entities/role.entity';
 import { Role } from 'discord.js';
-import { Collection } from 'mongodb';
+import { Collection, Filter } from 'mongodb';
 import { DatabaseService } from '../../database.service';
 
 export class RoleRepository extends BaseRepository<IRoleEntity> {
@@ -33,20 +33,27 @@ export class RoleRepository extends BaseRepository<IRoleEntity> {
         return result.position;
     }
 
+    async getRolesWithPermission(permission: RolePermission): Promise<Array<IRoleEntity>> {
+        const permissionObj: IRolePermissions = {};
+        permissionObj[permission] = true;
+
+        return this.getCollection().find<IRoleEntity>({
+            [`permissions.${permission}`]: true
+        }).toArray();
+    }
+
     async doUserHavePermission(discordId: string, permissions: Array<RolePermission>, roleIds: Array<string>): Promise<boolean> {
         if (process.env.DISCORD_SUPER_ADMIN.split(',').includes(discordId)) {
             return true;
         }
 
-        const permissionObj = permissions.reduce((prev, curr) => {
+        const filter: Filter<IRoleEntity> = permissions.reduce((prev, curr) => {
             // @ts-ignore
-            prev[curr] = true;
+            prev[`permissions.${curr}`] = true;
             return prev;
         }, {})
-        return await this.getCollection().countDocuments({
-            discordId: { $in: roleIds },
-            permissions: permissionObj
-        }) > 0;
+        filter.discordId = { $in: roleIds };
+        return (await this.getCollection().countDocuments(filter)) > 0;
     }
 
     async getPermissions(discordId: string, roleIds: Array<string>): Promise<IRolePermissions> {

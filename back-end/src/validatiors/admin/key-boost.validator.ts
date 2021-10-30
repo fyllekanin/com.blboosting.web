@@ -1,19 +1,21 @@
 import { IValidationError, IValidator } from '../validator.interface';
 import { IBoostView } from '../../rest-service-views/admin/boosts.interface';
-import { InternalRequest, InternalUser } from '../../utilities/internal.request';
+import { InternalUser } from '../../utilities/internal.request';
 import { ValidationError } from '../../constants/validation.error';
 import { Role } from '../../constants/roles.constant';
+import { Client } from 'discord.js';
+import { Configuration } from '../../configuration';
 
 export class KeyBoostValidator implements IValidator<IBoostView> {
 
-    async run(req: InternalRequest<IBoostView>, entity: IBoostView): Promise<Array<IValidationError>> {
+    async run(user: InternalUser, entity: IBoostView, client: Client): Promise<Array<IValidationError>> {
         const errors: Array<IValidationError> = [];
 
         await this.validateContactCharacter(entity, errors);
-        await this.validatePlayAlong(req, entity, errors);
-        await this.validatePayments(entity, errors);
+        await this.validatePlayAlong(user, entity, errors);
+        await this.validatePayments(user, entity, client, errors);
         await this.validateKeys(entity, errors);
-        await this.validateRoles(req.user, entity, errors);
+        await this.validateRoles(user, entity, errors);
 
         return errors;
     }
@@ -74,7 +76,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         }
     }
 
-    private async validatePlayAlong(req: InternalRequest<IBoostView>, entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
+    private async validatePlayAlong(user: InternalUser, entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
         if (!entity.playAlong.isPlaying) {
             return;
         }
@@ -91,7 +93,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 message: 'You can not be tank or healer if a key holder is this role'
             });
         }
-        if (entity.keys.some(key => key.keyHolder && key.keyHolder.user && key.keyHolder.user.value.discordId === req.user.discordId)) {
+        if (entity.keys.some(key => key.keyHolder && key.keyHolder.user && key.keyHolder.user.value.discordId === user.discordId)) {
             errors.push({
                 code: ValidationError.KEY_PLAY_ALONG_KEY_HOLDER,
                 message: 'You can not choose to play along and be key holder, choose one'
@@ -99,10 +101,13 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         }
     }
 
-    private async validatePayments(entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
+    private async validatePayments(user: InternalUser, entity: IBoostView, client: Client, errors: Array<IValidationError>): Promise<void> {
         if (entity.balancePayment && entity.balancePayment < 0) {
             errors.push({ code: ValidationError.KEY_PAYMENT_BALANCE, message: 'Balance payment can not be negative' });
         }
+        const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
+        const isTrialAdvertiser = (await guild.members.fetch(user.discordId)).roles.cache.get(Configuration.get().RoleIds.TRIAL_ADVERTISER);
+
         for (const payment of entity.payments) {
             if (!entity.balancePayment && (!payment.amount || payment.amount <= 0)) {
                 errors.push({
@@ -123,6 +128,12 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 errors.push({
                     code: ValidationError.KEY_PAYMENT_FACTION,
                     message: 'A payment faction needs to be picked'
+                });
+            }
+            if (!payment.collector && isTrialAdvertiser) {
+                errors.push({
+                    code: ValidationError.KEY_PAYMENT_COLLECTOR,
+                    message: 'Collector is missing, you are trial advertiser'
                 });
             }
         }

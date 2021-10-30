@@ -26,18 +26,21 @@ export interface IBooster {
 }
 
 export interface BoostContext {
+    isTrialAdvertiser: boolean;
     realms: Array<{ realmId: number, name: string, category: string }>;
     sources: Array<SelectItem<string>>;
     dungeons: Array<{ name: string, value: string, levels: Array<SelectItem> }>;
     roles: Array<SelectItem<string>>;
     factions: Array<SelectItem<string>>;
     boosters: { low: Array<IBooster>, medium: Array<IBooster>, high: Array<IBooster>, elite: Array<IBooster> };
+    collectors: Array<SelectItem<string>>;
 }
 
 export interface IBoostPayment {
     realm: SelectItem;
     amount: number;
     faction: SelectItem;
+    collector?: SelectItem<string>;
 }
 
 export interface IBoostKey {

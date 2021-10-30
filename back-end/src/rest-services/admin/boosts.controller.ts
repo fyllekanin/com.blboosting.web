@@ -14,6 +14,8 @@ import { Client, GuildMember, TextChannel } from 'discord.js';
 import { Configuration } from '../../configuration';
 import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
 import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
+import { ILabelValue } from '../../rest-service-views/common.interface';
+import { RoleRepository } from '../../persistance/repositories/role.repository';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
@@ -27,12 +29,17 @@ export class BoostsController {
             boosters = await this.getKeyBoosters(req.client);
             Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
         }
+        const guild = req.client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
+        const isTrialAdvertiser = (await guild.members.fetch(req.user.discordId)).roles.cache.get(Configuration.get().RoleIds.TRIAL_ADVERTISER);
+
         res.status(StatusCodes.OK).json({
+            isTrialAdvertiser: Boolean(isTrialAdvertiser),
             realms: await RealmRepository.newRepository().getAll(),
             sources: Object.keys(BoostSource).map(key => BoostSource[key]),
             dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
             roles: Object.keys(Role).map(key => Role[key]),
             factions: Object.keys(Faction).map(key => Faction[key]),
+            collectors: await this.getCollectors(req),
             boosters: boosters
         });
     }
@@ -40,7 +47,7 @@ export class BoostsController {
     @Post()
     @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async createBoost(req: InternalRequest<IBoostView>, res: Response): Promise<void> {
-        const errors = await (new KeyBoostValidator()).run(req, req.body);
+        const errors = await (new KeyBoostValidator()).run(req.user, req.body, req.client);
         if (errors.length > 0) {
             res.status(StatusCodes.BAD_REQUEST).json(errors);
             return;
@@ -60,7 +67,8 @@ export class BoostsController {
             payments: entity.payments.map(payment => !payment.realm ? null : ({
                 amount: payment.amount,
                 realm: payment.realm.value.name,
-                faction: payment.faction.value
+                faction: payment.faction.value,
+                collectorId: payment.collector ? payment.collector.value : null
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
             discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
@@ -106,6 +114,18 @@ export class BoostsController {
         return stacks.length > 0 ? stacks : ['Any'];
     }
 
+    private async getCollectors(req: InternalRequest): Promise<Array<ILabelValue<string>>> {
+        const guild = req.client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
+        const rolesThatCanCollect = await RoleRepository.newRepository().getRolesWithPermission(RolePermission.CAN_COLLECT_PAYMENTS);
+        const values: Array<ILabelValue<string>> = [];
+        for (const role of rolesThatCanCollect) {
+            (await guild.roles.fetch(role.discordId)).members
+                .forEach(item =>
+                    values.push({ label: item.nickname ? item.nickname : item.displayName, value: item.id }))
+        }
+        return values;
+    }
+
     private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> }> {
         const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
         const response: { low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> } = {
@@ -114,7 +134,7 @@ export class BoostsController {
             high: [],
             elite: []
         };
-        (await guild.roles.fetch(Configuration.get().BoosterRoles.LOW_KEY_BOOSTER)).members.forEach(item => {
+        (await guild.roles.fetch(Configuration.get().RoleIds.LOW_KEY_BOOSTER)).members.forEach(item => {
             const data: IKeyBoosterView = {
                 discordId: item.id,
                 name: item.nickname ? item.nickname : item.displayName,
@@ -123,13 +143,13 @@ export class BoostsController {
             };
             response.low.push(data);
 
-            if (item.roles.cache.get(Configuration.get().BoosterRoles.MEDIUM_KEY_BOOSTER)) {
+            if (item.roles.cache.get(Configuration.get().RoleIds.MEDIUM_KEY_BOOSTER)) {
                 response.medium.push(data);
             }
-            if (item.roles.cache.get(Configuration.get().BoosterRoles.HIGH_KEY_BOOSTER)) {
+            if (item.roles.cache.get(Configuration.get().RoleIds.HIGH_KEY_BOOSTER)) {
                 response.high.push(data);
             }
-            if (item.roles.cache.get(Configuration.get().BoosterRoles.ELITE_KEY_BOOSTER)) {
+            if (item.roles.cache.get(Configuration.get().RoleIds.ELITE_KEY_BOOSTER)) {
                 response.elite.push(data);
             }
         });

@@ -27,12 +27,13 @@ interface IConfiguration {
         PALADIN: IValue;
         DEATH_KNIGHT: IValue;
     };
-    BoosterRoles: {
+    RoleIds: {
         LOW_KEY_BOOSTER: string;
         MEDIUM_KEY_BOOSTER: string;
         HIGH_KEY_BOOSTER: string;
         ELITE_KEY_BOOSTER: string;
-    }
+        TRIAL_ADVERTISER: string;
+    };
 }
 
 export class Configuration {
@@ -52,7 +53,7 @@ export class Configuration {
         }
         return Configuration.config;
     }
-    
+
     static getCache(): NodeCache {
         return this.cache;
     }
