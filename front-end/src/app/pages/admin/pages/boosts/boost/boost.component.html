@@ -69,16 +69,24 @@
                 </div>
                 <div class="cell small-12 large-2">
                     <span class="payment-option" (click)="onAddPaymentRow(index)"><em
-                        class="fas fa-plus"></em></span>
+                        class="fas fa-plus big-icon"></em></span>
                     <span class="payment-option" (click)="onRemovePaymentRow(item)"
                           [attr.disabled]="entity.payments.length === 1"><em
-                        class="fas fa-minus"></em></span>
+                        class="big-icon fas fa-minus"></em></span>
                 </div>
             </div>
             <hr/>
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12 large-4">
-                    <label for="payment-discount">Discount</label>
+                    <label for="payment-discount">
+                        Discount
+                        <span
+                            tooltip="How much in gold have been discounted if any"
+                            tooltip-position="top"
+                        >
+                            <i class="fas fa-info-circle"></i>
+                        </span>
+                    </label>
                     <input id="payment-discount" type="number" placeholder="Discount"
                            [(ngModel)]="entity.boost.discount"/>
                 </div>
@@ -352,10 +360,10 @@
                 <div class="cell small-12 large-3">
                     <span class="payment-option" (click)="onAddKeyRow(index)"
                           [attr.disabled]="entity.keys.length >= 4"><em
-                        class="fas fa-plus"></em></span>
+                        class="fas big-icon fa-plus"></em></span>
                     <span class="payment-option" (click)="onRemoveKeyRow(item)"
                           [attr.disabled]="entity.keys.length === 1"><em
-                        class="fas fa-minus"></em></span>
+                        class="fas big-icon fa-minus"></em></span>
                 </div>
             </div>
         </app-content>
