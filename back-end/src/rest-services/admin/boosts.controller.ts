@@ -1,4 +1,4 @@
-import { Controller, Get, Middleware, Post } from '@overnightjs/core';
+import { ClassMiddleware, Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest, InternalUser } from '../../utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
@@ -16,13 +16,15 @@ import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boos
 import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
 import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../persistance/repositories/role.repository';
+import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
 
 @Controller('api/admin/boosts')
+@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
 export class BoostsController {
     private static readonly BOOSTERS_CACHE_KEY = 'KEY_BOOSTERS';
 
     @Get('context')
-    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
+    @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async getContext(req: InternalRequest, res: Response): Promise<void> {
         let boosters = Configuration.getCache().has(BoostsController.BOOSTERS_CACHE_KEY) ? Configuration.getCache().get(BoostsController.BOOSTERS_CACHE_KEY) : null;
         if (!boosters) {
@@ -45,7 +47,7 @@ export class BoostsController {
     }
 
     @Post()
-    @Middleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
+    @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async createBoost(req: InternalRequest<IBoostView>, res: Response): Promise<void> {
         const errors = await (new KeyBoostValidator()).run(req.user, req.body, req.client);
         if (errors.length > 0) {

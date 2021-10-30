@@ -8,9 +8,10 @@ import { RoleRepository } from '../../persistance/repositories/role.repository';
 import { StatusCodes } from 'http-status-codes';
 import { DiscordUtility } from '../../utilities/discord.utility';
 import { ObjectId } from 'mongodb';
+import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
 
 @Controller('api/admin/roles')
-@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
+@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
 export class RolesController {
 
     @Get('page/:page')

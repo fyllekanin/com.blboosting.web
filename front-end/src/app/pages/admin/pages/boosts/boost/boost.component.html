@@ -8,15 +8,15 @@
         <app-content header="Contact Character" tooltipText="Character name-realm for boosters to whisper">
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12 large-4">
-                    <label for="name" required>Name</label>
+                    <label for="name" required="required">Name</label>
                     <input id="name" type="text" [(ngModel)]="entity.boost.name" placeholder="Contact character name"/>
                 </div>
                 <div class="cell small-12 large-4">
-                    <label for="realm" required>Realm</label>
+                    <label for="realm" required="required">Realm</label>
                     <app-form-select id="realm" [items]="realms" [(value)]="entity.boost.realm"></app-form-select>
                 </div>
                 <div class="cell small-12 large-4">
-                    <label for="source" required>Source</label>
+                    <label for="source" required="required">Source</label>
                     <app-form-select id="source" [items]="context.sources"
                                      [(value)]="entity.boost.source"></app-form-select>
                 </div>
@@ -316,13 +316,13 @@
         <app-content header="Keys">
             <div class="grid-x grid-margin-x" *ngFor="let item of entity.keys; let index = index">
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-dungeon'" required>Dungeon</label>
+                    <label [for]="index + '-key-dungeon'" required="required">Dungeon</label>
                     <app-form-select [id]="index + '-key-dungeon'" [items]="dungeons"
                                      [(value)]="item.dungeon"
                                      (valueChange)="item.level = null; onKeyChange(item)"></app-form-select>
                 </div>
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-level'" required>Level</label>
+                    <label [for]="index + '-key-level'" required="required">Level</label>
                     <app-form-select *ngIf="item.dungeon" [items]="index + '-key-level'"
                                      [items]="item.dungeon.value.levels" [value]="item.level"
                                      (valueChange)="item.level = $event; onKeyChange(item)"></app-form-select>
@@ -340,11 +340,12 @@
                     </div>
                 </div>
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-realm'">Keyholder</label>
+                    <label [for]="index + '-key-realm'" [attr.required]="isMultipleSpecifics ? 'required' : ''">Keyholder</label>
                     <app-form-select [items]="item.availableBoosters" [(value)]="item.keyHolder.user"></app-form-select>
                 </div>
                 <div class="cell small-12 large-2">
-                    <label [for]="index + '-key-role'">Role</label>
+                    <label [for]="index + '-key-role'"
+                           [attr.required]="isMultipleSpecifics ? 'required' : ''">Role</label>
                     <app-form-select [id]="index + '-key-role'" [items]="context.roles"
                                      [(value)]="item.keyHolder.role"></app-form-select>
                 </div>

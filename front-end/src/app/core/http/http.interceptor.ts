@@ -16,10 +16,12 @@ import { catchError, filter, finalize, switchMap, take } from 'rxjs/operators';
 import { AuthService } from '../auth/auth.service';
 import { SiteNotificationService } from '../common-services/site-notification.service';
 import { SiteNotificationType } from '../../shared/app-views/site-notification/site-notification.interface';
+import { DialogService } from '../common-services/dialog.service';
 
 interface UnauthorizedResponse {
     isTokenExisting: boolean;
     isPermissionRelated: boolean;
+    isMissingBattleNet: boolean;
 }
 
 @Injectable()
@@ -30,7 +32,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     constructor(
         private authService: AuthService,
         private router: Router,
-        private siteNotificationSerivce: SiteNotificationService
+        private siteNotificationService: SiteNotificationService,
+        private dialogService: DialogService
     ) {
     }
 
@@ -42,12 +45,15 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                     switch ((<HttpErrorResponse>error).status) {
                         case 401:
                             const response = <UnauthorizedResponse>error.error;
-                            if (response.isTokenExisting) {
+                            if (response.isMissingBattleNet) {
+                                this.router.navigateByUrl('/admin/battle-net');
+                                return of(null);
+                            } else if (response.isTokenExisting) {
                                 return this.handleAuthenticationRefresh(req, next);
                             } else {
                                 this.authService.setAuthUser(null);
                                 const path = this.router.routerState.snapshot.url;
-                                this.router.navigate(['auth'], {
+                                this.router.navigate(['auth', 'login'], {
                                     queryParams: {
                                         path: encodeURIComponent(path)
                                     }
@@ -55,7 +61,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                                 return of(null);
                             }
                         case 404:
-                            this.siteNotificationSerivce.create({
+                            this.siteNotificationService.create({
                                 title: 'Not Found',
                                 message: 'We could not find the page',
                                 type: SiteNotificationType.INFO

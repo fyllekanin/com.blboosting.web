@@ -5,10 +5,11 @@ import { InternalRequest } from '../utilities/internal.request';
 @Controller('api/battle-net')
 export class BattleNetController {
 
-    @Get('auth')
+    @Get('oauth')
     async getDiscord(req: InternalRequest, res: Response): Promise<void> {
         if (!req.query.code) {
-            res.redirect(process.env.DISCORD_OAUTH_LINK);
+            const redirectUri = encodeURIComponent(`${process.env.APPLICATION_URL}/api/battle-net/oauth?token=${req.query.token}`);
+            res.redirect(`${process.env.BATTLE_NET_OAUTH_LINK}/?response_type=code&client_id=${process.env.BATTLE_NET_CLIENT_ID}&redirect_uri=${redirectUri}&scope=wow.profile`);
             return;
         }
         // result = await DiscordService.getOauth(req.query.code as string);

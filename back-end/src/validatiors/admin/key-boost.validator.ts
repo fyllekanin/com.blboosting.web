@@ -5,6 +5,7 @@ import { ValidationError } from '../../constants/validation.error';
 import { Role } from '../../constants/roles.constant';
 import { Client } from 'discord.js';
 import { Configuration } from '../../configuration';
+import { Dungeon } from '../../constants/dungeons.constant';
 
 export class KeyBoostValidator implements IValidator<IBoostView> {
 
@@ -157,6 +158,12 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 });
             }
         }
-
+        const specificKeys = entity.keys.filter(key => key.dungeon.value.value !== Dungeon.ANY.value);
+        if (specificKeys.length > 1 && specificKeys.some(key => !key.keyHolder || !key.keyHolder.user)) {
+            errors.push({
+                code: ValidationError.KEY_KEY_MULTIPLE_SPECIFIC,
+                message: 'If multiple specific keys every specific key needs a keyholder'
+            });
+        }
     }
 }

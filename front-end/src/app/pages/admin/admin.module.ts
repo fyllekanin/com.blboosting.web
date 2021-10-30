@@ -6,6 +6,7 @@ import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { RouterModule } from '@angular/router';
 import { adminRoutes } from './admin.routes';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
+import { BattleNetConnectComponent } from './pages/battle-net-connect/battle-net-connect.component';
 
 @NgModule({
     imports: [
@@ -15,7 +16,8 @@ import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
     ],
     declarations: [
         AdminComponent,
-        DashboardComponent
+        DashboardComponent,
+        BattleNetConnectComponent
     ],
     providers: [
         DashboardResolver

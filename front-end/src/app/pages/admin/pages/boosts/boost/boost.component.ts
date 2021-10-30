@@ -64,6 +64,7 @@ export class BoostComponent {
 
     realms: Array<SelectItem> = [];
     dungeons: Array<SelectItem> = [];
+    isMultipleSpecifics = false;
 
     constructor(
         private boostService: BoostService,
@@ -100,13 +101,14 @@ export class BoostComponent {
     }
 
     onKeyChange(item: IBoostKey): void {
-        if (item.dungeon.value.value === 'TAZ' || item.level.value === 0) {
+        if (item.dungeon.value.value === 'TAZ' || (item.level && item.level.value === 0)) {
             item.isTimed = false;
             item.isTimedDisabled = true;
         } else {
             item.isTimedDisabled = false;
         }
 
+        this.isMultipleSpecifics = this.entity.keys.filter(key => key.dungeon.value.value !== 'ANY').length > 1;
         item.availableBoosters = this.getAvailableBoosters(item);
         if (!item.keyHolder.user) {
             return;

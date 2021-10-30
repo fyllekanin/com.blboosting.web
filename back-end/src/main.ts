@@ -17,6 +17,7 @@ import { InternalRequest } from './utilities/internal.request';
 import { MigrationService } from './migrations/migration.service';
 import { BoostsController } from './rest-services/admin/boosts.controller';
 import { Configuration } from './configuration';
+import { BattleNetController } from './rest-services/battle-net.controller';
 
 dotenv.config();
 
@@ -74,7 +75,8 @@ class MainServer extends Server {
                 new AuthenticationController(),
                 new AdminPageController(),
                 new RolesController(),
-                new BoostsController()
+                new BoostsController(),
+                new BattleNetController()
             ],
             null,
             (req: InternalRequest, res: Response, next: NextFunction) => {

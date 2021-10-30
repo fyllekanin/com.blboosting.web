@@ -30,7 +30,7 @@ export class BattleNetService {
 
     private static async getData<T>(region: BattleNetRegions, path: string, queryParameters: string): Promise<T> {
         if (!ACCESS_TOKEN) {
-            ACCESS_TOKEN = `Bearer ${(await this.getOauth()).access_token}`;
+            ACCESS_TOKEN = `Bearer ${(await this.getApplicationOauth()).access_token}`;
         }
         return await axios.get(`${BattleNetService.BASE_URL.replace('{{REGION}}', region)}${path}?${queryParameters}`, {
             headers: {
@@ -48,7 +48,7 @@ export class BattleNetService {
             });
     }
 
-    private static async getOauth(): Promise<BattleNetOauth2> {
+    private static async getApplicationOauth(): Promise<BattleNetOauth2> {
         const params = new URLSearchParams();
         params.append('grant_type', 'client_credentials');
 

@@ -2,6 +2,7 @@ import { Routes } from '@angular/router';
 import { AdminComponent } from './admin.component';
 import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { DashboardResolver } from './pages/dashboard/dashboard.resolver';
+import { BattleNetConnectComponent } from './pages/battle-net-connect/battle-net-connect.component';
 
 export const adminRoutes: Routes = [
     {
@@ -15,6 +16,10 @@ export const adminRoutes: Routes = [
                 resolve: {
                     data: DashboardResolver
                 }
+            },
+            {
+                path: 'battle-net',
+                component: BattleNetConnectComponent
             },
             {
                 path: 'boosts',

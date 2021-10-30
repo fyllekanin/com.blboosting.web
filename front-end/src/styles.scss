@@ -191,7 +191,7 @@ input::placeholder {
     color: var(--secondary-text-color);
 }
 
-label[required]::after {
+label[required="required"]::after {
     content: " *";
     color: var(--abort-color);
     margin-left: 3px;
