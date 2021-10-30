@@ -13,7 +13,7 @@
     height: 39px;
     line-height: 1.1;
     margin-bottom: 2px !important;
-    padding: 10px 12px;
+    padding: 12px 10px;
     transition: border-color ease-in-out .15s, box-shadow ease-in-out .15s;
     width: 100%;
     outline: 0;
@@ -67,7 +67,7 @@
 div[data-placeholder]:not(:focus):not([data-div-placeholder-content]):before {
     content: attr(data-placeholder);
     float: left;
-    margin-left: -4px;
+    margin-left: -2px;
     color: var(--secondary-text-color);
     opacity: 0.5;
 }
