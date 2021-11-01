@@ -57,6 +57,7 @@ jobs:
           echo "${{secrets.TOKEN_SECRET}}" >> temp/.env
           echo "${{secrets.BATTLE_NET_CLIENT_ID}}" >> temp/.env
           echo "${{secrets.BATTLE_NET_CLIENT_SECRET}}" >> temp/.env
+          echo "${{secrets.BATTLE_NET_OAUTH_LINK}}" >> temp/.env
           echo "${{secrets.ENVIRONMENT}}" >> temp/.env
           echo "${{secrets.DISCORD_CREATE_BOOST}}" >> temp/.env
           
