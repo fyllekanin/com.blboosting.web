@@ -10,13 +10,14 @@ import { BoostSource } from '../../constants/boost-source.constant';
 import { Dungeon } from '../../constants/dungeons.constant';
 import { Role } from '../../constants/roles.constant';
 import { Faction } from '../../constants/factions.constant';
-import { Client, GuildMember, TextChannel } from 'discord.js';
+import { Client, GuildMember, MessageReaction, TextChannel } from 'discord.js';
 import { Configuration } from '../../configuration';
 import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
 import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
 import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../persistance/repositories/role.repository';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
+import { ValidationError } from '../../constants/validation.error';
 
 @Controller('api/admin/boosts')
 @ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
@@ -55,9 +56,23 @@ export class BoostsController {
             return;
         }
 
-        await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel).send(`!boost ${await this.getConvertedPayload(req.user, req.body)}`);
-
-        res.status(StatusCodes.OK).json();
+        const channel = await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel);
+        const message = await channel.send(`!boost ${await this.getConvertedPayload(req.user, req.body)}`);
+        const fallback = setTimeout(() => {
+            req.client.off('messageReactionAdd', listener);
+            res.status(StatusCodes.BAD_REQUEST).json([{
+                code: ValidationError.KEY_BOT_NO_REACTION,
+                message: 'Bot did not react'
+            }]);
+        }, 5000);
+        const listener = (reaction: MessageReaction) => {
+            if (reaction.message.id === message.id) {
+                clearTimeout(fallback);
+                req.client.off('messageReactionAdd', listener);
+                res.status(StatusCodes.OK).json();
+            }
+        };
+        req.client.on('messageReactionAdd', listener);
     }
 
     private getConvertedPayload(user: InternalUser, entity: IBoostView): string {

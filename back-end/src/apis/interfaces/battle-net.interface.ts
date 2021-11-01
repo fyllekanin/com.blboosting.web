@@ -22,3 +22,19 @@ export interface SlimBattleNetRealm {
 export interface BattleNetRealms {
     realms: Array<SlimBattleNetRealm>;
 }
+
+export interface BattleNetProfile {
+    id: number;
+    wow_accounts: Array<{
+        id: number;
+        characters: Array<{
+            name: string;
+            id: number;
+            realmSlug: string;
+            class: string;
+            race: string;
+            faction: string;
+            level: number;
+        }>
+    }>
+}
