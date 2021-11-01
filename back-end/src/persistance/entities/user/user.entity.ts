@@ -4,7 +4,7 @@ import { CreatedUpdatedAtEntity } from '../created-updated-at.interface';
 export interface IUserEntity extends CreatedUpdatedAtEntity {
     _id?: ObjectId;
     discordId: string;
-    battleNetId?: string;
+    battleNetId?: number;
     username: string;
     avatarHash: string;
 }

@@ -18,6 +18,7 @@ import { MigrationService } from './migrations/migration.service';
 import { BoostsController } from './rest-services/admin/boosts.controller';
 import { Configuration } from './configuration';
 import { BattleNetController } from './rest-services/battle-net.controller';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -32,6 +33,7 @@ class MainServer extends Server {
         this.backgroundTaskHandler = new BackgroundTaskHandler();
         this.app.use(express.json());
         this.app.use(compression());
+        this.app.use(cookieParser());
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
         this.client = new Client({
