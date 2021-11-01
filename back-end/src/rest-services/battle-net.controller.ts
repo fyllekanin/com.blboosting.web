@@ -14,7 +14,7 @@ export class BattleNetController {
     @Get('oauth')
     async connectBattleNet(req: InternalRequest, res: Response): Promise<void> {
         if (!req.query.token && !req.query.code) {
-            res.send(this.getHtml({ isTokenMissing: true }));
+            res.send(this.getHtml({ payload: { isTokenMissing: true } }));
             return;
         }
         if (!req.query.code) {
@@ -38,7 +38,7 @@ export class BattleNetController {
         user.battleNetId = profile.id;
         await UserRepository.newRepository().update(user);
 
-        res.send(this.getHtml({ isSuccess: true }));
+        res.send(this.getHtml({ payload: { isSuccess: true } }));
     }
 
     private getHtml(payload: Object): string {

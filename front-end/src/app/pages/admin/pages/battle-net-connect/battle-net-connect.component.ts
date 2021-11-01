@@ -30,17 +30,17 @@ export class BattleNetConnectComponent {
         if (data.origin !== environment.server) {
             return;
         }
-        debugger;
-        if (!data.data) {
+        const { payload } = data.data;
+        if (!payload) {
             return;
         }
-        if (data.data.isTokenMissing) {
+        if (payload.isTokenMissing) {
             this.siteNotificationService.create({
                 type: SiteNotificationType.ERROR,
                 title: 'Error',
                 message: 'Token was missing, try logging out and in again'
             })
-        } else if (data.data.isSuccess) {
+        } else if (payload.isSuccess) {
             this.siteNotificationService.create({
                 type: SiteNotificationType.SUCCESS,
                 title: 'Success',
