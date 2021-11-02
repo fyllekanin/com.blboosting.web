@@ -85,7 +85,7 @@ export class BoostsController {
                 amount: payment.amount,
                 realm: payment.realm.value.name,
                 faction: payment.faction.value,
-                collectorId: payment.collector ? payment.collector.value : null
+                collectorId: payment.collector ? payment.collector.value : user.discordId
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
             discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
