@@ -5,11 +5,13 @@ import { UserRepository } from '../../persistance/repositories/user/user.reposit
 import { IUserEntity } from '../../persistance/entities/user/user.entity';
 import { IRoleEntity, RolePermission } from '../../persistance/entities/role.entity';
 import { RoleRepository } from '../../persistance/repositories/role.repository';
+import { CharacterRepository } from '../../persistance/repositories/battle-net/character.repository';
 
 /**
  * - Create indexes for migration collection
  * - Create indexes for users collection
  * - Create indexes for roles collection
+ * - Create indexes for characters collection
  */
 export class Task1633797391242 implements MigrationTask {
 
@@ -17,6 +19,7 @@ export class Task1633797391242 implements MigrationTask {
         await this.createMigrationIndexes();
         await this.createUserIndexes();
         await this.createRoleIndexes();
+        await this.createCharacterIndexes();
     }
 
     getName(): string {
@@ -49,5 +52,15 @@ export class Task1633797391242 implements MigrationTask {
         for (const permission in RolePermission) {
             await collection.createIndex({ [`permissions.${permission}`]: 1 });
         }
+    }
+
+    private async createCharacterIndexes(): Promise<void> {
+        const collection = DatabaseService.getCollection<IRoleEntity>(CharacterRepository.COLLECTION);
+        await collection.createIndex({ characterId: 1 }, {
+            unique: true
+        });
+        await collection.createIndex({ accountId: 1 });
+        await collection.createIndex({ battleNetId: 1 });
+        await collection.createIndex({ userId: 1 });
     }
 }

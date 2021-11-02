@@ -6,6 +6,7 @@ import { BattleNetRegions, BattleNetService } from '../apis/services/battle-net.
 import { RequestUtility } from '../utilities/request.utility';
 import { UserRepository } from '../persistance/repositories/user/user.repository';
 import { ObjectId } from 'mongodb';
+import { CharacterRepository } from '../persistance/repositories/battle-net/character.repository';
 
 @Controller('api/battle-net')
 export class BattleNetController {
@@ -30,15 +31,48 @@ export class BattleNetController {
             res.redirect(myUrl.href);
             return;
         }
+        const parsedToken = RequestUtility.getJWTValue(req.cookies.token);
+        if (!parsedToken || !parsedToken.id) {
+            res.send(this.getHtml({ payload: { isTokenMissing: true } }));
+            return;
+        }
+
         const result = await BattleNetService.getOath(BattleNetRegions.EU, req.query.code as string, 'wow.profile');
         const profile = await BattleNetService.getWoWProfile(BattleNetRegions.EU, result.access_token);
 
-        const parsedToken = RequestUtility.getJWTValue(req.cookies.token);
         const user = await UserRepository.newRepository().get(new ObjectId(parsedToken.id));
         user.battleNetId = profile.id;
         await UserRepository.newRepository().update(user);
 
-        res.send(this.getHtml({ payload: { isSuccess: true } }));
+        const characterRepository = new CharacterRepository();
+        const promises = [];
+        for (const account of profile.wow_accounts) {
+            for (const character of account.characters) {
+                if (character.level < 60) {
+                    continue;
+                }
+                const characterAssets = await BattleNetService.getCharacterAssets(BattleNetRegions.EU, character.realm.slug, character.name, result.access_token);
+                promises.push(characterRepository.insert({
+                    userId: user._id,
+                    battleNetId: user.battleNetId,
+                    accountId: account.id,
+                    characterId: character.id,
+                    name: character.name,
+                    realmSlug: character.realm.slug,
+                    class: character.playable_class.name,
+                    race: character.playable_race.name,
+                    faction: character.faction.type,
+                    level: character.level,
+                    characterAssets: {
+                        avatar: characterAssets.avatar,
+                        inset: characterAssets.inset,
+                        main: characterAssets.main
+                    }
+                }));
+            }
+        }
+
+        Promise.all(promises).then(() => res.send(this.getHtml({ payload: { isSuccess: true } })));
     }
 
     private getHtml(payload: Object): string {

@@ -30,10 +30,22 @@ export interface BattleNetProfile {
         characters: Array<{
             name: string;
             id: number;
-            realmSlug: string;
-            class: string;
-            race: string;
-            faction: string;
+            realm: {
+                name: string;
+                slug: string;
+            };
+            playable_class: {
+                name: string;
+                id: number;
+            };
+            playable_race: {
+                name: string;
+                id: number;
+            };
+            faction: {
+                type: string;
+                name: string;
+            };
             level: number;
         }>
     }>

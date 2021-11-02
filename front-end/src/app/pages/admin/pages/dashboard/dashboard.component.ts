@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { AuthService } from '../../../../core/auth/auth.service';
+import { ActivatedRoute } from '@angular/router';
+import { IDashboard } from './dashboard.interface';
 
 @Component({
     selector: 'app-admin-dashboard',
@@ -7,10 +8,9 @@ import { AuthService } from '../../../../core/auth/auth.service';
     styleUrls: ['dashboard.component.scss']
 })
 export class DashboardComponent {
-    avatarUrl: string;
+    context: IDashboard;
 
-    constructor(authService: AuthService) {
-        const authUser = authService.getUser();
-        this.avatarUrl = `https://cdn.discordapp.com/avatars/${authUser.discordId}/${authUser.avatarHash}.png?size=32`;
+    constructor(activatedRoute: ActivatedRoute) {
+        this.context = activatedRoute.snapshot.data.data;
     }
 }

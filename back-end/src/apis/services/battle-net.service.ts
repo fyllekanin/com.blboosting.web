@@ -45,7 +45,31 @@ export class BattleNetService {
                 locale: 'en_US'
             }
         })
-            .then(async result => result.data);
+            .then(result => result.data);
+    }
+
+    static async getCharacterAssets(region: BattleNetRegions, slug: string, character: string, accessToken: string): Promise<{
+        avatar: string;
+        inset: string;
+        main: string;
+    }> {
+        const characterName = encodeURI(character.toLowerCase());
+        return await axios.get(`${BattleNetService.BASE_URL.replace('{{REGION}}', region)}/profile/wow/character/${slug}/${characterName}/character-media`, {
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${accessToken}`
+            },
+            params: {
+                namespace: `profile-${region}`,
+                locale: 'en_US'
+            }
+        })
+            .then((result: { data: { assets: [{ key: string, value: string }] } }) => ({
+                avatar: result.data.assets.find(item => item.key === 'avatar').value,
+                inset: result.data.assets.find(item => item.key === 'inset').value,
+                main: result.data.assets.find(item => item.key === 'main').value
+            }));
     }
 
     static async getRealm(region: BattleNetRegions, slug: string): Promise<BattleNetRealm> {
@@ -68,14 +92,15 @@ export class BattleNetService {
         if (!ACCESS_TOKEN) {
             ACCESS_TOKEN = `Bearer ${(await this.getApplicationOauth(region)).access_token}`;
         }
-        return await axios.get(`${BattleNetService.BASE_URL.replace('{{REGION}}', region)}${path}?${queryParameters}`, {
+        const url = `${BattleNetService.BASE_URL.replace('{{REGION}}', region)}${path}?${queryParameters}`;
+        return await axios.get(url, {
             headers: {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',
                 Authorization: ACCESS_TOKEN
             }
         })
-            .then(async result => result.data).catch(err => {
+            .then(result => result.data).catch(err => {
                 console.error(`BattleNet getData error: ${err}`);
                 if (err.response && err.response.status === 401) {
                     ACCESS_TOKEN = null;

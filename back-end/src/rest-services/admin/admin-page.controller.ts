@@ -6,6 +6,8 @@ import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middlewar
 import { PermissionMiddleware } from '../middlewares/permission.middleware';
 import { RolePermission } from '../../persistance/entities/role.entity';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
+import { CharacterRepository } from '../../persistance/repositories/battle-net/character.repository';
+import { Faction } from '../../constants/factions.constant';
 
 @Controller('api/admin')
 @ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
@@ -14,6 +16,15 @@ export class AdminPageController {
     @Get('dashboard')
     @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN])])
     async getDashboard(req: InternalRequest, res: Response): Promise<void> {
-        res.status(StatusCodes.OK).json({ message: 'Tjabba tjena hallå' });
+        const characters = await CharacterRepository.newRepository().getCharacterForUserId(req.user.id);
+
+        res.status(StatusCodes.OK).json({
+            characters: characters.map(character => ({
+                name: character.name,
+                class: character.class,
+                faction: Faction[character.faction].label,
+                inset: character.characterAssets.inset
+            }))
+        });
     }
 }
