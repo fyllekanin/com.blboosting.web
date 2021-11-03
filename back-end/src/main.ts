@@ -34,7 +34,7 @@ class MainServer extends Server {
         this.app.use(express.json());
         this.app.use(compression());
         this.app.use(cookieParser());
-        this.app.use('/', express.static(__dirname + '/public'));
+        // this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
         this.client = new Client({
             intents: new Intents(Number(process.env.DISCORD_INTENTS))
@@ -45,7 +45,16 @@ class MainServer extends Server {
         await this.preSetup();
         this.setupControllers();
         this.backgroundTaskHandler.activate();
-        this.app.get('/*', (req, res) => {
+        this.app.use('/', (req, res) => {
+            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+            res.header('Expires', '-1');
+            res.header('Pragma', 'no-cache');
+            res.sendFile(__dirname + '/public/index.html');
+        });
+        this.app.use('/*', (req, res) => {
+            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+            res.header('Expires', '-1');
+            res.header('Pragma', 'no-cache');
             res.sendFile(__dirname + '/public/index.html');
         });
         this.app.listen(port, () => {
