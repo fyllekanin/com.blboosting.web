@@ -36,7 +36,7 @@ jobs:
           mkdir temp
           mv back-end/dist/* temp/
           mv back-end/node_modules temp/
-          mv -f front-end/dist/front-end/* temp/public/
+          mv -f front-end/dist/front-end/* temp/web/public/
         
       - name: Add ecosystem
         run: cp integration/ecosystem.config.js temp/ecosystem.config.js 
