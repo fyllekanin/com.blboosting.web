@@ -43,7 +43,7 @@ img {
 }
 
 #discord-button a {
-    color: white;
+    color: var(--button-color);
     font-weight: bold;
     border-radius: 8px;
     display: inline-flex;

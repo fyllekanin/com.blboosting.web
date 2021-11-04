@@ -3,7 +3,7 @@ import { BoostContext, IBoost, IBooster, IBoostKey, IBoostPayment } from '../boo
 import { ActivatedRoute, Router } from '@angular/router';
 import { SelectItem } from '../../../../../shared/components/form/select/select.interface';
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
-import { ColorValue } from '../../../../../shared/constants/colors.constants';
+import { ButtonClasses } from '../../../../../shared/constants/button.constants';
 import { BoostService } from './boost.service';
 import { DialogService } from '../../../../../core/common-services/dialog.service';
 
@@ -58,8 +58,8 @@ export class BoostComponent {
     };
 
     actions: Array<UserAction> = [
-        { label: 'Submit', color: ColorValue.GREEN, value: 'submit' },
-        { label: 'Back', color: ColorValue.BLUE, link: '/admin/boosts/page/1' }
+        { label: 'Submit', buttonClass: ButtonClasses.GREEN, value: 'submit' },
+        { label: 'Back', buttonClass: ButtonClasses.BLUE, link: '/admin/boosts/page/1' }
     ];
 
     realms: Array<SelectItem> = [];

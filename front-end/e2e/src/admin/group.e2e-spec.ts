@@ -3,7 +3,7 @@ import { AuthClass } from '../../classes/auth.class';
 import { ClickClass } from '../../classes/click.class';
 import { InputClass } from '../../classes/input.class';
 import { TableClass } from '../../classes/table.class';
-import { IdHelper } from '../../../../back-end/src/helpers/id.helper';
+import { IdHelper } from '../../../../back-end/src/web/helpers/id.helper';
 
 describe('Group', () => {
 

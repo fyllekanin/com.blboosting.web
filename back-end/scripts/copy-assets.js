@@ -6,7 +6,7 @@ ncp.limit = 16;
 console.log('Starting to copy assets.');
 const promises = [
     new Promise(res => {
-        ncp('src/public', 'dist/public', function (err) {
+        ncp('src/web/public', 'dist/web/public', function (err) {
             if (err) {
                 return console.error(err);
             }
@@ -14,7 +14,7 @@ const promises = [
         });
     }),
     new Promise(res => {
-        ncp('src/resources', 'dist/resources', function (err) {
+        ncp('src/web/resources', 'dist/web/resources', function (err) {
             if (err) {
                 return console.error(err);
             }

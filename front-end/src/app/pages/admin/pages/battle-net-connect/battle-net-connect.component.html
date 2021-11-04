@@ -3,13 +3,36 @@
         <app-content header="Battle Net Connection">
         </app-content>
     </div>
-    <div class="cell small-12">
-        <app-content header="Connect your account">
-            You haven't connected your battle.net account, this limits the usage on the site for you until you connect
-            it.
-            Click the battle.net button below to start connecting your account.
+    <div class="cell small-12 large-4">
+        <app-content header="Why do you need to connect your battle.net account?">
+            We need you to connect your battle.net account for a few reasons listed below.<br/>
             <br/>
-            <button (click)="onClick()" class="button-blue">Cba fixing good button atm</button>
+            <ol>
+                <li>It's a unique way we can identify you as a user on WoW</li>
+                <li>We are able to use fetch your characters to automatically scan your m+ score, raider logs etc</li>
+            </ol>
+        </app-content>
+    </div>
+    <div class="cell small-12 large-8">
+        <app-content header="Connect or update your account">
+            <ol>
+                <li>
+                    First time here: We need you to connect your account before you can use the site, this is a
+                    limitation
+                    so we got all the data we need
+                </li>
+                <li>
+                    Update characters: If you got new level 60 characters you wanna include, you can use this to include
+                    those characters
+                </li>
+            </ol>
+            <br/>
+            <div class="text-center">
+                <button (click)="onClick()" id="battle-net-button">
+                    <img src="/assets/images/battle-net-logo.png" alt="BattleNet logo">
+                    Connect / Update BattleNet Account
+                </button>
+            </div>
         </app-content>
     </div>
 </div>

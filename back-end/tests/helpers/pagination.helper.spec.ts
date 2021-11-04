@@ -1,4 +1,4 @@
-import { PaginationHelper } from '../../src/helpers/pagination.helper';
+import { PaginationHelper } from '../../src/web/helpers/pagination.helper';
 
 describe('PaginationHelper', () => {
 

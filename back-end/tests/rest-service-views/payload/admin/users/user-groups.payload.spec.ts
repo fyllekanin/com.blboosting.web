@@ -1,5 +1,5 @@
-import { InternalRequest } from '../../../../../src/utilities/internal.request';
-import { UserGroupsView } from '../../../../../src/rest-service-views/two-way/admin/user-groups.view';
+import { InternalRequest } from '../../../../../src/common/utilities/internal.request';
+import { UserGroupsView } from '../../../../../src/web/rest-service-views/two-way/admin/user-groups.view';
 
 describe('UserGroupsPayload', () => {
 

@@ -1,5 +1,5 @@
-import { InternalRequest } from '../../../../../src/utilities/internal.request';
-import { UserDetailsPayload } from '../../../../../src/rest-service-views/payloads/admin/users/user-details.payload';
+import { InternalRequest } from '../../../../../src/common/utilities/internal.request';
+import { UserDetailsPayload } from '../../../../../src/web/rest-service-views/payloads/admin/users/user-details.payload';
 
 describe('UserDetailsPayload', () => {
 

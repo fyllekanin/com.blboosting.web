@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { TableActionResponse, TableHeader, TableRow } from '../../../../../shared/components/table/table.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RolesListEntry } from '../roles.interfaces';
-import { ColorValue } from '../../../../../shared/constants/colors.constants';
+import { ButtonClasses } from '../../../../../shared/constants/button.constants';
 import { IPagination } from '../../../../../shared/components/pagination/pagination.interface';
 import { CombineSubscriptions, UnSub } from '../../../../../shared/decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
@@ -49,7 +49,7 @@ export class RolesListComponent implements OnDestroy {
                 { label: item.position }
             ],
             actions: [
-                { label: 'Edit', color: ColorValue.BLUE, value: 'edit', icon: 'fas fa-edit' }
+                { label: 'Edit', buttonClass: ButtonClasses.BLUE, value: 'edit', icon: 'fas fa-edit' }
             ]
         }));
     }

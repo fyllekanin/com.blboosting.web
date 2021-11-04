@@ -1,9 +1,9 @@
-import { GroupView } from '../../../../src/rest-service-views/two-way/admin/group.view';
-import { InternalRequest } from '../../../../src/utilities/internal.request';
+import { GroupView } from '../../../../src/web/rest-service-views/two-way/admin/group.view';
+import { InternalRequest } from '../../../../src/common/utilities/internal.request';
 import {
     AdminPermissions,
     StaffPermissions
-} from '../../../../src/rest-service-views/respond-views/user/auth-user.view';
+} from '../../../../src/web/rest-service-views/respond-views/user/auth-user.view';
 
 describe('GroupView', () => {
 

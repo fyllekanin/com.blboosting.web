@@ -1,0 +1,17 @@
+#battle-net-button {
+    color: var(--button-color);
+    border-radius: 8px;
+    display: inline-flex;
+    align-items: center;
+    padding: 20px 20px;
+    background-color: #181a1e;
+    text-decoration: none;
+    opacity: 1;
+    border-bottom: 3px solid #101010;
+    border-right: 3px solid #101010;
+}
+
+#battle-net-button img {
+    max-width: 30px;
+    margin-right: 10px;
+}

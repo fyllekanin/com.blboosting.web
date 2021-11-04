@@ -1,4 +1,4 @@
-import { SlimUserView } from '../../../src/rest-service-views/two-way/slim-user.view';
+import { SlimUserView } from '../../../src/web/rest-service-views/two-way/slim-user.view';
 
 describe('SlimUserView', () => {
     it('should be possible to build', () => {

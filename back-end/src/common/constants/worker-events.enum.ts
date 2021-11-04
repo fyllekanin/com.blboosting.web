@@ -1,0 +1,4 @@
+export enum WorkerEvents {
+    CHECK_RAIDER_IO_FOR = 'CHECK_RAIDER_IO_FOR',
+    SCAN_WOW_REALMS = 'SCAN_WOW_REALMS'
+}

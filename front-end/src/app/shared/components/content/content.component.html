@@ -10,7 +10,7 @@
     </span>
 
     <span *ngIf="actions.length > 0" class="buttons">
-        <button *ngFor="let action of actions" [style]="{ background: action.color }"
+        <button *ngFor="let action of actions" [ngClass]="action.buttonClass"
                 (click)="action.link ? onLink(action) : actionChange.emit(action)">
                 <i [class]="action.icon"></i> {{action.label}}
             </button>

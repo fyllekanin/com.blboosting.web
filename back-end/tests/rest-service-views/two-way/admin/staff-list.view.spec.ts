@@ -1,5 +1,5 @@
-import { StaffListView, StaffListViewEntry } from '../../../../src/rest-service-views/two-way/admin/staff-list.view';
-import { InternalRequest } from '../../../../src/utilities/internal.request';
+import { StaffListView, StaffListViewEntry } from '../../../../src/web/rest-service-views/two-way/admin/staff-list.view';
+import { InternalRequest } from '../../../../src/common/utilities/internal.request';
 
 describe('StaffListView', () => {
     const entries: Array<StaffListViewEntry> = [

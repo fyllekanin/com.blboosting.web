@@ -1,4 +1,4 @@
-import { SettingEntity, SettingKey } from '../../../../src/persistance/entities/settings/setting.entity';
+import { SettingEntity, SettingKey } from '../../../../src/common/persistance/entities/settings/setting.entity';
 
 describe('SettingEntity', () => {
 

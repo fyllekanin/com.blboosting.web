@@ -21,6 +21,11 @@ export class AdminComponent {
             route: '/admin'
         },
         {
+            icon: 'fa fa-cog',
+            label: 'Battle.Net',
+            route: '/admin/battle-net'
+        },
+        {
             icon: 'fas fa-running',
             label: 'Mythic+ Boost',
             route: '/admin/boosts/page/1'

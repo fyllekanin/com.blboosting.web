@@ -10,7 +10,7 @@
         </td>
 
         <td *ngIf="row.actions && row.actions.length > 0" class="actions">
-            <button *ngFor="let action of row.actions" [style]="{ background: action.color }"
+            <button *ngFor="let action of row.actions" [style]="{ background: action.buttonClass }"
                     (click)="actionChange.emit({ row: row, action: action })">
                 <i [class]="action.icon"></i> {{action.label}}
             </button>

@@ -7,7 +7,7 @@ import { RoleService } from './role.service';
 import { AuthService } from '../../../../../core/auth/auth.service';
 import { AuthUser } from '../../../../../core/auth/auth.model';
 import { UserAction } from '../../../../../shared/constants/common.interfaces';
-import { ColorValue } from '../../../../../shared/constants/colors.constants';
+import { ButtonClasses } from '../../../../../shared/constants/button.constants';
 
 @Component({
     selector: 'app-admin-roles-role',
@@ -21,8 +21,8 @@ export class RoleComponent implements OnDestroy {
     subscriber: Unsubscribable;
 
     actions: Array<UserAction> = [
-        { label: 'Save', color: ColorValue.GREEN, value: 'save' },
-        { label: 'Back', color: ColorValue.BLUE, link: '/admin/roles/page/1' }
+        { label: 'Save', buttonClass: ButtonClasses.GREEN, value: 'save' },
+        { label: 'Back', buttonClass: ButtonClasses.BLUE, link: '/admin/roles/page/1' }
     ];
 
     constructor(

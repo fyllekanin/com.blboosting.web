@@ -1,8 +1,8 @@
-import { ColorValue } from './colors.constants';
+import { ButtonClasses } from './button.constants';
 
 export interface UserAction {
     label: string;
-    color: ColorValue;
+    buttonClass: ButtonClasses;
     icon?: string;
     link?: string;
     value?: string | number;

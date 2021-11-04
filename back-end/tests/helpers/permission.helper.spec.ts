@@ -1,8 +1,8 @@
-import { PermissionHelper } from '../../src/helpers/permission.helper';
-import { GroupEntity } from '../../src/persistance/entities/group/group.entity';
-import { UserEntity } from '../../src/persistance/entities/user/user.entity';
-import { AdminPermissions, StaffPermissions } from '../../src/rest-service-views/respond-views/user/auth-user.view';
-import { ServiceConfig } from '../../src/utilities/internal.request';
+import { PermissionHelper } from '../../src/web/helpers/permission.helper';
+import { GroupEntity } from '../../src/common/persistance/entities/group/group.entity';
+import { UserEntity } from '../../src/common/persistance/entities/user/user.entity';
+import { AdminPermissions, StaffPermissions } from '../../src/web/rest-service-views/respond-views/user/auth-user.view';
+import { ServiceConfig } from '../../src/common/utilities/internal.request';
 
 describe('PermissionHelper', () => {
 

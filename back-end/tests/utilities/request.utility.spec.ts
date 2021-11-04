@@ -1,5 +1,5 @@
-import { InternalRequest } from '../../src/utilities/internal.request';
-import { RequestUtility } from '../../src/utilities/request.utility';
+import { InternalRequest } from '../../src/common/utilities/internal.request';
+import { RequestUtility } from '../../src/common/utilities/request.utility';
 
 describe('RequestUtility', () => {
 

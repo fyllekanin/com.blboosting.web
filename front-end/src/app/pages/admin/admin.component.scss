@@ -70,7 +70,7 @@
 #top-bar {
     width: 100%;
     position: fixed;
-    height: 70px;
+    height: 65px;
     background: var(--secondary-backround);
     -webkit-box-shadow: 0 0 10px 0 #080808;
     box-shadow: 0 0 10px 0 #080808;
@@ -125,4 +125,12 @@
     border-radius: 50%;
     width: 40px;
     margin-right: 10px;
+}
+
+#username {
+    display: inline-block;
+}
+
+#logout {
+    font-size: 17px;
 }

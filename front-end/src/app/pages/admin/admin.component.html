@@ -9,8 +9,8 @@
 
     <div id="user">
         <img [src]="avatarUrl" alt="avatar url"/>
-        <span>{{authUser.username}}</span>
-        <span><i (click)="onLogout()" class="fas fa-sign-out-alt"></i></span>
+        <span id="username">{{authUser.username}}</span>
+        <button id="logout"><i (click)="onLogout()" class="fas fa-sign-out-alt"></i></button>
     </div>
 </div>
 <div id="navigation-wrapper" [attr.data-open]="!isCollapsed">

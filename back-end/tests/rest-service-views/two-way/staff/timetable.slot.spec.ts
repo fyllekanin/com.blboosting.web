@@ -1,6 +1,6 @@
-import { TimetableSlot } from '../../../../src/rest-service-views/two-way/staff/timetable.slot';
-import { InternalRequest } from '../../../../src/utilities/internal.request';
-import { SlimUserView } from '../../../../src/rest-service-views/two-way/slim-user.view';
+import { TimetableSlot } from '../../../../src/web/rest-service-views/two-way/staff/timetable.slot';
+import { InternalRequest } from '../../../../src/common/utilities/internal.request';
+import { SlimUserView } from '../../../../src/web/rest-service-views/two-way/slim-user.view';
 
 describe('TimetableSlot', () => {
 
