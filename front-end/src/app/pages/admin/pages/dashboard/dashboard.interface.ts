@@ -8,6 +8,9 @@ export interface IDashboard {
         mythicPlus: {
             score: number,
             role: string
+        },
+        raiding: {
+            bestAverage: number
         }
     }>
 }

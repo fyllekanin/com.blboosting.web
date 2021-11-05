@@ -10,7 +10,6 @@ export class UpdateRaiderIoEvent implements ITask {
 
     constructor(data: { documentId: ObjectId }) {
         this.data = data;
-        console.log(`Data in event: ${JSON.stringify(this.data)}`);
     }
 
     async start(): Promise<void> {

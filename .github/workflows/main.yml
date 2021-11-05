@@ -14,33 +14,33 @@ jobs:
       - name: Install front-end
         working-directory: front-end
         run: npm install
-        
+
       - name: Update environment.prod.ts
         working-directory: front-end/src/environments
         run: sed -i 's@{{APPLICATION_URL}}@${{secrets.APPLICATION_URL_ONLY}}@g' environment.prod.ts
-        
+
       - name: Build front-end
         working-directory: front-end
         run: npm run build:prod
-        
+
       - name: Install back-end
         working-directory: back-end
         run: npm install
-        
+
       - name: Build back-end
         working-directory: back-end
         run: npm run build
-        
+
       - name: Combine front-end back-end
         run: |
           mkdir temp
           mv back-end/dist/* temp/
           mv back-end/node_modules temp/
           mv -f front-end/dist/front-end/* temp/web/public/
-        
+
       - name: Add ecosystem
-        run: cp integration/ecosystem.config.js temp/ecosystem.config.js 
-          
+        run: cp integration/ecosystem.config.js temp/ecosystem.config.js
+
       - name: Create .env
         run: |
           echo "${{secrets.APPLICATION_URL}}" >> temp/.env
@@ -60,24 +60,26 @@ jobs:
           echo "${{secrets.BATTLE_NET_OAUTH_LINK}}" >> temp/.env
           echo "${{secrets.ENVIRONMENT}}" >> temp/.env
           echo "${{secrets.DISCORD_CREATE_BOOST}}" >> temp/.env
-          
+          echo "${{secrets.WARCRAFTLOGS_CLIENT_ID}}" >> temp/.env
+          echo "${{secrets.WARCRAFTLOGS_CLIENT_SECRET}}" >> temp/.env
+
       - name: Check if current production exists
         id: check_files
         uses: andstor/file-existence-action@v1
         with:
           files: "/home/ubuntu/web/production/ecosystem.config.js"
-          
+
       - name: Stop current site if existing
         if: steps.check_files.outputs.files_exists == 'true'
         working-directory: /home/ubuntu/web/production
         run: pm2 stop ecosystem.config.js
-      
+
       - name: Remove current production code
         run: rm -Rf /home/ubuntu/web/production
-        
+
       - name: Move new files to production
         run: mv temp /home/ubuntu/web/production
-        
+
       - name: Start new production
         run: |
           cd /home/ubuntu/web/production

@@ -24,4 +24,7 @@ export interface ICharacter extends CreatedUpdatedAtEntity {
         dps: number;
         all: number;
     }
+    raid?: {
+        bestPerformanceAverage: number
+    }
 }

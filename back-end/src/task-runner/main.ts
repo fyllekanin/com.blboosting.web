@@ -4,11 +4,13 @@ import { WorkerEvents } from '../common/constants/worker-events.enum';
 import { UpdateRaiderIoEvent } from './tasks/update-raider-io.event';
 import { parentPort, workerData } from 'worker_threads';
 import { ITask } from './task.interface';
+import { UpdateWarcraftLogsEvent } from './tasks/update-warcraft-logs.event';
 
 dotenv.config();
 
 const EVENTS: { [key: string]: any } = {
-    [WorkerEvents.CHECK_RAIDER_IO_FOR]: UpdateRaiderIoEvent
+    [WorkerEvents.CHECK_RAIDER_IO_FOR]: UpdateRaiderIoEvent,
+    [WorkerEvents.CHECK_RAID_LOGS_FOR]: UpdateWarcraftLogsEvent
 };
 
 export class Main {

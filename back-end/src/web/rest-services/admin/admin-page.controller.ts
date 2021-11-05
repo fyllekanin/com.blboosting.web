@@ -27,7 +27,10 @@ export class AdminPageController {
                     faction: Faction[character.faction].label,
                     inset: character.characterAssets.inset,
                     raiderId: character.raiderIo ? character.raiderIo : null,
-                    mythicPlus: this.getMythicPlusFor(character)
+                    mythicPlus: this.getMythicPlusFor(character),
+                    raiding: {
+                        bestAverage: character.raid ? character.raid.bestPerformanceAverage : 0
+                    }
                 }))
             });
         } catch (_e) {
