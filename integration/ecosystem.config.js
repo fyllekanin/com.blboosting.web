@@ -10,9 +10,7 @@ module.exports = {
                 NODE_ENV: "production",
             },
             exec_mode: 'cluster',
-            instances: 'max',
-            log: './logs.log',
-            error: './error.log'
+            instances: 'max'
         }
     ]
 }
