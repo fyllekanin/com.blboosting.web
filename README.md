@@ -1,4 +1,4 @@
-# Bloodlust web
+# Bloodlust web app
 
 ### Languages & Frameworks
 
