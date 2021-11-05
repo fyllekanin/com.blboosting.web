@@ -3,15 +3,22 @@
         <app-content header="Characters">
         </app-content>
     </div>
-    <div class="cell small-12 large-3" *ngFor="let character of context.characters">
-        <app-content [header]="character.name">
+    <div class="cell small-12 large-4" *ngFor="let character of context.characters">
+        <app-content>
             <div class="grid-x grid-margin-x">
                 <div class="cell small-12 large-4">
                     <img [src]="character.inset" alt="Character inset">
                 </div>
-                <div class="cell small-12 large-8">
+                <div class="cell small-12 large-4">
+                    <strong>Character:</strong> <br/>
+                    <strong>Name:</strong> {{character.name}} <br/>
                     <strong>Class:</strong> {{character.class}} <br/>
                     <strong>Faction:</strong> {{character.faction}} <br/>
+                </div>
+                <div class="cell small-12 large-4">
+                    <strong>Progress:</strong> <br/>
+                    <strong>Raid parse:</strong> N/A <br/>
+                    <strong>M+:</strong> {{character.mythicPlus.score}} {{character.mythicPlus.role}} <br/>
                 </div>
             </div>
         </app-content>

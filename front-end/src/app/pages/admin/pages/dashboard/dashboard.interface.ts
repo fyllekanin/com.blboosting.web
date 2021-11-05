@@ -3,6 +3,11 @@ export interface IDashboard {
         name: string,
         class: string,
         faction: string,
-        inset: string
+        inset: string,
+        hcRaidParse: number,
+        mythicPlus: {
+            score: number,
+            role: string
+        }
     }>
 }

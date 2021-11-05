@@ -8,6 +8,7 @@ import { RolePermission } from '../../../common/persistance/entities/role.entity
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
 import { CharacterRepository } from '../../../common/persistance/repositories/battle-net/character.repository';
 import { Faction } from '../../../common/constants/factions.constant';
+import { ICharacter } from '../../../common/persistance/entities/battle-net/character.entity';
 
 @Controller('api/admin')
 @ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
@@ -25,11 +26,32 @@ export class AdminPageController {
                     class: character.class,
                     faction: Faction[character.faction].label,
                     inset: character.characterAssets.inset,
-                    raiderId: character.raiderIo ? character.raiderIo : null
+                    raiderId: character.raiderIo ? character.raiderIo : null,
+                    mythicPlus: this.getMythicPlusFor(character)
                 }))
             });
         } catch (_e) {
             res.status(StatusCodes.BAD_REQUEST).json();
         }
+    }
+
+    private getMythicPlusFor(character: ICharacter): { role: string, score: number } {
+        if (!character.raiderIo) {
+            return {
+                role: 'N/A',
+                score: 0
+            };
+        }
+        const highest = Object.keys(character.raiderIo).reduce((prev, curr) => {
+            // @ts-ignore
+            return curr !== 'all' && character.raiderIo[curr] > character.raiderIo[prev] ? curr : prev;
+        }, 'dps');
+
+        // @ts-ignore
+        const score = character.raiderIo[highest];
+        return {
+            role: highest,
+            score: score
+        };
     }
 }
