@@ -28,9 +28,9 @@ export class AdminPageController {
                     inset: character.characterAssets.inset,
                     raiderId: character.raiderIo ? character.raiderIo : null,
                     mythicPlus: this.getMythicPlusFor(character),
-                    raiding: {
+                    raiding: character.raid ? {
                         bestAverage: character.raid ? character.raid.bestPerformanceAverage : 0
-                    }
+                    } : null
                 }))
             });
         } catch (_e) {
@@ -40,10 +40,7 @@ export class AdminPageController {
 
     private getMythicPlusFor(character: ICharacter): { role: string, score: number } {
         if (!character.raiderIo) {
-            return {
-                role: 'N/A',
-                score: 0
-            };
+            return null;
         }
         const highest = Object.keys(character.raiderIo).reduce((prev, curr) => {
             // @ts-ignore

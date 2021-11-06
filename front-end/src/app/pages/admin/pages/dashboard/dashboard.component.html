@@ -17,8 +17,12 @@
                 </div>
                 <div class="cell small-12 large-4">
                     <strong>Progress:</strong> <br/>
-                    <strong>Raid parse:</strong> {{character.raiding.bestAverage}}% <br/>
-                    <strong>M+:</strong> {{character.mythicPlus.score}} {{character.mythicPlus.role}} <br/>
+                    <strong>Raid
+                        parse:</strong> {{character.raiding ? character.raiding.bestAverage + '%' : 'Processing...'}}
+                    <br/>
+                    <strong>M+:</strong> <span *ngIf="!character.mythicPlus">Processing...</span> <span
+                    *ngIf="character.mythicPlus">{{character.mythicPlus.score}} {{character.mythicPlus.role}}</span>
+                    <br/>
                 </div>
             </div>
         </app-content>
