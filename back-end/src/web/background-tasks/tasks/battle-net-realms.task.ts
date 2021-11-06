@@ -13,11 +13,10 @@ export class BattleNetRealmsTask implements IBackgroundTask {
         const repository = new RealmRepository();
         const realms = await BattleNetService.getRealmList(BattleNetRegions.EU);
 
-        const existingRealms = await repository.getAll();
         const newRealms: Array<IRealmEntity> = [];
         for (const realm of realms.realms) {
-            const existingItem = existingRealms.find(item => item.realmId === realm.id);
-            if (!existingItem) {
+            const isRealmAdded = await repository.doRealmWithIdExist(realm.id);
+            if (!isRealmAdded) {
                 newRealms.push(await this.getNewRealmEntity(realm));
             }
         }

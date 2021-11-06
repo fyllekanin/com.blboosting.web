@@ -14,7 +14,8 @@ export class UpdateWarcraftLogsEvent implements ITask {
     async start(): Promise<void> {
         const character = await this.characterRepository.get(this.data.documentId);
         const warcraftLogs = await WarcraftLogsService.getCharacter(character.characterId);
-        if (!warcraftLogs) {
+        if (!warcraftLogs || !warcraftLogs.data.characterData ||
+            !warcraftLogs.data.characterData.character || !warcraftLogs.data.characterData.character.zoneRankings) {
             return;
         }
 

@@ -22,7 +22,7 @@ export const Dungeon: StringKeyValue<{ name: string, value: string, levels: Arra
     },
     MIST: {
         name: 'Mists of Tirna Scithe',
-        value: 'MIST',
+        value: 'MISTS',
         levels: keyLevels
     },
     PF: {

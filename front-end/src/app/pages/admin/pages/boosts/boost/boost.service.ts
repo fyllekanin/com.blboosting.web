@@ -22,10 +22,7 @@ export class BoostService implements Resolve<{ context: BoostContext }> {
                 type: SiteNotificationType.SUCCESS
             });
             return true;
-        }).catch(error => {
-            this.siteNotificationService.onError(error.error);
-            return false;
-        });
+        }, () => false);
     }
 
     async resolve(): Promise<{ context: BoostContext }> {

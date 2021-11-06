@@ -11,6 +11,10 @@ export class RealmRepository extends BaseRepository<IRealmEntity> {
         return new RealmRepository();
     }
 
+    async doRealmWithIdExist(id: number): Promise<boolean> {
+        return await this.getCollection().countDocuments({ realmId: id }) > 0;
+    }
+
     protected getCollection(): Collection<IRealmEntity> {
         if (this.repository) {
             return this.repository;

@@ -59,7 +59,10 @@ export class BoostsController {
         try {
             const errors = await (new KeyBoostValidator()).run(req.user, req.body, req.client);
             if (errors.length > 0) {
-                res.status(StatusCodes.BAD_REQUEST).json(errors);
+                res.status(StatusCodes.BAD_REQUEST).json({
+                    isValidationErrors: true,
+                    errors: errors
+                });
                 return;
             }
 
