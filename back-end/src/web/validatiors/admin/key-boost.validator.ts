@@ -4,8 +4,10 @@ import { InternalUser } from '../../../common/utilities/internal.request';
 import { ValidationError } from '../../../common/constants/validation.error';
 import { Role } from '../../../common/constants/roles.constant';
 import { Client } from 'discord.js';
-import { Configuration } from '../../../common/configuration';
 import { Dungeon } from '../../../common/constants/dungeons.constant';
+import { RoleRepository } from '../../../common/persistance/repositories/role.repository';
+import { RolePermission } from '../../../common/persistance/entities/role.entity';
+import { DiscordUtility } from '../../../common/utilities/discord.utility';
 
 export class KeyBoostValidator implements IValidator<IBoostView> {
 
@@ -106,8 +108,8 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         if (entity.balancePayment && entity.balancePayment < 0) {
             errors.push({ code: ValidationError.KEY_PAYMENT_BALANCE, message: 'Balance payment can not be negative' });
         }
-        const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
-        const isTrialAdvertiser = (await guild.members.fetch(user.discordId)).roles.cache.get(Configuration.get().RoleIds.TRIAL_ADVERTISER);
+        const canCollectPayments = await RoleRepository.newRepository().doUserHavePermission(user.discordId,
+            [RolePermission.CAN_COLLECT_PAYMENTS], DiscordUtility.getRoleIds(client, user.discordId));
 
         for (const payment of entity.payments) {
             if (!entity.balancePayment && (!payment.amount || payment.amount <= 0)) {
@@ -131,10 +133,10 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                     message: 'A payment faction needs to be picked'
                 });
             }
-            if (!payment.collector && isTrialAdvertiser) {
+            if (!payment.collector && !canCollectPayments) {
                 errors.push({
                     code: ValidationError.KEY_PAYMENT_COLLECTOR,
-                    message: 'Collector is missing, you are trial advertiser'
+                    message: 'Collector is missing, you are not able to collect yourself'
                 });
             }
         }

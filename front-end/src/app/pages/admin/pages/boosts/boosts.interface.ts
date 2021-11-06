@@ -26,7 +26,7 @@ export interface IBooster {
 }
 
 export interface BoostContext {
-    isTrialAdvertiser: boolean;
+    canCollectPayment: boolean;
     realms: Array<{ realmId: number, name: string, category: string }>;
     sources: Array<SelectItem<string>>;
     dungeons: Array<{ name: string, value: string, levels: Array<SelectItem> }>;

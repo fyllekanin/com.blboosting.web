@@ -32,7 +32,6 @@ interface IConfiguration {
         MEDIUM_KEY_BOOSTER: string;
         HIGH_KEY_BOOSTER: string;
         ELITE_KEY_BOOSTER: string;
-        TRIAL_ADVERTISER: string;
     };
 }
 

@@ -18,6 +18,7 @@ import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../../common/persistance/repositories/role.repository';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
 import { ValidationError } from '../../../common/constants/validation.error';
+import { DiscordUtility } from '../../../common/utilities/discord.utility';
 
 @Controller('api/admin/boosts')
 @ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
@@ -33,11 +34,12 @@ export class BoostsController {
                 boosters = await this.getKeyBoosters(req.client);
                 Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
             }
-            const guild = req.client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
-            const isTrialAdvertiser = (await guild.members.fetch(req.user.discordId)).roles.cache.get(Configuration.get().RoleIds.TRIAL_ADVERTISER);
+
+            const canCollectPayment = await RoleRepository.newRepository().doUserHavePermission(req.user.discordId,
+                [RolePermission.CAN_COLLECT_PAYMENTS], DiscordUtility.getRoleIds(req.client, req.user.discordId));
 
             res.status(StatusCodes.OK).json({
-                isTrialAdvertiser: Boolean(isTrialAdvertiser),
+                canCollectPayment: canCollectPayment,
                 realms: await RealmRepository.newRepository().getAll(),
                 sources: Object.keys(BoostSource).map(key => BoostSource[key]),
                 dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
