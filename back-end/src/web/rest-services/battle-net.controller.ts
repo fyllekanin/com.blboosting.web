@@ -94,17 +94,13 @@ export class BattleNetController {
             }
         });
 
-        const worker = new Worker(`${__dirname}/../../task-runner/main.js`, {
-            workerData: {
-                type: WorkerEvents.CHECK_RAIDER_IO_FOR,
-                data: {
-                    documentId: entry._id.toString()
-                }
-            }
-
-        });
-        worker.once('message', result => console.log(result));
-        worker.once('exit', exitCode => console.log(exitCode));
+        for (const event of [WorkerEvents.CHECK_RAIDER_IO_FOR, WorkerEvents.CHECK_RAID_LOGS_FOR]) {
+            const worker = new Worker(`${__dirname}/../../task-runner/main.js`, {
+                workerData: { type: event, data: { documentId: entry._id.toString() } }
+            });
+            worker.once('message', result => console.log(result));
+            worker.once('exit', exitCode => console.log(exitCode));
+        }
     }
 
     private getHtml(payload: Object): string {
