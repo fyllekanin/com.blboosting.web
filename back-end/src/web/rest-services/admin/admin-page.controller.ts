@@ -33,8 +33,8 @@ export class AdminPageController {
                     } : null
                 }))
             });
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 

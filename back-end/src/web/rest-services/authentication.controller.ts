@@ -76,8 +76,8 @@ export class AuthenticationController {
                 avatarHash: user.avatarHash,
                 permissions: await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(req.client, user.discordId))
             });
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 
@@ -112,8 +112,8 @@ export class AuthenticationController {
                 </body>
             </html>
             `);
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 

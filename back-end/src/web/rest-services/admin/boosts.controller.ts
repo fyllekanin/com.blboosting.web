@@ -48,8 +48,8 @@ export class BoostsController {
                 collectors: await this.getCollectors(req),
                 boosters: boosters
             });
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 

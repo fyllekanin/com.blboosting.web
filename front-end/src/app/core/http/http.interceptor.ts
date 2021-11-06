@@ -44,13 +44,13 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
-                            if (error.error.isValidationErrors) {
+                            if (typeof error.error === 'object' && error.error.isValidationErrors) {
                                 this.siteNotificationService.onError(error.error.errors);
                                 return of(null);
                             }
                             this.dialogService.open({
                                 title: 'Error - something happened',
-                                content: `Error: ${JSON.stringify(error.error)}`,
+                                content: `Error: ${error.error}`,
                                 buttons: [{
                                     label: 'Close',
                                     action: 'close',

@@ -31,8 +31,8 @@ export class RolesController {
                     position: { $lt: position }
                 }
             }));
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 
@@ -49,8 +49,8 @@ export class RolesController {
             }
 
             res.status(StatusCodes.OK).json(role);
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 
@@ -72,8 +72,8 @@ export class RolesController {
             await RoleRepository.newRepository().update(req.body);
 
             res.status(StatusCodes.OK).json(role);
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 

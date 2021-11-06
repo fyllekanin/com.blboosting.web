@@ -13,8 +13,8 @@ export class PageController {
     async getTest(req: InternalRequest, res: Response): Promise<void> {
         try {
             res.status(StatusCodes.OK).json({ message: 'Tjabba tjena hallå' });
-        } catch (_e) {
-            res.status(StatusCodes.BAD_REQUEST).json();
+        } catch (err) {
+            res.status(StatusCodes.BAD_REQUEST).send(err);
         }
     }
 }

@@ -64,7 +64,7 @@ export class BattleNetController {
             await this.addCharacters(result, profile, user);
 
             res.send(this.getHtml({ payload: { isSuccess: true } }));
-        } catch (_e) {
+        } catch (err) {
             res.status(StatusCodes.BAD_REQUEST).send(`<script>
     window.close();
 </script>`);
