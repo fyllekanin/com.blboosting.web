@@ -145,8 +145,12 @@ export class BoostsController {
         const values: Array<ILabelValue<string>> = [];
         for (const role of rolesThatCanCollect) {
             (await guild.roles.fetch(role.discordId)).members
-                .forEach(item =>
-                    values.push({ label: item.nickname ? item.nickname : item.displayName, value: item.id }))
+                .forEach(item => {
+                    if (values.some(value => value.value === item.id)) {
+                        return;
+                    }
+                    values.push({ label: item.nickname ? item.nickname : item.displayName, value: item.id });
+                });
         }
         return values;
     }
