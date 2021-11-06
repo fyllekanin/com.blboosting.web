@@ -38,9 +38,7 @@ export class Task1633797391242 implements MigrationTask {
         await collection.createIndex({ discordId: 1 }, {
             unique: true
         });
-        await collection.createIndex({ battleNetId: 1 }, {
-            unique: true
-        });
+        await collection.createIndex({ battleNetId: 1 });
     }
 
     private async createRoleIndexes(): Promise<void> {

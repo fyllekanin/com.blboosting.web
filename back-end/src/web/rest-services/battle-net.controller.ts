@@ -11,7 +11,8 @@ import { Worker } from 'worker_threads';
 import { WorkerEvents } from '../../common/constants/worker-events.enum';
 import { StatusCodes } from 'http-status-codes';
 import { IUserEntity } from '../../common/persistance/entities/user/user.entity';
-import { WoWCharacter } from '../../common/apis/interfaces/battle-net.interface';
+import { BattleNetOauth2, BattleNetProfile, WoWCharacter } from '../../common/apis/interfaces/battle-net.interface';
+import { ValidationError } from '../../common/constants/validation.error';
 
 @Controller('api/battle-net')
 export class BattleNetController {
@@ -43,7 +44,24 @@ export class BattleNetController {
                 res.send(this.getHtml({ payload: { isTokenMissing: true } }));
                 return;
             }
-            await this.addCharacters(req, parsedToken);
+
+            const result = await BattleNetService.getOath(BattleNetRegions.EU, req.query.code as string, 'wow.profile');
+            const profile = await BattleNetService.getWoWProfile(BattleNetRegions.EU, result.access_token);
+            const usersWithId = await UserRepository.newRepository().getUsersWithBattleNetId(profile.id);
+            const user = await UserRepository.newRepository().get(new ObjectId(parsedToken.id));
+
+            if (usersWithId.length > 0 && usersWithId[0]._id.toString() !== user._id.toString()) {
+                res.status(StatusCodes.BAD_REQUEST).json({
+                    isValidationErrors: true,
+                    errors: [{
+                        code: ValidationError.EXISTING_USER_WITH_BATTLE_NET_ID,
+                        message: 'There is already a user with this account'
+                    }]
+                });
+                return;
+            }
+
+            await this.addCharacters(result, profile, user);
 
             res.send(this.getHtml({ payload: { isSuccess: true } }));
         } catch (_e) {
@@ -53,11 +71,7 @@ export class BattleNetController {
         }
     }
 
-    private async addCharacters(req: InternalRequest, parsedToken: { id: string, discordId: string }): Promise<void> {
-        const result = await BattleNetService.getOath(BattleNetRegions.EU, req.query.code as string, 'wow.profile');
-        const profile = await BattleNetService.getWoWProfile(BattleNetRegions.EU, result.access_token);
-
-        const user = await UserRepository.newRepository().get(new ObjectId(parsedToken.id));
+    private async addCharacters(battleNetOAUTH: BattleNetOauth2, profile: BattleNetProfile, user: IUserEntity): Promise<void> {
         user.battleNetId = profile.id;
         await UserRepository.newRepository().update(user);
 
@@ -69,7 +83,7 @@ export class BattleNetController {
                 if (character.level < 60) {
                     continue;
                 }
-                await this.addCharacter(characterRepository, user, character, account.id, result.access_token);
+                await this.addCharacter(characterRepository, user, character, account.id, battleNetOAUTH.access_token);
             }
         }
     }

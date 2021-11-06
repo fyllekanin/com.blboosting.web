@@ -129,6 +129,8 @@ export class HttpRequestInterceptor implements HttpInterceptor {
     }
 
     private logoutUser(): Observable<any> {
+        this.authService.setAuthUser(null);
+        this.router.navigateByUrl('/auth/login');
         return observableThrowError('');
     }
 }

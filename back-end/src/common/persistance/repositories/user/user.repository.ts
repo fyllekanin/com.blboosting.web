@@ -16,6 +16,11 @@ export class UserRepository extends BaseRepository<IUserEntity> {
             .findOne({ discordId: discordId });
     }
 
+    async getUsersWithBattleNetId(battleNetId: number): Promise<Array<IUserEntity>> {
+        return await this.getCollection()
+            .find({ battleNetId: battleNetId }).toArray();
+    }
+
     protected getCollection(): Collection<IUserEntity> {
         if (this.repository) {
             return this.repository;
