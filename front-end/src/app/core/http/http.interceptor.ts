@@ -43,6 +43,19 @@ export class HttpRequestInterceptor implements HttpInterceptor {
             catchError(error => {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
+                        case 400:
+                            this.dialogService.open({
+                                title: 'Error - something happened',
+                                content: `Error: ${error.error}`,
+                                buttons: [{
+                                    label: 'Close',
+                                    action: 'close',
+                                    type: 'button-gray',
+                                    isClosing: true
+                                }]
+                            });
+                            this.dialogService.onAction.pipe(take(1)).subscribe(() => this.dialogService.close());
+                            return;
                         case 401:
                             const response = <UnauthorizedResponse>error.error;
                             if (response.isMissingBattleNet) {
