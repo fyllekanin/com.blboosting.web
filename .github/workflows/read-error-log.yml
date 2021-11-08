@@ -1,4 +1,4 @@
-name: Continues integration and deployment
+name: Read Error Log
 
 on:
   workflow_dispatch:
