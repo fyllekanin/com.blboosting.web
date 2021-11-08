@@ -1,0 +1,21 @@
+name: Continues integration and deployment
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+
+      - name: Check if current production exists
+        id: check_files
+        uses: andstor/file-existence-action@v1
+        with:
+          files: "/home/ubuntu/web/production/ecosystem.config.js"
+
+      - name: Read error log
+        if: steps.check_files.outputs.files_exists == 'true'
+        working-directory: /home/ubuntu/web/production
+        run: cat err.log
