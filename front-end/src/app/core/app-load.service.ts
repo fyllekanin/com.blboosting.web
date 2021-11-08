@@ -22,6 +22,9 @@ export class AppLoadService {
             httpService.get('/oauth/initialize').subscribe((res: AuthUser) => {
                 authService.setAuthUser(res ? res : null);
                 resolve();
+            }, () => {
+                authService.setAuthUser(null);
+                resolve();
             });
         });
     }
