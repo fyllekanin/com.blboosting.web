@@ -20,8 +20,10 @@ jobs:
          target: release.tar.gz
          token: ${{ secrets.GITHUB_TOKEN }}
          
-     - name: Extract release
-       run: tar xvzf release.tar.gz
+     - name: Extract release and remove .env if existing
+       run: |
+         tar xvzf release.tar.gz
+         rm -Rf release/.env
        
      - name: Write .env file
        run: |
