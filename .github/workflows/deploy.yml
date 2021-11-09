@@ -1,0 +1,27 @@
+name: Deploy
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Which tag to deploy"
+        required: true
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+     - uses: mukunku/tag-exists-action@v1.0.0
+       id: checkTag
+       with: 
+         tag: ${{github.event.input.tag}}
+       env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+     
+     - name: Check if tag exists
+       if: steps.checkTag.outputs.exists == 'false'
+       uses: andymckay/cancel-action@0.2
+       
+     - name: Test
+       run: echo "test"
