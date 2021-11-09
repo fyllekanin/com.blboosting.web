@@ -27,8 +27,8 @@ export class SelectComponent {
 
     @Input()
     set items(items: Array<SelectItem>) {
-        this._items = items;
-        this.filteredItems = items;
+        this._items = items || [];
+        this.filteredItems = items || [];
     }
 
     get textContent(): string {
