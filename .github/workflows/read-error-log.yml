@@ -1,4 +1,4 @@
-name: Read Error Log
+name: Read Test Error Log
 
 on:
   workflow_dispatch:
