@@ -7,7 +7,12 @@ export class DatabaseService {
     } = {};
 
     static async startup(): Promise<void> {
-        this.connection.client = await new MongoClient(process.env.MONGODB_HOST).connect();
+        this.connection.client = await new MongoClient(process.env.MONGODB_HOST, {
+            auth: process.env.MONGODB_USERNAME ? {
+                username: process.env.MONGODB_USERNAME,
+                password: process.env.MONGODB_PASSWORD
+            } : undefined
+        }).connect();
         this.connection.db = this.connection.client.db(process.env.MONGODB_DATABASE);
     }
 
