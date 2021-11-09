@@ -12,16 +12,37 @@ jobs:
     runs-on: self-hosted
 
     steps:
-     - uses: mukunku/tag-exists-action@v1.0.0
-       id: checkTag
-       with: 
-         tag: ${{github.event.input.tag}}
-       env:
-         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-     
-     - name: Check if tag exists
-       if: steps.checkTag.outputs.exists == 'false'
-       uses: andymckay/cancel-action@0.2
+     - name: Download release asset
+       uses: dsaltares/fetch-gh-release-asset@master
+       with:
+         version: tags/${{ github.event.inputs.tag }}
+         file: release.tar.gz
+         target: release.tar.gz
+         token: ${{ secrets.DEPLOY_TOKEN }}
+     - name: Extract release
+       run: tar xvzf release.tar.gz
        
-     - name: Test
-       run: echo "test"
+     - name: Write .env file
+       run: |
+          echo "${{secrets.PROD_APPLICATION_URL}}" >> release/.env
+          echo "${{secrets.PROD_APPLICATION_PORT}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CLIENT_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_GUILD_ID}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_INTENTS}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_OAUTH_LINK}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_SUPER_ADMIN}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_TOKEN}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_DATABASE}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_HOST}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_USERNAME}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_PASSWORD}}" >> release/.env
+          echo "${{secrets.PROD_TOKEN_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_CLIENT_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_OAUTH_LINK}}" >> release/.env
+          echo "${{secrets.PROD_ENVIRONMENT}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CREATE_BOOST}}" >> release/.env
+          echo "${{secrets.WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
+       
