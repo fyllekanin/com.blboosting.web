@@ -65,9 +65,8 @@ export class BattleNetController {
 
             res.send(this.getHtml({ payload: { isSuccess: true } }));
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(`<script>
-    window.close();
-</script>`);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).send('Contact administrator for support');
         }
     }
 

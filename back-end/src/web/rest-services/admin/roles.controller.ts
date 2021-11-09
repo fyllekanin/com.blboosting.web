@@ -32,7 +32,8 @@ export class RolesController {
                 }
             }));
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
@@ -50,7 +51,8 @@ export class RolesController {
 
             res.status(StatusCodes.OK).json(role);
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
@@ -73,7 +75,8 @@ export class RolesController {
 
             res.status(StatusCodes.OK).json(role);
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 

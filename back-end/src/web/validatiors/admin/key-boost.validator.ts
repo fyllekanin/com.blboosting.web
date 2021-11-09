@@ -160,7 +160,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 });
             }
         }
-        const specificKeys = entity.keys.filter(key => key.dungeon.value.value !== Dungeon.ANY.value);
+        const specificKeys = entity.keys.filter(key => key.dungeon && key.dungeon.value.value !== Dungeon.ANY.value);
         if (specificKeys.length > 1 && specificKeys.some(key => !key.keyHolder || !key.keyHolder.user)) {
             errors.push({
                 code: ValidationError.KEY_KEY_MULTIPLE_SPECIFIC,

@@ -49,7 +49,8 @@ export class BoostsController {
                 boosters: boosters
             });
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.error(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
@@ -83,7 +84,8 @@ export class BoostsController {
                 }
             };
             req.client.on('messageReactionAdd', listener);
-        } catch (_e) {
+        } catch (err) {
+            console.log(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }

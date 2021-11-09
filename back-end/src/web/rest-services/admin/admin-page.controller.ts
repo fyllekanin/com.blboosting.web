@@ -34,7 +34,8 @@ export class AdminPageController {
                 }))
             });
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.error(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 

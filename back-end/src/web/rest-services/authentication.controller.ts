@@ -51,7 +51,8 @@ export class AuthenticationController {
                 avatarHash: user.avatarHash,
                 permissions: await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(req.client, user.discordId))
             });
-        } catch (_e) {
+        } catch (err) {
+            console.log(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
@@ -77,7 +78,8 @@ export class AuthenticationController {
                 permissions: await RoleRepository.newRepository().getPermissions(user.discordId, DiscordUtility.getRoleIds(req.client, user.discordId))
             });
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
@@ -113,7 +115,8 @@ export class AuthenticationController {
             </html>
             `);
         } catch (err) {
-            res.status(StatusCodes.BAD_REQUEST).send(err);
+            console.log(err);
+            res.status(StatusCodes.BAD_REQUEST).send('Contact administrator for support');
         }
     }
 

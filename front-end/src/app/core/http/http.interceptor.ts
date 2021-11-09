@@ -44,13 +44,14 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
+                            debugger;
                             if (typeof error.error === 'object' && error.error.isValidationErrors) {
                                 this.siteNotificationService.onError(error.error.errors);
                                 return observableThrowError(error);
                             }
                             this.dialogService.open({
                                 title: 'Error - something happened',
-                                content: `Error: ${error.error}`,
+                                content: `Contact the administrator for support`,
                                 buttons: [{
                                     label: 'Close',
                                     action: 'close',
@@ -59,7 +60,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                                 }]
                             });
                             this.dialogService.onAction.pipe(take(1)).subscribe(() => this.dialogService.close());
-                            return of(null);
+                            return observableThrowError(error);
                         case 401:
                             const response = <UnauthorizedResponse>error.error;
                             if (response.isMissingBattleNet) {
