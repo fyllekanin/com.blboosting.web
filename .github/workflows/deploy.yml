@@ -47,7 +47,7 @@ jobs:
           echo "${{secrets.WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
           echo "${{secrets.WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
           
-     - name: Stop current server
+     - name: Stop current server and delte
        uses: appleboy/ssh-action@master
        with:
          host: ${{ secrets.REMOTE_HOST }}
@@ -57,6 +57,7 @@ jobs:
          script: |
            cd app
            pm2 delete ecosystem.config.js
+           rm -Rf ./*
       
      - name: Deploy to Server
        uses: easingthemes/ssh-deploy@main
@@ -68,7 +69,7 @@ jobs:
          REMOTE_USER: ${{ secrets.REMOTE_USER }}
          TARGET: "app/"
        
-     - name: Stop current server
+     - name: Start new server
        uses: appleboy/ssh-action@master
        with:
          host: ${{ secrets.REMOTE_HOST }}
