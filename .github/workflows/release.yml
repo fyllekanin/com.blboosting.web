@@ -57,8 +57,8 @@ jobs:
       - name: Create Release
       - uses: ncipollo/release-action@v1
         with:
-          commit: "main"
+          commit: main
           tag: ${{github.event.inputs.version}}
-          artifacts: "release.tar.gz"
+          artifacts: release.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
       
