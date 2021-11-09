@@ -1,0 +1,69 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Which version to be created"
+        required: true
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install front-end
+        working-directory: front-end
+        run: npm install
+
+      - name: Update environment.prod.ts
+        working-directory: front-end/src/environments
+        run: sed -i 's@{{APPLICATION_URL}}@${{secrets.PROD_APPLICATION_URL_ONLY}}@g' environment.prod.ts
+
+      - name: Build front-end
+        working-directory: front-end
+        run: npm run build:prod
+
+      - name: Install back-end
+        working-directory: back-end
+        run: npm install
+
+      - name: Build back-end
+        working-directory: back-end
+        run: npm run build
+
+      - name: Combine front-end back-end
+        run: |
+          mkdir release
+          mv back-end/dist/* release/
+          mv back-end/node_modules release/
+          mv -f front-end/dist/front-end/* release/web/public/
+      - name: Add ecosystem
+        run: cp integration/ecosystem.config.js release/ecosystem.config.js
+
+      - name: Create .env
+        run: |
+          echo "${{secrets.PROD_APPLICATION_URL}}" >> release/.env
+          echo "${{secrets.PROD_APPLICATION_PORT}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CLIENT_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_GUILD_ID}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_INTENTS}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_OAUTH_LINK}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_SUPER_ADMIN}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_TOKEN}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_DATABASE}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_HOST}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_USERNAME}}" >> release/.env
+          echo "${{secrets.PROD_MONGODB_PASSWORD}}" >> release/.env
+          echo "${{secrets.PROD_TOKEN_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_CLIENT_SECRET}}" >> release/.env
+          echo "${{secrets.PROD_BATTLE_NET_OAUTH_LINK}}" >> release/.env
+          echo "${{secrets.PROD_ENVIRONMENT}}" >> release/.env
+          echo "${{secrets.PROD_DISCORD_CREATE_BOOST}}" >> release/.env
+          echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
+          echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
+      
