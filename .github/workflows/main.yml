@@ -1,4 +1,4 @@
-name: Continues integration and deployment
+name: Continues integration and test deployment
 
 on:
   workflow_dispatch:
