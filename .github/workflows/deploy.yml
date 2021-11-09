@@ -19,6 +19,7 @@ jobs:
          file: release.tar.gz
          target: release.tar.gz
          token: ${{ secrets.DEPLOY_TOKEN }}
+         
      - name: Extract release
        run: tar xvzf release.tar.gz
        
