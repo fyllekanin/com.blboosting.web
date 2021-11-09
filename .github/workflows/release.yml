@@ -66,6 +66,7 @@ jobs:
           echo "${{secrets.PROD_DISCORD_CREATE_BOOST}}" >> release/.env
           echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
           echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
+          
       - name: Merge develop -> main
         uses: devmasx/merge-branch@master
         with:
