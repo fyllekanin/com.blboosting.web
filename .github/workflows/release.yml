@@ -74,4 +74,26 @@ jobs:
           from_branch: develop
           target_branch: main
           github_token: ${{ github.token }}
+          
+      - name: Create file
+        run: tar -zcvf release.tar.gz release
+          
+      - name: Create Release
+        uses: aaiezza/create-release@master
+        id: create_release
+        with:
+          release_branch: releases/${{ github.event.inputs.version }}
+          tag: ${{ github.event.inputs.version }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Upload Jar
+        uses: actions/upload-release-asset@v1.0.2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: release.tar.gz
+          asset_name: release.tar.gz
+          asset_content_type: application/tar+gzip
       
