@@ -42,30 +42,6 @@ jobs:
           mv -f front-end/dist/front-end/* release/web/public/
       - name: Add ecosystem
         run: cp integration/ecosystem.config.js release/ecosystem.config.js
-
-      - name: Create .env
-        run: |
-          echo "${{secrets.PROD_APPLICATION_URL}}" >> release/.env
-          echo "${{secrets.PROD_APPLICATION_PORT}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_CLIENT_ID}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_CLIENT_SECRET}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_GUILD_ID}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_INTENTS}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_OAUTH_LINK}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_SUPER_ADMIN}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_TOKEN}}" >> release/.env
-          echo "${{secrets.PROD_MONGODB_DATABASE}}" >> release/.env
-          echo "${{secrets.PROD_MONGODB_HOST}}" >> release/.env
-          echo "${{secrets.PROD_MONGODB_USERNAME}}" >> release/.env
-          echo "${{secrets.PROD_MONGODB_PASSWORD}}" >> release/.env
-          echo "${{secrets.PROD_TOKEN_SECRET}}" >> release/.env
-          echo "${{secrets.PROD_BATTLE_NET_CLIENT_ID}}" >> release/.env
-          echo "${{secrets.PROD_BATTLE_NET_CLIENT_SECRET}}" >> release/.env
-          echo "${{secrets.PROD_BATTLE_NET_OAUTH_LINK}}" >> release/.env
-          echo "${{secrets.PROD_ENVIRONMENT}}" >> release/.env
-          echo "${{secrets.PROD_DISCORD_CREATE_BOOST}}" >> release/.env
-          echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
-          echo "${{secrets.PROD_WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
           
       - name: Merge develop -> main
         uses: devmasx/merge-branch@master
