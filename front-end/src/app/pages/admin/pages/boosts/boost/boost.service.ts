@@ -15,6 +15,9 @@ export class BoostService implements Resolve<{ context: BoostContext }> {
     }
 
     async submitBoost(boost: IBoost): Promise<boolean> {
+        for (const key of boost.keys) {
+            delete key.availableBoosters;
+        }
         return await this.httpService.post('/admin/boosts', boost).toPromise().then(() => {
             this.siteNotificationService.create({
                 title: 'Success',

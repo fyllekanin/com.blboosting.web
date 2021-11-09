@@ -42,7 +42,6 @@ export interface IBoostKeyView {
     level: ILabelValue<string | number>;
     dungeon: ILabelValue<{ name: string, value: string, levels: Array<ILabelValue<string | number>> }>;
     isTimed: boolean;
-    availableBoosters: Array<ILabelValue<IKeyBoosterView>>;
     keyHolder: {
         user: ILabelValue<IKeyBoosterView>;
         role: ILabelValue<string>;
