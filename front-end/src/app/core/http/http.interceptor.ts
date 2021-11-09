@@ -46,7 +46,7 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                         case 400:
                             if (typeof error.error === 'object' && error.error.isValidationErrors) {
                                 this.siteNotificationService.onError(error.error.errors);
-                                return of(null);
+                                return observableThrowError(error);
                             }
                             this.dialogService.open({
                                 title: 'Error - something happened',

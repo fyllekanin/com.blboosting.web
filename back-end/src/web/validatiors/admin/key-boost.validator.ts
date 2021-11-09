@@ -121,7 +121,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
             if (!entity.balancePayment && !payment.realm) {
                 errors.push({ code: ValidationError.KEY_PAYMENT_REALM, message: 'A payment realm needs to be picked' });
             }
-            if (payment.amount < 1000) {
+            if (!entity.balancePayment && payment.amount < 1000) {
                 errors.push({
                     code: ValidationError.KEY_PAYMENT_AMOUNT,
                     message: 'A payment amount can not be less then 1000'
@@ -133,7 +133,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                     message: 'A payment faction needs to be picked'
                 });
             }
-            if (!payment.collector && !canCollectPayments) {
+            if (!entity.balancePayment && !payment.collector && !canCollectPayments) {
                 errors.push({
                     code: ValidationError.KEY_PAYMENT_COLLECTOR,
                     message: 'Collector is missing, you are not able to collect yourself'
