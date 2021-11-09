@@ -46,6 +46,17 @@ jobs:
           echo "${{secrets.PROD_DISCORD_CREATE_BOOST}}" >> release/.env
           echo "${{secrets.WARCRAFTLOGS_CLIENT_ID}}" >> release/.env
           echo "${{secrets.WARCRAFTLOGS_CLIENT_SECRET}}" >> release/.env
+          
+     - name: Stop current server
+       uses: appleboy/ssh-action@master
+       with:
+         host: ${{ secrets.REMOTE_HOST }}
+         username: ${{ secrets.REMOTE_USER }}
+         key: ${{ secrets.PROD_WEB_SERVER_KEY }}
+         port: ${{ secrets.PORT }}
+         script: |
+           cd app
+           pm2 delete ecosystem.config.js
       
      - name: Deploy to Server
        uses: easingthemes/ssh-deploy@main
@@ -57,3 +68,13 @@ jobs:
          REMOTE_USER: ${{ secrets.REMOTE_USER }}
          TARGET: "app/"
        
+     - name: Stop current server
+       uses: appleboy/ssh-action@master
+       with:
+         host: ${{ secrets.REMOTE_HOST }}
+         username: ${{ secrets.REMOTE_USER }}
+         key: ${{ secrets.PROD_WEB_SERVER_KEY }}
+         port: ${{ secrets.PORT }}
+         script: |
+           cd app
+           pm2 start ecosystem.config.js
