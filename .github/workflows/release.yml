@@ -55,7 +55,7 @@ jobs:
         run: tar -zcvf release.tar.gz release
           
       - name: Create Release
-      - uses: ncipollo/release-action@v1
+        uses: ncipollo/release-action@v1
         with:
           commit: main
           tag: ${{github.event.inputs.version}}
