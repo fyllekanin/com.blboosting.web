@@ -38,7 +38,8 @@ jobs:
         run: |
           mkdir release
           mv back-end/dist/* release/
-          mv back-end/node_modules release/
+          mv back-end/package.json release/
+          mv back-end/package-lock.json release/
           mv -f front-end/dist/front-end/* release/web/public/
       - name: Add ecosystem
         run: cp integration/ecosystem.config.js release/ecosystem.config.js
