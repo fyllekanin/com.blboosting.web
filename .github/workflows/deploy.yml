@@ -78,5 +78,5 @@ jobs:
          key: ${{ secrets.PROD_WEB_SERVER_KEY }}
          script: |
            cd app
-           npm install --prod
+           npm install --only=prod
            pm2 start ecosystem.config.js
