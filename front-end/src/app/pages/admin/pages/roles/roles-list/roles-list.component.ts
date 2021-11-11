@@ -1,5 +1,10 @@
 import { Component, OnDestroy } from '@angular/core';
-import { TableActionResponse, TableHeader, TableRow } from '../../../../../shared/components/table/table.model';
+import {
+    TableActionResponse,
+    TableFilters,
+    TableHeader,
+    TableRow
+} from '../../../../../shared/components/table/table.model';
 import { ActivatedRoute, Router } from '@angular/router';
 import { RolesListEntry } from '../roles.interfaces';
 import { ButtonClasses } from '../../../../../shared/constants/button.constants';
@@ -22,6 +27,14 @@ export class RolesListComponent implements OnDestroy {
     rows: Array<TableRow> = [];
     @CombineSubscriptions()
     subscriber: Unsubscribable;
+    filters: TableFilters = {
+        path: '/admin/roles/page/1',
+        filters: [{
+            placeholder: 'Name',
+            queryName: 'name',
+            type: 'string'
+        }]
+    };
 
     constructor(
         private router: Router,

@@ -18,3 +18,14 @@ export interface TableActionResponse {
     row: TableRow;
     action: UserAction;
 }
+
+export interface TableFilter {
+    placeholder: string;
+    queryName: string;
+    type: 'string';
+}
+
+export interface TableFilters {
+    filters: Array<TableFilter>;
+    path: string;
+}
