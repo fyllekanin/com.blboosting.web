@@ -31,6 +31,7 @@ export class BoostsController {
         try {
             let boosters = Configuration.getCache().has(BoostsController.BOOSTERS_CACHE_KEY) ? Configuration.getCache().get(BoostsController.BOOSTERS_CACHE_KEY) : null;
             if (!boosters) {
+                console.log('Booster cache did not contain data, filling up');
                 boosters = await this.getKeyBoosters(req.client);
                 Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
             }
