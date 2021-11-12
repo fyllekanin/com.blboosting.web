@@ -1,9 +1,13 @@
 name: Continues integration and test deployment
 
 on:
-  workflow_dispatch:
   push:
+    branches:
+      - *
   pull_request:
+    branches:
+      - develop
+      - main
 
 jobs:
   build:
