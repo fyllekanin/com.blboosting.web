@@ -96,13 +96,13 @@ export class BoostsController {
 
         return JSON.stringify({
             name: entity.boost.name,
-            realm: realms.find(realm => realm.realmId === entity.boost.realmId),
+            realm: entity.boost.realm.value.name,
             source: entity.boost.source,
-            payments: entity.payments.map(payment => !payment.realmId ? null : ({
+            payments: entity.payments.map(payment => !payment.realm.value.name ? null : ({
                 amount: payment.amount,
-                realm: realms.find(realm => realm.realmId === payment.realmId),
+                realm: payment.realm.value.name,
                 faction: payment.faction,
-                collectorId: payment.collectorDiscordId ? payment.collectorDiscordId : user.discordId
+                collectorId: payment.collector.value ? payment.collector.value : user.discordId
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
             discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
@@ -117,8 +117,8 @@ export class BoostsController {
                 dungeon: key.dungeon,
                 level: key.level,
                 timed: key.isTimed,
-                booster: key.keyHolder && key.keyHolder.discordId ? {
-                    boosterId: key.keyHolder.discordId,
+                booster: key.keyHolder && key.keyHolder.user.value.discordId ? {
+                    boosterId: key.keyHolder.user.value.discordId,
                     role: key.keyHolder.role
                 } : null
             }))
