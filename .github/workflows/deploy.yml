@@ -78,7 +78,6 @@ jobs:
          key: ${{ secrets.PROD_WEB_SERVER_KEY }}
          script: |
            cd app
-           npm ci --only=prod
            pm2 start ecosystem.config.js
            
      - name: Discord notification
