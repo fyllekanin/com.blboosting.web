@@ -13,6 +13,7 @@ export const rolesRoutes: Routes = [
             {
                 path: 'page/:page',
                 component: RolesListComponent,
+                runGuardsAndResolvers: 'paramsOrQueryParamsChange',
                 resolve: {
                     data: RolesListResolver
                 }

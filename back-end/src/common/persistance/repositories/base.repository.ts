@@ -62,6 +62,11 @@ export abstract class BaseRepository<T extends { _id?: ObjectId, createdAt?: num
     }
 
     async paginate(options: PaginationOptions<T>): Promise<IPaginationData<T>> {
+        for (const key in options.filter) {
+            if (options.filter[key] === undefined) {
+                delete options.filter[key];
+            }
+        }
         const items = await this.getCollection().find<T>(options.filter, {
             limit: options.take,
             skip: (options.take * options.page) - options.take,

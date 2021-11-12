@@ -28,7 +28,8 @@ export class RolesController {
                     order: 'ASC'
                 },
                 filter: {
-                    position: { $lt: position }
+                    position: { $lt: position },
+                    name: req.query.name ? { $regex: new RegExp(`${req.query.name}`, 'i') } : undefined
                 }
             }));
         } catch (err) {
