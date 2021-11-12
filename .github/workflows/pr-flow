@@ -1,0 +1,37 @@
+name: Continues integration and test deployment
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: self-hosted
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Install front-end
+        working-directory: front-end
+        run: npm ci
+        
+      - name: Test front-end
+        working-directory: front-end
+        run: npm run test
+
+      - name: Build front-end
+        working-directory: front-end
+        run: npm run build:prod
+
+      - name: Install back-end
+        working-directory: back-end
+        run: npm ci
+        
+      - name: Test back-end
+        working-directory: back-end
+        run: npm run test
+
+      - name: Build back-end
+        working-directory: back-end
+        run: npm run build
