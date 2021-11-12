@@ -62,4 +62,11 @@ jobs:
           tag: ${{github.event.inputs.version}}
           artifacts: release.tar.gz
           token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.RELEASE_DEPLOY_DISCORD_WEBHOOK }}
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Web release v${{github.event.inputs.version}} have been successful'
       
