@@ -1,5 +1,3 @@
-import { ILabelValue } from '../common.interface';
-
 export interface IKeyBoosterView {
     discordId: string;
     name: string;
@@ -25,26 +23,20 @@ export interface IKeyBoosterView {
     };
 }
 
-export interface IBoostRealm {
-    realmId: number,
-    name: string,
-    category: string;
-}
-
 export interface IBoostPaymentView {
-    realm: ILabelValue<IBoostRealm>;
+    realmId: number;
     amount: number;
-    faction: ILabelValue<string>;
-    collector: ILabelValue<string>;
+    faction: string;
+    collectorDiscordId: string;
 }
 
 export interface IBoostKeyView {
-    level: ILabelValue<string | number>;
-    dungeon: ILabelValue<{ name: string, value: string, levels: Array<ILabelValue<string | number>> }>;
+    level: string | number;
+    dungeon: string;
     isTimed: boolean;
     keyHolder: {
-        user: ILabelValue<IKeyBoosterView>;
-        role: ILabelValue<string>;
+        discordId: string;
+        role: string;
     };
 }
 
@@ -53,8 +45,8 @@ export interface IBoostView {
     name: null;
     boost: {
         name: string;
-        realm: ILabelValue<IBoostRealm>;
-        source: ILabelValue<string>;
+        realmId: number;
+        source: string;
         discount: number;
         armor: {
             cloth: boolean,
@@ -81,8 +73,8 @@ export interface IBoostView {
     playAlong: {
         isPlaying: boolean;
         name: string;
-        realm: ILabelValue<IBoostRealm>;
-        role: ILabelValue<string>;
+        realmId: number;
+        role: string;
     };
     keys: Array<IBoostKeyView>;
     balancePayment?: number;

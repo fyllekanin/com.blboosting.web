@@ -13,7 +13,7 @@ import { Faction } from '../../../common/constants/factions.constant';
 import { Client, GuildMember, MessageReaction, TextChannel } from 'discord.js';
 import { Configuration } from '../../../common/configuration';
 import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
-import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
+import { KeyBoostValidator } from '../../validators/admin/key-boost.validator';
 import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../../common/persistance/repositories/role.repository';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
@@ -91,17 +91,18 @@ export class BoostsController {
         }
     }
 
-    private getConvertedPayload(user: InternalUser, entity: IBoostView): string {
+    private async getConvertedPayload(user: InternalUser, entity: IBoostView): Promise<string> {
+        const realms = await RealmRepository.newRepository().getAll();
 
         return JSON.stringify({
             name: entity.boost.name,
-            realm: entity.boost.realm.value.name,
-            source: entity.boost.source.value,
-            payments: entity.payments.map(payment => !payment.realm ? null : ({
+            realm: realms.find(realm => realm.realmId === entity.boost.realmId),
+            source: entity.boost.source,
+            payments: entity.payments.map(payment => !payment.realmId ? null : ({
                 amount: payment.amount,
-                realm: payment.realm.value.name,
-                faction: payment.faction.value,
-                collectorId: payment.collector ? payment.collector.value : user.discordId
+                realm: realms.find(realm => realm.realmId === payment.realmId),
+                faction: payment.faction,
+                collectorId: payment.collectorDiscordId ? payment.collectorDiscordId : user.discordId
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
             discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
@@ -109,16 +110,16 @@ export class BoostsController {
             advertiser: {
                 advertiserId: user.discordId,
                 playing: entity.playAlong.isPlaying,
-                role: entity.playAlong.role ? entity.playAlong.role.value : null
+                role: entity.playAlong.role ? entity.playAlong.role : null
             },
             notes: entity.boost.note || '',
             keys: entity.keys.map(key => ({
-                dungeon: key.dungeon.value.value,
-                level: key.level.value,
+                dungeon: key.dungeon,
+                level: key.level,
                 timed: key.isTimed,
-                booster: key.keyHolder && key.keyHolder.user ? {
-                    boosterId: key.keyHolder.user.value.discordId,
-                    role: key.keyHolder.role.value
+                booster: key.keyHolder && key.keyHolder.discordId ? {
+                    boosterId: key.keyHolder.discordId,
+                    role: key.keyHolder.role
                 } : null
             }))
         });

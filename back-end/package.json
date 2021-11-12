@@ -48,7 +48,6 @@
         "@types/node-cache": "^4.2.5",
         "@types/node-cron": "^2.0.4",
         "@types/shelljs": "^0.8.9",
-        "@types/winston": "^2.4.4",
         "@typescript-eslint/eslint-plugin": "^5.1.0",
         "@typescript-eslint/parser": "^5.1.0",
         "codelyzer": "^6.0.2",
