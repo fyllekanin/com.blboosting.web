@@ -41,6 +41,11 @@ jobs:
           mv back-end/package.json release/
           mv back-end/package-lock.json release/
           mv -f front-end/dist/front-end/* release/web/public/
+        
+      - name: Install release package
+        working-directory: release
+        run: npm ci --only=prod
+          
       - name: Add ecosystem
         run: cp integration/ecosystem.config.js release/ecosystem.config.js
           
