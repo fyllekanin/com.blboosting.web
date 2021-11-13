@@ -2,8 +2,7 @@ import { Component } from '@angular/core';
 
 @Component({
     selector: 'app-default-not-found',
-    templateUrl: 'not-found.component.html',
-    styleUrls: [ 'not-found.component.scss' ]
+    template: '<div style="text-align: center"><img src="/assets/images/404.png" /> </div>'
 })
 export class NotFoundComponent {
 
