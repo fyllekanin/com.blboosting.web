@@ -1,4 +1,5 @@
 import { Routes } from '@angular/router';
+import { NotFoundComponent } from './not-found.component';
 
 export const appRoutes: Routes = [
     {
@@ -16,6 +17,10 @@ export const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'default'
+        redirectTo: 'admin'
+    },
+    {
+        path: '**',
+        component: NotFoundComponent
     }
 ];
