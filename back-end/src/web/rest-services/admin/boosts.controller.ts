@@ -97,11 +97,11 @@ export class BoostsController {
         return JSON.stringify({
             name: entity.boost.name,
             realm: entity.boost.realm.value.name,
-            source: entity.boost.source,
+            source: entity.boost.source.value,
             payments: entity.payments.map(payment => !payment.realm.value.name ? null : ({
                 amount: payment.amount,
                 realm: payment.realm.value.name,
-                faction: payment.faction,
+                faction: payment.faction.value,
                 collectorId: payment.collector.value ? payment.collector.value : user.discordId
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
@@ -110,16 +110,16 @@ export class BoostsController {
             advertiser: {
                 advertiserId: user.discordId,
                 playing: entity.playAlong.isPlaying,
-                role: entity.playAlong.role ? entity.playAlong.role : null
+                role: entity.playAlong.role ? entity.playAlong.role.value : null
             },
             notes: entity.boost.note || '',
             keys: entity.keys.map(key => ({
-                dungeon: key.dungeon,
-                level: key.level,
+                dungeon: key.dungeon.value.value,
+                level: key.level.value,
                 timed: key.isTimed,
-                booster: key.keyHolder && key.keyHolder.user.value.discordId ? {
+                booster: key.keyHolder?.user && key.keyHolder.user.value.discordId ? {
                     boosterId: key.keyHolder.user.value.discordId,
-                    role: key.keyHolder.role
+                    role: key.keyHolder.role.value
                 } : null
             }))
         });
