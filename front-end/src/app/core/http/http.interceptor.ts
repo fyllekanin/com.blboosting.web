@@ -44,7 +44,6 @@ export class HttpRequestInterceptor implements HttpInterceptor {
                 if (error instanceof HttpErrorResponse) {
                     switch ((<HttpErrorResponse>error).status) {
                         case 400:
-                            debugger;
                             if (typeof error.error === 'object' && error.error.isValidationErrors) {
                                 this.siteNotificationService.onError(error.error.errors);
                                 return observableThrowError(error);

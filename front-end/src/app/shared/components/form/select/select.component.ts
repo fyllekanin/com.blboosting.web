@@ -63,7 +63,6 @@ export class SelectComponent {
     @HostListener('blur')
     onClose() {
         this.isOpen = false;
-        console.log(`filter: ${this.filter}`);
         if (this.filter === '') {
             this.value = null;
             this.valueChange.emit(null);
