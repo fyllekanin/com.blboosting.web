@@ -69,7 +69,7 @@ export class BoostsController {
             }
 
             const channel = await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel);
-            const message = await channel.send(`!boost ${await this.getConvertedPayload(req.user, req.body)}`);
+            const message = await channel.send(`!mplus ${await this.getConvertedPayload(req.user, req.body)}`);
             const fallback = setTimeout(() => {
                 req.client.off('messageReactionAdd', listener);
                 res.status(StatusCodes.BAD_REQUEST).json([{
