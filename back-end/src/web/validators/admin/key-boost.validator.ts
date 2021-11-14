@@ -133,7 +133,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                     message: 'A payment faction needs to be picked'
                 });
             }
-            if (!entity.balancePayment && !payment.collector.value && !canCollectPayments) {
+            if (!entity.balancePayment && !payment.collector && !canCollectPayments) {
                 errors.push({
                     code: ValidationError.KEY_PAYMENT_COLLECTOR,
                     message: 'Collector is missing, you are not able to collect yourself'
