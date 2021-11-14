@@ -13,7 +13,7 @@ import { Faction } from '../../../common/constants/factions.constant';
 import { Client, GuildMember, MessageReaction, TextChannel } from 'discord.js';
 import { Configuration } from '../../../common/configuration';
 import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
-import { KeyBoostValidator } from '../../validatiors/admin/key-boost.validator';
+import { KeyBoostValidator } from '../../validators/admin/key-boost.validator';
 import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../../common/persistance/repositories/role.repository';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
@@ -31,6 +31,7 @@ export class BoostsController {
         try {
             let boosters = Configuration.getCache().has(BoostsController.BOOSTERS_CACHE_KEY) ? Configuration.getCache().get(BoostsController.BOOSTERS_CACHE_KEY) : null;
             if (!boosters) {
+                console.log('Booster cache did not contain data, filling up');
                 boosters = await this.getKeyBoosters(req.client);
                 Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
             }
@@ -68,7 +69,7 @@ export class BoostsController {
             }
 
             const channel = await (req.client.channels.cache.get(process.env.DISCORD_CREATE_BOOST) as TextChannel);
-            const message = await channel.send(`!boost ${await this.getConvertedPayload(req.user, req.body)}`);
+            const message = await channel.send(`!mplus ${await this.getConvertedPayload(req.user, req.body)}`);
             const fallback = setTimeout(() => {
                 req.client.off('messageReactionAdd', listener);
                 res.status(StatusCodes.BAD_REQUEST).json([{
@@ -90,17 +91,18 @@ export class BoostsController {
         }
     }
 
-    private getConvertedPayload(user: InternalUser, entity: IBoostView): string {
+    private async getConvertedPayload(user: InternalUser, entity: IBoostView): Promise<string> {
+        const realms = await RealmRepository.newRepository().getAll();
 
         return JSON.stringify({
             name: entity.boost.name,
             realm: entity.boost.realm.value.name,
-            source: entity.boost.source.value,
-            payments: entity.payments.map(payment => !payment.realm ? null : ({
+            source: entity.boost.source,
+            payments: entity.payments.map(payment => !payment.realm.value.name ? null : ({
                 amount: payment.amount,
                 realm: payment.realm.value.name,
-                faction: payment.faction.value,
-                collectorId: payment.collector ? payment.collector.value : user.discordId
+                faction: payment.faction,
+                collectorId: payment.collector.value ? payment.collector.value : user.discordId
             })).filter(item => item),
             paidBalance: entity.balancePayment && entity.balancePayment > 0 ? entity.balancePayment : null,
             discount: entity.boost.discount && entity.boost.discount > 0 ? entity.boost.discount : null,
@@ -108,16 +110,16 @@ export class BoostsController {
             advertiser: {
                 advertiserId: user.discordId,
                 playing: entity.playAlong.isPlaying,
-                role: entity.playAlong.role ? entity.playAlong.role.value : null
+                role: entity.playAlong.role ? entity.playAlong.role : null
             },
             notes: entity.boost.note || '',
             keys: entity.keys.map(key => ({
-                dungeon: key.dungeon.value.value,
-                level: key.level.value,
+                dungeon: key.dungeon,
+                level: key.level,
                 timed: key.isTimed,
-                booster: key.keyHolder && key.keyHolder.user ? {
+                booster: key.keyHolder && key.keyHolder.user.value.discordId ? {
                     boosterId: key.keyHolder.user.value.discordId,
-                    role: key.keyHolder.role.value
+                    role: key.keyHolder.role
                 } : null
             }))
         });

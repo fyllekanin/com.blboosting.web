@@ -7,6 +7,7 @@ import { CoreModule } from './core/core.module';
 import { RouterModule } from '@angular/router';
 import { appRoutes } from './app.routes';
 import { AppLoadService } from './core/app-load.service';
+import { NotFoundComponent } from './not-found.component';
 
 export function init_app(appLoadService: AppLoadService) {
     return () => appLoadService.load();
@@ -23,7 +24,8 @@ export function init_app(appLoadService: AppLoadService) {
         BrowserModule
     ],
     declarations: [
-        AppComponent
+        AppComponent,
+        NotFoundComponent
     ],
     providers: [
         AppLoadService,
