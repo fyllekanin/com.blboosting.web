@@ -54,7 +54,7 @@ export class BoostComponent {
             keyHolder: { user: null, role: null },
             availableBoosters: []
         }],
-        payments: [{ realm: null, amount: null, faction: null }]
+        payments: [{ realm: null, amount: null, faction: null, isMandatory: false }]
     };
 
     actions: Array<UserAction> = [
@@ -100,6 +100,10 @@ export class BoostComponent {
         this.entity.keys.forEach(key => key.availableBoosters = this.getAvailableBoosters(key));
     }
 
+    onPaymentChange(item: IBoostPayment): void {
+        item.isMandatory = Boolean(item.realm || item.amount || item.faction || item.collector)
+    }
+
     onKeyChange(item: IBoostKey): void {
         if (item.dungeon.value.value === 'TAZ' || (item.level && item.level.value === 0)) {
             item.isTimed = false;
@@ -119,7 +123,12 @@ export class BoostComponent {
     }
 
     onAddPaymentRow(index: number): void {
-        this.entity.payments.splice((index + 2) - 1, 0, { realm: null, amount: null, faction: null });
+        this.entity.payments.splice((index + 2) - 1, 0, {
+            realm: null,
+            amount: null,
+            faction: null,
+            isMandatory: false
+        });
     }
 
     onRemovePaymentRow(payment: IBoostPayment): void {
