@@ -92,13 +92,11 @@ export class BoostsController {
     }
 
     private async getConvertedPayload(user: InternalUser, entity: IBoostView): Promise<string> {
-        const realms = await RealmRepository.newRepository().getAll();
-
         return JSON.stringify({
             name: entity.boost.name,
             realm: entity.boost.realm.value.name,
             source: entity.boost.source.value,
-            payments: entity.payments.map(payment => !payment.realm.value.name ? null : ({
+            payments: entity.payments.map(payment => !payment.realm ? null : ({
                 amount: payment.amount,
                 realm: payment.realm.value.name,
                 faction: payment.faction.value,

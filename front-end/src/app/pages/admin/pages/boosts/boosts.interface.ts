@@ -41,6 +41,7 @@ export interface IBoostPayment {
     amount: number;
     faction: SelectItem;
     collector?: SelectItem<string>;
+    isMandatory: boolean;
 }
 
 export interface IBoostKey {
