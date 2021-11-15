@@ -34,6 +34,15 @@ class Main extends Server {
         this.app.use(express.json());
         this.app.use(compression());
         this.app.use(cookieParser());
+        this.app.use('/', (req, res, next) => {
+            const hashPattern = /.*[0-9a-f]*\..*/;
+            const isHashedFilename = hashPattern.test(req.url);
+            if (isHashedFilename) {
+                const oneYear = 365 * 24 * 60 * 60;
+                res.setHeader('Cache-Control', 'max-age=' + oneYear + ', immutable');
+            }
+            next();
+        });
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
         this.client = new Client({
