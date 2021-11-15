@@ -12,14 +12,12 @@ export class TableComponent {
     private myFilters: TableFilters;
     private myTimeout: any;
 
-
     @Input() headers: Array<TableHeader> = [];
     @Output() actionChange: EventEmitter<TableActionResponse> = new EventEmitter();
     doAnyRowHaveActions = false;
     filterValues: { [key: string]: string } = {};
 
     constructor(private router: Router, activatedRoute: ActivatedRoute) {
-        debugger;
         this.filterValues = { ...activatedRoute.snapshot.queryParams };
     }
 
@@ -35,7 +33,7 @@ export class TableComponent {
     @Input()
     set rows(rows: Array<TableRow>) {
         this.myRows = rows;
-        this.myRows.forEach(row => row.actions = row.actions.filter(action => !action.isHidden));
+        this.myRows.forEach(row => row.actions = row.actions?.filter(action => !action.isHidden));
         this.doAnyRowHaveActions = this.myRows.some(row => Array.isArray(row.actions) && row.actions.length > 0);
     }
 

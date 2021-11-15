@@ -1,4 +1,4 @@
-import { ClassMiddleware, Controller, Get, Middleware } from '@overnightjs/core';
+import { Controller, Get, Middleware } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest } from '../../../common/utilities/internal.request';
 import { StatusCodes } from 'http-status-codes';
@@ -11,11 +11,10 @@ import { Faction } from '../../../common/constants/factions.constant';
 import { ICharacter } from '../../../common/persistance/entities/battle-net/character.entity';
 
 @Controller('api/admin')
-@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
 export class AdminPageController {
 
     @Get('dashboard')
-    @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN])])
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN])])
     async getDashboard(req: InternalRequest, res: Response): Promise<void> {
         try {
             const characters = await CharacterRepository.newRepository().getCharacterForUserId(req.user.id);

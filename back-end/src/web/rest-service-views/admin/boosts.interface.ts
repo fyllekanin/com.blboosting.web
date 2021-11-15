@@ -3,6 +3,12 @@ import { ILabelValue } from '../common.interface';
 export interface IKeyBoosterView {
     discordId: string;
     name: string;
+    roles: {
+        isLow: boolean,
+        isMid: boolean,
+        isHigh: boolean,
+        isEpic: boolean
+    },
     armors: {
         cloth: boolean,
         leather: boolean,
