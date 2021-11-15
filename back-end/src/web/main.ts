@@ -45,7 +45,12 @@ class Main extends Server {
         await this.preSetup();
         this.backgroundTaskHandler.activate();
         this.setupControllers();
-        this.app.use('/*', (req, res) => res.sendFile(__dirname + '/public/index.html'));
+        this.app.use('/*', (req, res) => {
+            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+            res.header('Expires', '-1');
+            res.header('Pragma', 'no-cache');
+            res.sendFile(__dirname + '/public/index.html');
+        });
         this.app.listen(port, () => {
             console.log(`Server started on port ${port}`);
         });
