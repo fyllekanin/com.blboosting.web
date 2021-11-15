@@ -65,7 +65,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 message: 'Name of your contact character needs to be filled in'
             });
         }
-        if (!entity.boost.realm.value.realmId) {
+        if (!entity.boost.realm) {
             errors.push({
                 code: ValidationError.KEY_BOOST_REALM,
                 message: 'Realm for your contact character needs to be filled in'
@@ -111,34 +111,52 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
         const canCollectPayments = await RoleRepository.newRepository().doUserHavePermission(user.discordId,
             [RolePermission.CAN_COLLECT_PAYMENTS], DiscordUtility.getRoleIds(client, user.discordId));
 
+        let isAnyPaymentValid = false;
         for (const payment of entity.payments) {
-            if (!entity.balancePayment && (!payment.amount || payment.amount <= 0)) {
-                errors.push({
+            if (payment.amount == null && !payment.realm && !payment.faction) {
+                continue;
+            }
+            const keyErrors: Array<IValidationError> = [];
+            if (!payment.amount || payment.amount <= 0) {
+                keyErrors.push({
                     code: ValidationError.KEY_PAYMENT_AMOUNT,
                     message: 'A payment amount can not be empty or 0'
                 });
-            }
-            if (!entity.balancePayment && !payment.realm) {
-                errors.push({ code: ValidationError.KEY_PAYMENT_REALM, message: 'A payment realm needs to be picked' });
-            }
-            if (!entity.balancePayment && payment.amount < 1000) {
-                errors.push({
+            } else if (payment.amount < 1000) {
+                keyErrors.push({
                     code: ValidationError.KEY_PAYMENT_AMOUNT,
                     message: 'A payment amount can not be less then 1000'
                 });
             }
-            if (!entity.balancePayment && !payment.faction) {
-                errors.push({
+            if (!payment.realm) {
+                keyErrors.push({
+                    code: ValidationError.KEY_PAYMENT_REALM,
+                    message: 'A payment realm needs to be picked'
+                });
+            }
+            if (!payment.faction) {
+                keyErrors.push({
                     code: ValidationError.KEY_PAYMENT_FACTION,
                     message: 'A payment faction needs to be picked'
                 });
             }
-            if (!entity.balancePayment && !payment.collector && !canCollectPayments) {
-                errors.push({
+            if (!payment.collector && !canCollectPayments) {
+                keyErrors.push({
                     code: ValidationError.KEY_PAYMENT_COLLECTOR,
                     message: 'Collector is missing, you are not able to collect yourself'
                 });
             }
+            if (keyErrors.length === 0) {
+                isAnyPaymentValid = true;
+            }
+            errors.push(...keyErrors);
+        }
+
+        if (!isAnyPaymentValid && !entity.balancePayment && errors.length === 0) {
+            errors.push({
+                code: ValidationError.KEY_NO_VALID_PAYMENT,
+                message: 'There is no valid payment, need to have a payment row, balance or both'
+            })
         }
     }
 
