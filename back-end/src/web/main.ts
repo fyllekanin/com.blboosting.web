@@ -46,9 +46,13 @@ class Main extends Server {
         this.backgroundTaskHandler.activate();
         this.setupControllers();
         this.app.use('/*', (req, res) => {
-            res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-            res.header('Expires', '-1');
-            res.header('Pragma', 'no-cache');
+            const hashPattern = /.*[0-9a-f]*\..*/;
+            const isHashedFilename = hashPattern.test(req.url);
+            if (!isHashedFilename) {
+                res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
+                res.header('Expires', '-1');
+                res.header('Pragma', 'no-cache');
+            }
             res.sendFile(__dirname + '/public/index.html');
         });
         this.app.listen(port, () => {
