@@ -34,15 +34,6 @@ class Main extends Server {
         this.app.use(express.json());
         this.app.use(compression());
         this.app.use(cookieParser());
-        this.app.use('/', (req, res, next) => {
-            const hashPattern = /.*[0-9a-f]*\..*/;
-            const isHashedFilename = hashPattern.test(req.url);
-            if (isHashedFilename) {
-                const oneYear = 365 * 24 * 60 * 60;
-                res.setHeader('Cache-Control', 'max-age=' + oneYear + ', immutable');
-            }
-            next();
-        });
         this.app.use('/', express.static(__dirname + '/public'));
         this.app.use('/resources', express.static(__dirname + '/resources'));
         this.client = new Client({
@@ -54,16 +45,7 @@ class Main extends Server {
         await this.preSetup();
         this.backgroundTaskHandler.activate();
         this.setupControllers();
-        this.app.use('/*', (req, res) => {
-            const hashPattern = /.*[0-9a-f]*\..*/;
-            const isHashedFilename = hashPattern.test(req.url);
-            if (!isHashedFilename) {
-                res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
-                res.header('Expires', '-1');
-                res.header('Pragma', 'no-cache');
-            }
-            res.sendFile(__dirname + '/public/index.html');
-        });
+        this.app.use('/*', (req, res) => res.sendFile(__dirname + '/public/index.html'));
         this.app.listen(port, () => {
             console.log(`Server started on port ${port}`);
         });
