@@ -10,7 +10,7 @@ module.exports = {
                 NODE_ENV: "development",
             },
             exec_mode: 'cluster',
-            instances: '1'
+            instances: '3'
         }
     ]
 }

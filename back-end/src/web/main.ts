@@ -44,7 +44,6 @@ class Main extends Server {
 
     async start(port: number): Promise<void> {
         await this.preSetup();
-        this.backgroundTaskHandler.activate();
         this.setupControllers();
         this.app.use('/*', (req, res) => {
             res.header('Cache-Control', 'private, no-cache, no-store, must-revalidate');
@@ -66,12 +65,17 @@ class Main extends Server {
         console.log('Create database connection');
         await DatabaseService.startup();
 
-        console.log('Run migrations');
-        await MigrationService.run();
+        if (Number(process.env.NODE_APP_INSTANCE) === 0) {
+            console.log('Run migrations');
+            await MigrationService.run();
 
-        console.log('Starting discord listener');
-        this.discordListener = new DiscordListener();
-        await this.discordListener.start(this.client);
+            console.log('Starting discord listener');
+            this.discordListener = new DiscordListener();
+            await this.discordListener.start(this.client);
+
+            console.log('Starting background tasks');
+            this.backgroundTaskHandler.activate();
+        }
     }
 
     private setupControllers(): void {
