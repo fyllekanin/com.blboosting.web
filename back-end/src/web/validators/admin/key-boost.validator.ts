@@ -64,6 +64,12 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
                 code: ValidationError.KEY_BOOST_NAME,
                 message: 'Name of your contact character needs to be filled in'
             });
+            if (!(/^[a-zA-Z\u00C0-\u00ff]{2,12}$/.test(entity.boost.name))) {
+                errors.push({
+                    code: ValidationError.KEY_BOOST_NAME,
+                    message: 'Your character name is not valid, it needs to be exactly your name on World of Warcraft'
+                });
+            }
         }
         if (!entity.boost.realm) {
             errors.push({
