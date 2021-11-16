@@ -32,7 +32,6 @@ export interface BoostContext {
     dungeons: Array<{ name: string, value: string, levels: Array<SelectItem> }>;
     roles: Array<SelectItem<string>>;
     factions: Array<SelectItem<string>>;
-    boosters: { low: Array<IBooster>, medium: Array<IBooster>, high: Array<IBooster>, elite: Array<IBooster> };
     collectors: Array<SelectItem<string>>;
 }
 
@@ -49,7 +48,6 @@ export interface IBoostKey {
     dungeon: SelectItem;
     isTimed: boolean;
     isTimedDisabled?: boolean;
-    availableBoosters: Array<SelectItem>;
     keyHolder: {
         user: SelectItem;
         role: SelectItem;

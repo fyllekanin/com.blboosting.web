@@ -14,8 +14,9 @@
                 *ngFor="let item of backwardItems"
                 [ngClass]="item < 0 ? 'page-no-click' : ''">
                 <a
-                    [routerLink]="[getUrl(item)]"
-                    [queryParams]="queryParameters">
+                    [routerLink]="onPageChange ? null : [getUrl(item)]"
+                    [queryParams]="queryParameters"
+                    (click)="onPageChange ? onPageChange(item) : null">
                     {{ item < 0 ? '...' : item }}
                 </a>
             </div>
@@ -24,8 +25,9 @@
                 *ngFor="let item of fillBackwardItems"
                 [ngClass]="item < 0 ? 'page-no-click' : ''">
                 <a
-                    [routerLink]="[getUrl(item)]"
-                    [queryParams]="queryParameters">
+                    [routerLink]="onPageChange ? null : [getUrl(item)]"
+                    [queryParams]="queryParameters"
+                    (click)="onPageChange ? onPageChange(item) : null">
                     {{ item < 0 ? '...' : item }}
                 </a>
             </div>
@@ -35,8 +37,9 @@
                 *ngFor="let item of fillForwardItems"
                 [ngClass]="item < 0 ? 'page-no-click' : ''">
                 <a
-                    [routerLink]="[getUrl(item)]"
-                    [queryParams]="queryParameters">
+                    [routerLink]="onPageChange ? null : [getUrl(item)]"
+                    [queryParams]="queryParameters"
+                    (click)="onPageChange ? onPageChange(item) : null">
                     {{ item < 0 ? '...' : item }}
                 </a>
             </div>
@@ -45,8 +48,9 @@
                 *ngFor="let item of forwardItems"
                 [ngClass]="item < 0 ? 'page-no-click' : ''">
                 <a
-                    [routerLink]="[getUrl(item)]"
-                    [queryParams]="queryParameters">
+                    [routerLink]="onPageChange ? null : [getUrl(item)]"
+                    [queryParams]="queryParameters"
+                    (click)="onPageChange ? onPageChange(item) : null">
                     {{ item < 0 ? '...' : item }}
                 </a>
             </div>

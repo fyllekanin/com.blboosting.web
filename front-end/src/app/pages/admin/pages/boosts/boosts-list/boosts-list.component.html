@@ -1,1 +1,7 @@
-This is the list page, see <a routerLink="/admin/boosts/boost/new">Here</a>
+<app-pagination [total]="pagination?.total" [page]="pagination?.page"></app-pagination>
+
+<app-content header="Boosts" [actions]="actions">
+    <app-table [headers]="headers" [rows]="rows"></app-table>
+</app-content>
+
+<app-pagination [total]="pagination?.total" [page]="pagination?.page"></app-pagination>

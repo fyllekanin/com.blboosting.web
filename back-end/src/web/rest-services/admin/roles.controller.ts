@@ -1,4 +1,4 @@
-import { ClassMiddleware, Controller, Get, Put } from '@overnightjs/core';
+import { Controller, Get, Middleware, Put } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest } from '../../../common/utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
@@ -11,10 +11,10 @@ import { ObjectId } from 'mongodb';
 import { BATTLE_NET_MIDDLEWARE } from '../middlewares/battle-net.middleware';
 
 @Controller('api/admin/roles')
-@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
 export class RolesController {
 
     @Get('page/:page')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
     async getList(req: InternalRequest, res: Response): Promise<void> {
         try {
             const position = await RoleRepository.newRepository()
@@ -33,12 +33,13 @@ export class RolesController {
                 }
             }));
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
     @Get('role/:id')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
     async getRole(req: InternalRequest, res: Response): Promise<void> {
         try {
             const position = await RoleRepository.newRepository()
@@ -52,12 +53,13 @@ export class RolesController {
 
             res.status(StatusCodes.OK).json(role);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
 
     @Put('role/:id')
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_MANAGE_ROLES])])
     async updateRole(req: InternalRequest<IRoleEntity>, res: Response): Promise<void> {
         try {
             const position = await RoleRepository.newRepository()
@@ -76,7 +78,7 @@ export class RolesController {
 
             res.status(StatusCodes.OK).json(role);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }

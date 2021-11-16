@@ -3,6 +3,12 @@ import { ILabelValue } from '../common.interface';
 export interface IKeyBoosterView {
     discordId: string;
     name: string;
+    roles: {
+        isLow: boolean,
+        isMid: boolean,
+        isHigh: boolean,
+        isEpic: boolean
+    },
     armors: {
         cloth: boolean,
         leather: boolean,
@@ -43,7 +49,7 @@ export interface IBoostKeyView {
     dungeon: ILabelValue<{ name: string, value: string, levels: Array<ILabelValue<string | number>> }>;
     isTimed: boolean;
     keyHolder: {
-        user: ILabelValue<IKeyBoosterView>;
+        user: ILabelValue<string>;
         role: ILabelValue<string>;
     };
 }

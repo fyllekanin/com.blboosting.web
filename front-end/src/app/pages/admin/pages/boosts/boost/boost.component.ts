@@ -6,6 +6,9 @@ import { UserAction } from '../../../../../shared/constants/common.interfaces';
 import { ButtonClasses } from '../../../../../shared/constants/button.constants';
 import { BoostService } from './boost.service';
 import { DialogService } from '../../../../../core/common-services/dialog.service';
+import { DialogTableComponent } from '../../../../../shared/components/table/dialog-table.component';
+import { first } from 'rxjs';
+import { IPagination } from '../../../../../shared/components/pagination/pagination.interface';
 
 @Component({
     selector: 'app-admin-boosts-boost',
@@ -13,6 +16,7 @@ import { DialogService } from '../../../../../core/common-services/dialog.servic
     styleUrls: ['boost.component.scss'],
 })
 export class BoostComponent {
+    private dialogComponent: DialogTableComponent<IBooster>;
     context: BoostContext;
     entity: IBoost = {
         _id: null,
@@ -51,8 +55,7 @@ export class BoostComponent {
             level: null,
             dungeon: null,
             isTimed: false,
-            keyHolder: { user: null, role: null },
-            availableBoosters: []
+            keyHolder: { user: null, role: null }
         }],
         payments: [{ realm: null, amount: null, faction: null, isMandatory: false }]
     };
@@ -75,11 +78,6 @@ export class BoostComponent {
         this.context = activatedRoute.snapshot.data.data.context;
         this.realms = this.context.realms.map(realm => ({ label: realm.name, value: realm }));
         this.dungeons = this.context.dungeons.map(dungeon => ({ label: dungeon.name, value: dungeon }));
-
-        this.entity.keys[0].availableBoosters = this.context.boosters.low.map(booster => ({
-            label: booster.name,
-            value: booster.discordId
-        }));
     }
 
     async onAction(action: UserAction): Promise<void> {
@@ -96,8 +94,30 @@ export class BoostComponent {
         }
     }
 
-    updateApplicableBoosters(): void {
-        this.entity.keys.forEach(key => key.availableBoosters = this.getAvailableBoosters(key));
+    async onSelectBooster(boostKey: IBoostKey): Promise<void> {
+        this.dialogService.onComponentInstance.pipe(first()).subscribe(async componentRef => {
+            this.dialogComponent = (<DialogTableComponent<IBooster>>componentRef.instance);
+            this.dialogComponent.onPageChange = this.setDialogData.bind(this);
+            this.dialogComponent.onSearchChange = this.setDialogData.bind(this);
+            this.dialogComponent.headers = [{ label: 'Name' }, { label: 'Discord ID' }];
+            this.dialogComponent.onPageChange(1);
+
+            this.dialogComponent.onSelectRow = rowId => {
+                boostKey.keyHolder.user = {
+                    label: this.dialogComponent.pagination.items.find(item => item.discordId === rowId).name,
+                    value: rowId
+                };
+                this.dialogService.close();
+            };
+        });
+        this.dialogService.open({
+            component: DialogTableComponent,
+            title: 'Booster',
+            buttons: [
+                { label: 'Close', action: 'close', type: 'button-gray', isClosing: true }
+            ]
+        });
+        this.dialogService.onAction.pipe(first()).subscribe(() => this.dialogService.close());
     }
 
     onPaymentChange(item: IBoostPayment): void {
@@ -113,11 +133,10 @@ export class BoostComponent {
         }
 
         this.isMultipleSpecifics = this.entity.keys.filter(key => key.dungeon.value.value !== 'ANY').length > 1;
-        item.availableBoosters = this.getAvailableBoosters(item);
         if (!item.keyHolder.user) {
             return;
         }
-        if (!item.keyHolder || !item.availableBoosters.every(booster => booster.value.discordId !== item.keyHolder.user.value.discordId)) {
+        if (!item.keyHolder) {
             item.keyHolder.user = null;
         }
     }
@@ -146,10 +165,6 @@ export class BoostComponent {
             level: null,
             dungeon: null,
             isTimed: false,
-            availableBoosters: this.context.boosters.low.map(booster => ({
-                label: booster.name,
-                value: booster.discordId
-            })),
             keyHolder: { user: null, role: null }
         });
     }
@@ -161,39 +176,25 @@ export class BoostComponent {
         this.entity.keys = this.entity.keys.filter(item => item !== key);
     }
 
-    private getAvailableBoosters(item: IBoostKey): Array<SelectItem> {
-        let boosters: Array<IBooster> = this.context.boosters.low;
-        if (item.dungeon && item.dungeon.value.value === 'TAZ') {
-            boosters = this.context.boosters.high;
-        } else if (item.dungeon && item.level) {
-            if (item.isTimed && item.level.value >= 16) {
-                boosters = this.context.boosters.elite;
-            }
-            if (item.isTimed && item.level.value >= 15) {
-                boosters = this.context.boosters.high;
-            }
-            if ((item.isTimed && item.level.value >= 10) || item.level.value > 10) {
-                boosters = this.context.boosters.medium;
-            }
-        }
-
-        return this.getApplicableArmorsAndClasses(boosters).map(booster => ({
-            label: booster.name,
-            value: booster
-        }));
-    }
-
-    private getApplicableArmorsAndClasses(boosters: Array<IBooster>): Array<IBooster> {
-        const activeArmors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]);
-        const activeClasses = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]);
-        if (activeClasses.length === 0 && activeArmors.length === 0) {
-            return boosters;
-        }
-        return boosters.filter(booster => {
-            const boosterClasses = Object.keys(booster.classes).filter(key => booster.classes[key]);
-            const boosterArmors = Object.keys(booster.armors).filter(key => booster.armors[key]);
-            return activeClasses.some(key => boosterClasses.includes(key)) || activeArmors.some(key => boosterArmors.includes(key));
-            ;
+    private async setDialogData(): Promise<void> {
+        const armors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]).map(key => key);
+        const classes = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]).map(key => key);
+        const data: IPagination<IBooster> = await this.boostService.getBoosters(1, {
+            name: this.dialogComponent.search,
+            armors: armors,
+            classes: classes
         });
+        this.dialogComponent.pagination = data;
+        this.dialogComponent.rows = data.items.map(item => ({
+            rowId: item.discordId,
+            actions: [{
+                label: 'Select',
+                buttonClass: ButtonClasses.BLUE
+            }],
+            cells: [
+                { label: item.name },
+                { label: item.discordId }
+            ]
+        }));
     }
 }

@@ -5,7 +5,7 @@ import { HttpClient } from '@angular/common/http';
 interface Options {
     params?: { [key: string]: string };
     headers?: { [key: string]: string };
-    queryParameters?: { [key: string]: string };
+    queryParameters?: { [key: string]: string | number | Array<string> | Array<number> };
 }
 
 @Injectable()
@@ -36,7 +36,19 @@ export class HttpService {
         return this.httpClient.delete<T>(completeUrl, options);
     }
 
-    private getUrlWithQueryParameters(url: string, queryParams: { [key: string]: string }): string {
-        return `${url}?${new URLSearchParams(queryParams)}`;
+    private getUrlWithQueryParameters(url: string, queryParams: { [key: string]: string | number | Array<string> | Array<number> }): string {
+        const search = new URLSearchParams();
+        for (const key in queryParams) {
+            const value = <string | Array<string>>queryParams[key];
+            if (!value) continue;
+            if (Array.isArray(value) && value.length === 0) continue;
+            // @ts-ignore
+            if (Array.isArray(value)) {
+                value.forEach(item => search.append(`${key}[]`, item));
+            } else {
+                search.append(key, value);
+            }
+        }
+        return `${url}?${search.toString()}`;
     }
 }

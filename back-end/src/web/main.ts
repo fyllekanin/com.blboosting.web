@@ -19,6 +19,7 @@ import { Configuration } from '../common/configuration';
 import { BattleNetController } from './rest-services/battle-net.controller';
 import cookieParser from 'cookie-parser';
 import { BackgroundTaskHandler } from './background-tasks/background-task.handler';
+import { BoostersController } from './rest-services/admin/boosters.controller';
 
 dotenv.config();
 
@@ -81,6 +82,7 @@ class Main extends Server {
         super.addControllers(
             [
                 new PageController(),
+                new BoostersController(),
                 new AuthenticationController(),
                 new AdminPageController(),
                 new RolesController(),
@@ -90,7 +92,7 @@ class Main extends Server {
             null,
             (req: InternalRequest, res: Response, next: NextFunction) => {
                 req.client = this.client;
-                INITIAL_MIDDLEWARE(req, res, next)
+                INITIAL_MIDDLEWARE(req, res, next);
             },
         );
     }
