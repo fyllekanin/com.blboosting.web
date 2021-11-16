@@ -15,8 +15,8 @@ export class BoostersController {
         const boosters: Array<IKeyBoosterView> = await this.getKeyBoosters(req.client).then(items => {
             return items.filter(item => {
                 if (req.query.name && !this.isValidName(<string>req.query.name, item.name)) return false;
-                if (req.query.armor && !this.isValidArmor(<Array<string>>req.query.armors, item)) return false;
-                if (req.query.class && !this.isValidClass(<Array<string>>req.query.classes, item)) return false;
+                if (req.query.armors && !this.isValidArmor(<Array<string>>req.query.armors, item)) return false;
+                if (req.query.classes && !this.isValidClass(<Array<string>>req.query.classes, item)) return false;
                 return true;
             });
         });
@@ -29,6 +29,7 @@ export class BoostersController {
     }
 
     private isValidArmor(armors: Array<string>, item: IKeyBoosterView): boolean {
+        console.log(armors);
         for (const armor of armors) {
             // @ts-ignore
             if (item.armors[armor.toLowerCase()]) {

@@ -177,8 +177,12 @@ export class BoostComponent {
     }
 
     private async setDialogData(): Promise<void> {
+        const armors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]).map(key => key);
+        const classes = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]).map(key => key);
         const data: IPagination<IBooster> = await this.boostService.getBoosters(1, {
-            name: this.dialogComponent.search
+            name: this.dialogComponent.search,
+            armors: armors,
+            classes: classes
         });
         this.dialogComponent.pagination = data;
         this.dialogComponent.rows = data.items.map(item => ({

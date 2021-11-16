@@ -2,7 +2,7 @@
     "name": "back-end",
     "version": "1.0.0",
     "description": "",
-    "main": "dist/main.js",
+    "main": "dist/web/main.js",
     "scripts": {
         "test": "jasmine-ts --config=jasmine.json",
         "clean": "node node_modules/rimraf/bin dist/*",

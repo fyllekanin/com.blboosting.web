@@ -39,12 +39,13 @@ export class BoostService implements Resolve<{ context: BoostContext }> {
         classes?: Array<string>,
         name?: string
     }): Promise<IPagination<IBooster>> {
-        const search = new URLSearchParams();
-        if (filters?.name) search.append('name', filters.name);
-        (filters?.armors || []).forEach(item => search.append('armors', item));
-        (filters?.classes || []).forEach(item => search.append('classes', item));
-
-        return await this.httpService.get<IPagination<IBooster>>(`/admin/boosters/key/page/${page}?${search.toString()}`)
+        return await this.httpService.get<IPagination<IBooster>>(`/admin/boosters/key/page/${page}`, {
+            queryParameters: {
+                name: filters?.name,
+                armors: filters?.armors,
+                classes: filters.classes
+            }
+        })
             .toPromise();
     }
 }

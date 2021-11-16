@@ -21,7 +21,7 @@ import { DiscordUtility } from '../../../common/utilities/discord.utility';
 
 @Controller('api/admin/boosts')
 export class BoostsController {
-    
+
     @Get('context')
     @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async getContext(req: InternalRequest, res: Response): Promise<void> {
@@ -104,8 +104,8 @@ export class BoostsController {
                 dungeon: key.dungeon.value.value,
                 level: key.level.value,
                 timed: key.isTimed,
-                booster: key.keyHolder?.user && key.keyHolder.user.value.discordId ? {
-                    boosterId: key.keyHolder.user.value.discordId,
+                booster: key.keyHolder.user ? {
+                    boosterId: key.keyHolder.user.value,
                     role: key.keyHolder.role.value
                 } : null
             }))

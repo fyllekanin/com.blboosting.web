@@ -355,7 +355,7 @@
                 </div>
                 <div class="cell small-12 large-2">
                     <label [for]="index + '-key-realm'" [attr.required]="isMultipleSpecifics ? 'required' : ''">Keyholder</label>
-                    <input type="text" (click)="onSelectBooster(item)" [ngModel]="item.user?.label"
+                    <input type="text" (click)="onSelectBooster(item)" [value]="item.keyHolder.user?.label"
                            [placeholder]="'Select booster'">
                 </div>
                 <div class="cell small-12 large-2">

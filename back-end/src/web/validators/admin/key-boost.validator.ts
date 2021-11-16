@@ -26,14 +26,14 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
     private async validateRoles(user: InternalUser, entity: IBoostView, errors: Array<IValidationError>): Promise<void> {
         const playAlongRole = entity.playAlong.isPlaying ? entity.playAlong.role : null;
         const tanks = new Set(entity.keys
-            .filter(key => key.keyHolder?.user && key.keyHolder.user.value.discordId && key.keyHolder.role && key.keyHolder.role.value === Role.TANK.value)
-            .map(key => key.keyHolder.user.value.discordId));
+            .filter(key => key.keyHolder?.user && key.keyHolder.user.value && key.keyHolder.role && key.keyHolder.role.value === Role.TANK.value)
+            .map(key => key.keyHolder.user.value));
         const healers = new Set(entity.keys
-            .filter(key => key.keyHolder?.user && key.keyHolder.user.value.discordId && key.keyHolder.role && key.keyHolder.role.value === Role.HEALER.value)
-            .map(key => key.keyHolder.user.value.discordId));
+            .filter(key => key.keyHolder?.user && key.keyHolder.user.value && key.keyHolder.role && key.keyHolder.role.value === Role.HEALER.value)
+            .map(key => key.keyHolder.user.value));
         const dps = new Set(entity.keys
-            .filter(key => key.keyHolder?.user && key.keyHolder.user.value.discordId && key.keyHolder.role && key.keyHolder.role.value === Role.DPS.value)
-            .map(key => key.keyHolder.user.value.discordId));
+            .filter(key => key.keyHolder?.user && key.keyHolder.user.value && key.keyHolder.role && key.keyHolder.role.value === Role.DPS.value)
+            .map(key => key.keyHolder.user.value));
         if (playAlongRole?.value === Role.TANK.value) tanks.add(user.discordId);
         if (playAlongRole?.value === Role.HEALER.value) healers.add(user.discordId);
         if (playAlongRole?.value === Role.DPS.value) dps.add(user.discordId);
@@ -96,13 +96,13 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
             });
         }
         if ([Role.TANK.value, Role.HEALER.value].includes(entity.playAlong.role.value) &&
-            entity.keys.some(key => key.keyHolder?.user && key.keyHolder.user.value.discordId && key.keyHolder.role === entity.playAlong.role)) {
+            entity.keys.some(key => key.keyHolder?.user && key.keyHolder.user.value && key.keyHolder.role === entity.playAlong.role)) {
             errors.push({
                 code: ValidationError.KEY_MULTIPLE_SAME_ROLE,
                 message: 'You can not be tank or healer if a key holder is this role'
             });
         }
-        if (entity.keys.some(key => key.keyHolder?.user && key.keyHolder.user.value.discordId && key.keyHolder.user.value.discordId === user.discordId)) {
+        if (entity.keys.some(key => key.keyHolder?.user && key.keyHolder.user.value && key.keyHolder.user.value === user.discordId)) {
             errors.push({
                 code: ValidationError.KEY_PLAY_ALONG_KEY_HOLDER,
                 message: 'You can not choose to play along and be key holder, choose one'
@@ -177,7 +177,13 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
             if (!key.dungeon) {
                 errors.push({ code: ValidationError.KEY_KEY_DUNGEON, message: 'A key dungeon needs to be picked' });
             }
-            if (key.keyHolder?.user && key.keyHolder.user.value.discordId && !key.keyHolder.role) {
+            if (key.keyHolder.role && !key.keyHolder.user) {
+                errors.push({
+                    code: ValidationError.KEY_KEY_HOLDER,
+                    message: 'Need to select a keyholder if role is selected'
+                });
+            }
+            if (key.keyHolder.user && !key.keyHolder.role) {
                 errors.push({
                     code: ValidationError.KEY_KEY_HOLDER,
                     message: 'A key holder needs to have a role selected'
@@ -185,7 +191,7 @@ export class KeyBoostValidator implements IValidator<IBoostView> {
             }
         }
         const specificKeys = entity.keys.filter(key => key.dungeon && key.dungeon.value.value !== Dungeon.ANY.value);
-        if (specificKeys.length > 1 && specificKeys.some(key => !key.keyHolder?.user || !key.keyHolder.user.value.discordId)) {
+        if (specificKeys.length > 1 && specificKeys.some(key => !key.keyHolder?.user || !key.keyHolder.user.value)) {
             errors.push({
                 code: ValidationError.KEY_KEY_MULTIPLE_SPECIFIC,
                 message: 'If multiple specific keys every specific key needs a keyholder'
