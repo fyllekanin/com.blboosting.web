@@ -46,7 +46,15 @@ export class BattleNetController {
             }
 
             const result = await BattleNetService.getOath(BattleNetRegions.EU, req.query.code as string, 'wow.profile');
+            if (!result.scope.includes('wow.profile')) {
+                res.status(StatusCodes.BAD_REQUEST).send('You did not give permission to your WoW profile, this is mandatory');
+                return;
+            }
             const profile = await BattleNetService.getWoWProfile(BattleNetRegions.EU, result.access_token);
+            if (!profile) {
+                res.status(StatusCodes.BAD_REQUEST).send('We got an error fetching your WoW profile, contact an administrator');
+                return;
+            }
             const usersWithId = await UserRepository.newRepository().getUsersWithBattleNetId(profile.id);
             const user = await UserRepository.newRepository().get(new ObjectId(parsedToken.id));
 
