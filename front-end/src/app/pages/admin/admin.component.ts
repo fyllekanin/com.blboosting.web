@@ -28,18 +28,21 @@ export class AdminComponent {
         {
             icon: 'fas fa-running',
             label: 'Mythic+ Boost',
-            route: '/admin/boosts/page/1'
+            route: '/admin/boosts/page/1',
+            permission: 'CAN_CREATE_BOOST'
         },
         {
             icon: 'fas fa-user-tag',
             label: 'Manage Roles',
-            route: '/admin/roles/page/1'
+            route: '/admin/roles/page/1',
+            permission: 'CAN_MANAGE_ROLES'
         }
     ];
 
     constructor(private authService: AuthService) {
         this.authUser = this.authService.getUser();
         this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
+        this.navigationItems = this.navigationItems.filter(item => !item.permission || authService.getUser().permissions[item.permission])
     }
 
     onLogout(): void {
