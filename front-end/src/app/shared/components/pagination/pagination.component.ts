@@ -25,13 +25,16 @@ export class PaginationComponent implements OnDestroy {
     thereIsPrevious: boolean;
     thereIsNext: boolean;
 
+    @Input()
+    onPageChange: (page: number) => void;
+
     constructor(
         private router: Router,
         activatedRoute: ActivatedRoute
     ) {
         const currentPath = `/${activatedRoute.snapshot.url.map(segment => segment.path).join('/')}`;
         const prefix = this.router.url.replace(currentPath, '');
-        this._url = `${prefix}/${activatedRoute.snapshot.routeConfig.path}`;
+        this._url = `${prefix}/${activatedRoute.snapshot?.routeConfig?.path}`;
         this.subscriber = activatedRoute.queryParams.subscribe(params => this.queryParameters = params);
     }
 
@@ -52,11 +55,19 @@ export class PaginationComponent implements OnDestroy {
     }
 
     goToPrevious(): void {
-        this.router.navigate([this.getUrl(this.currentPage - 1)], this.queryParameters);
+        if (this.onPageChange) {
+            this.onPageChange(this.currentPage - 1);
+        } else {
+            this.router.navigate([this.getUrl(this.currentPage - 1)], this.queryParameters);
+        }
     }
 
     goToNext(): void {
-        this.router.navigate([this.getUrl(this.currentPage + 1)], this.queryParameters);
+        if (this.onPageChange) {
+            this.onPageChange(this.currentPage + 1);
+        } else {
+            this.router.navigate([this.getUrl(this.currentPage + 1)], this.queryParameters);
+        }
     }
 
     private getUrl(page: number): string {

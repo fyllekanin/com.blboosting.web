@@ -1,9 +1,10 @@
 import { Injectable } from '@angular/core';
 import { Resolve } from '@angular/router';
-import { BoostContext, IBoost } from '../boosts.interface';
+import { BoostContext, IBoost, IBooster } from '../boosts.interface';
 import { HttpService } from '../../../../../core/http/http.service';
 import { SiteNotificationService } from '../../../../../core/common-services/site-notification.service';
 import { SiteNotificationType } from '../../../../../shared/app-views/site-notification/site-notification.interface';
+import { IPagination } from '../../../../../shared/components/pagination/pagination.interface';
 
 @Injectable()
 export class BoostService implements Resolve<{ context: BoostContext }> {
@@ -15,9 +16,6 @@ export class BoostService implements Resolve<{ context: BoostContext }> {
     }
 
     async submitBoost(boost: IBoost): Promise<boolean> {
-        for (const key of boost.keys) {
-            delete key.availableBoosters;
-        }
         return await this.httpService.post('/admin/boosts', boost).toPromise().then(() => {
             this.siteNotificationService.create({
                 title: 'Success',
@@ -36,12 +34,18 @@ export class BoostService implements Resolve<{ context: BoostContext }> {
         };
     }
 
-    private getPayload(boost: IBoost) {
-        return {
-            boost: {
-                name: boost.boost.name,
-                realmId: boost.boost.realm.value.realmId
+    async getBoosters(page: number, filters?: {
+        armors?: Array<string>,
+        classes?: Array<string>,
+        name?: string
+    }): Promise<IPagination<IBooster>> {
+        return await this.httpService.get<IPagination<IBooster>>(`/admin/boosters/key/page/${page}`, {
+            queryParameters: {
+                name: filters?.name,
+                armors: filters?.armors,
+                classes: filters.classes
             }
-        }
+        })
+            .toPromise();
     }
 }

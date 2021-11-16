@@ -1,4 +1,4 @@
-import { ClassMiddleware, Controller, Get, Middleware, Post } from '@overnightjs/core';
+import { Controller, Get, Middleware, Post } from '@overnightjs/core';
 import { Response } from 'express';
 import { InternalRequest, InternalUser } from '../../../common/utilities/internal.request';
 import { AUTHORIZATION_MIDDLEWARE } from '../middlewares/authorization.middleware';
@@ -10,9 +10,8 @@ import { BoostSource } from '../../../common/constants/boost-source.constant';
 import { Dungeon } from '../../../common/constants/dungeons.constant';
 import { Role } from '../../../common/constants/roles.constant';
 import { Faction } from '../../../common/constants/factions.constant';
-import { Client, GuildMember, MessageReaction, TextChannel } from 'discord.js';
-import { Configuration } from '../../../common/configuration';
-import { IBoostView, IKeyBoosterView } from '../../rest-service-views/admin/boosts.interface';
+import { MessageReaction, TextChannel } from 'discord.js';
+import { IBoostView } from '../../rest-service-views/admin/boosts.interface';
 import { KeyBoostValidator } from '../../validators/admin/key-boost.validator';
 import { ILabelValue } from '../../rest-service-views/common.interface';
 import { RoleRepository } from '../../../common/persistance/repositories/role.repository';
@@ -21,21 +20,12 @@ import { ValidationError } from '../../../common/constants/validation.error';
 import { DiscordUtility } from '../../../common/utilities/discord.utility';
 
 @Controller('api/admin/boosts')
-@ClassMiddleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE])
 export class BoostsController {
-    private static readonly BOOSTERS_CACHE_KEY = 'KEY_BOOSTERS';
 
     @Get('context')
-    @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async getContext(req: InternalRequest, res: Response): Promise<void> {
         try {
-            let boosters = Configuration.getCache().has(BoostsController.BOOSTERS_CACHE_KEY) ? Configuration.getCache().get(BoostsController.BOOSTERS_CACHE_KEY) : null;
-            if (!boosters) {
-                console.log('Booster cache did not contain data, filling up');
-                boosters = await this.getKeyBoosters(req.client);
-                Configuration.getCache().set(BoostsController.BOOSTERS_CACHE_KEY, boosters, 300);
-            }
-
             const canCollectPayment = await RoleRepository.newRepository().doUserHavePermission(req.user.discordId,
                 [RolePermission.CAN_COLLECT_PAYMENTS], DiscordUtility.getRoleIds(req.client, req.user.discordId));
 
@@ -46,8 +36,7 @@ export class BoostsController {
                 dungeons: Object.keys(Dungeon).map(key => Dungeon[key]),
                 roles: Object.keys(Role).map(key => Role[key]),
                 factions: Object.keys(Faction).map(key => Faction[key]),
-                collectors: await this.getCollectors(req),
-                boosters: boosters
+                collectors: await this.getCollectors(req)
             });
         } catch (err) {
             console.error(err);
@@ -56,7 +45,7 @@ export class BoostsController {
     }
 
     @Post()
-    @Middleware([PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
+    @Middleware([AUTHORIZATION_MIDDLEWARE, BATTLE_NET_MIDDLEWARE, PermissionMiddleware.getPermissionMiddleware([RolePermission.CAN_LOGIN, RolePermission.CAN_CREATE_BOOST])])
     async createBoost(req: InternalRequest<IBoostView>, res: Response): Promise<void> {
         try {
             const errors = await (new KeyBoostValidator()).run(req.user, req.body, req.client);
@@ -86,7 +75,7 @@ export class BoostsController {
             };
             req.client.on('messageReactionAdd', listener);
         } catch (err) {
-            console.log(err);
+            console.error(err);
             res.status(StatusCodes.BAD_REQUEST).json();
         }
     }
@@ -115,8 +104,8 @@ export class BoostsController {
                 dungeon: key.dungeon.value.value,
                 level: key.level.value,
                 timed: key.isTimed,
-                booster: key.keyHolder?.user && key.keyHolder.user.value.discordId ? {
-                    boosterId: key.keyHolder.user.value.discordId,
+                booster: key.keyHolder.user ? {
+                    boosterId: key.keyHolder.user.value,
                     role: key.keyHolder.role.value
                 } : null
             }))
@@ -160,80 +149,5 @@ export class BoostsController {
                 });
         }
         return values;
-    }
-
-    private async getKeyBoosters(client: Client): Promise<{ low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> }> {
-        const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
-        const response: { low: Array<IKeyBoosterView>, medium: Array<IKeyBoosterView>, high: Array<IKeyBoosterView>, elite: Array<IKeyBoosterView> } = {
-            low: [],
-            medium: [],
-            high: [],
-            elite: []
-        };
-        (await guild.roles.fetch(Configuration.get().RoleIds.LOW_KEY_BOOSTER)).members.forEach(item => {
-            const data: IKeyBoosterView = {
-                discordId: item.id,
-                name: item.nickname ? item.nickname : item.displayName,
-                armors: this.getUserArmors(item),
-                classes: this.getUserClasses(item)
-            };
-            response.low.push(data);
-
-            if (item.roles.cache.get(Configuration.get().RoleIds.MEDIUM_KEY_BOOSTER)) {
-                response.medium.push(data);
-            }
-            if (item.roles.cache.get(Configuration.get().RoleIds.HIGH_KEY_BOOSTER)) {
-                response.high.push(data);
-            }
-            if (item.roles.cache.get(Configuration.get().RoleIds.ELITE_KEY_BOOSTER)) {
-                response.elite.push(data);
-            }
-        });
-
-        return response;
-    }
-
-    private getUserClasses(user: GuildMember): {
-        priest: boolean,
-        warlock: boolean,
-        mage: boolean,
-        druid: boolean,
-        monk: boolean,
-        rogue: boolean,
-        demonHunter: boolean,
-        hunter: boolean,
-        shaman: boolean,
-        warrior: boolean,
-        deathKnight: boolean,
-        paladin: boolean
-    } {
-        return {
-            priest: user.roles.cache.get(Configuration.get().ClassRoles.PRIEST.discordId) != null,
-            warlock: user.roles.cache.get(Configuration.get().ClassRoles.WARLOCK.discordId) != null,
-            mage: user.roles.cache.get(Configuration.get().ClassRoles.MAGE.discordId) != null,
-            druid: user.roles.cache.get(Configuration.get().ClassRoles.DRUID.discordId) != null,
-            monk: user.roles.cache.get(Configuration.get().ClassRoles.MONK.discordId) != null,
-            rogue: user.roles.cache.get(Configuration.get().ClassRoles.ROGUE.discordId) != null,
-            demonHunter: user.roles.cache.get(Configuration.get().ClassRoles.DEMON_HUNTER.discordId) != null,
-            hunter: user.roles.cache.get(Configuration.get().ClassRoles.HUNTER.discordId) != null,
-            shaman: user.roles.cache.get(Configuration.get().ClassRoles.SHAMAN.discordId) != null,
-            warrior: user.roles.cache.get(Configuration.get().ClassRoles.WARRIOR.discordId) != null,
-            deathKnight: user.roles.cache.get(Configuration.get().ClassRoles.DEATH_KNIGHT.discordId) != null,
-            paladin: user.roles.cache.get(Configuration.get().ClassRoles.PALADIN.discordId) != null
-        }
-    }
-
-    private getUserArmors(user: GuildMember): {
-        cloth: boolean,
-        leather: boolean,
-        mail: boolean,
-        plate: boolean
-    } {
-        return {
-            cloth: user.roles.cache.get(Configuration.get().ArmorRoles.CLOTH.discordId) != null,
-            leather: user.roles.cache.get(Configuration.get().ArmorRoles.LEATHER.discordId) != null,
-            mail: user.roles.cache.get(Configuration.get().ArmorRoles.MAIL.discordId) != null,
-            plate: user.roles.cache.get(Configuration.get().ArmorRoles.PLATE.discordId) != null
-        }
     }
 }

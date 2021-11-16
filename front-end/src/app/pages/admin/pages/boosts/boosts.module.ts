@@ -9,6 +9,8 @@ import { RouterModule } from '@angular/router';
 import { FormsModule } from '@angular/forms';
 import { BoostService } from './boost/boost.service';
 import { SelectModule } from '../../../../shared/components/form/select/select.module';
+import { PaginationModule } from '../../../../shared/components/pagination/pagination.module';
+import { TableModule } from '../../../../shared/components/table/table.module';
 
 @NgModule({
     imports: [
@@ -16,7 +18,9 @@ import { SelectModule } from '../../../../shared/components/form/select/select.m
         CommonModule,
         ContentModule,
         FormsModule,
-        SelectModule
+        SelectModule,
+        PaginationModule,
+        TableModule
     ],
     declarations: [
         BoostComponent,
