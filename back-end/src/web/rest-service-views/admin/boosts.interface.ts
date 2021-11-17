@@ -3,32 +3,6 @@ import { ILabelValue } from '../common.interface';
 export interface IKeyBoosterView {
     discordId: string;
     name: string;
-    roles: {
-        isLow: boolean,
-        isMid: boolean,
-        isHigh: boolean,
-        isEpic: boolean
-    },
-    armors: {
-        cloth: boolean,
-        leather: boolean,
-        mail: boolean,
-        plate: boolean
-    };
-    classes: {
-        priest: boolean,
-        warlock: boolean,
-        mage: boolean,
-        druid: boolean,
-        monk: boolean,
-        rogue: boolean,
-        demonHunter: boolean,
-        hunter: boolean,
-        shaman: boolean,
-        warrior: boolean,
-        deathKnight: boolean,
-        paladin: boolean
-    };
 }
 
 export interface IBoostRealm {
