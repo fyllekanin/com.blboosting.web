@@ -58,7 +58,7 @@ export class BoostersController {
             if ((filters.armors || []).length > 0 && !this.isValidArmor(item, filters.armors)) return;
             if ((filters.classes || []).length > 0 && !this.isValidClass(item, filters.classes)) return;
             
-            const data: IKeyBoosterView = <unknown><IKeyBoosterView>{
+            const data: IKeyBoosterView = {
                 discordId: item.id,
                 name: name
             };
