@@ -176,10 +176,10 @@ export class BoostComponent {
         this.entity.keys = this.entity.keys.filter(item => item !== key);
     }
 
-    private async setDialogData(): Promise<void> {
+    private async setDialogData(page = 1): Promise<void> {
         const armors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]).map(key => key);
         const classes = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]).map(key => key);
-        const data: IPagination<IBooster> = await this.boostService.getBoosters(1, {
+        const data: IPagination<IBooster> = await this.boostService.getBoosters(page, {
             name: this.dialogComponent.search,
             armors: armors,
             classes: classes

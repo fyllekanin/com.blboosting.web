@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy } from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, Output } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
 import { CombineSubscriptions, UnSub } from '../../decorators/unsub.decorator';
 import { Unsubscribable } from 'rxjs';
@@ -26,7 +26,9 @@ export class PaginationComponent implements OnDestroy {
     thereIsNext: boolean;
 
     @Input()
-    onPageChange: (page: number) => void;
+    useCallback: boolean;
+    @Output()
+    onPageChange: EventEmitter<number> = new EventEmitter();
 
     constructor(
         private router: Router,
@@ -55,16 +57,16 @@ export class PaginationComponent implements OnDestroy {
     }
 
     goToPrevious(): void {
-        if (this.onPageChange) {
-            this.onPageChange(this.currentPage - 1);
+        if (this.useCallback) {
+            this.onPageChange.emit(this.currentPage - 1);
         } else {
             this.router.navigate([this.getUrl(this.currentPage - 1)], this.queryParameters);
         }
     }
 
     goToNext(): void {
-        if (this.onPageChange) {
-            this.onPageChange(this.currentPage + 1);
+        if (this.useCallback) {
+            this.onPageChange.emit(this.currentPage + 1);
         } else {
             this.router.navigate([this.getUrl(this.currentPage + 1)], this.queryParameters);
         }
