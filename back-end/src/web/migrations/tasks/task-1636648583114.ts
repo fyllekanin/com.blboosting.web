@@ -6,14 +6,14 @@ import { RoleRepository } from '../../../common/persistance/repositories/role.re
 /**
  * - Create index for role name
  */
-export class Task1633797391242 implements MigrationTask {
+export class Task1636648583114 implements MigrationTask {
 
     async run(): Promise<void> {
         await this.createRoleNameIndex();
     }
 
     getName(): string {
-        return 'Task1633797391242';
+        return 'Task1636648583114';
     }
 
     private async createRoleNameIndex(): Promise<void> {
