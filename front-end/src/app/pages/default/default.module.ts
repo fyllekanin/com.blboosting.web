@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { DefaultComponent } from './default.component';
 import { ContentModule } from '../../shared/components/content/content.module';
 import { FormsModule } from '@angular/forms';
+import { ErrorComponent } from './error/error.component';
 
 @NgModule({
     imports: [
@@ -16,7 +17,8 @@ import { FormsModule } from '@angular/forms';
     ],
     declarations: [
         HomeComponent,
-        DefaultComponent
+        DefaultComponent,
+        ErrorComponent
     ],
     providers: [],
     exports: [
