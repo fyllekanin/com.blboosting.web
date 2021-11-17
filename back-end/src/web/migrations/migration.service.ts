@@ -2,6 +2,8 @@ import { MigrationTask } from './task.interface';
 import { Task1633797391242 } from './tasks/task-1633797391242';
 import { DatabaseService } from '../../common/database.service';
 import { Collection } from 'mongodb';
+import { Task1636648583114 } from './tasks/task-1636648583114';
+import { Task1637170656132 } from './tasks/task-1637170656132';
 
 interface IMigration {
     name: string;
@@ -33,7 +35,9 @@ export class MigrationService {
 
     private static getTasks(): Array<MigrationTask> {
         return [
-            new Task1633797391242()
+            new Task1633797391242(),
+            new Task1636648583114(),
+            new Task1637170656132()
         ];
     }
 }
