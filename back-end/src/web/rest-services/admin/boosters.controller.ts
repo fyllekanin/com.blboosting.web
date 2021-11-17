@@ -12,13 +12,10 @@ export class BoostersController {
 
     @Get('key/page/:page')
     async getList(req: InternalRequest, res: Response): Promise<void> {
-        const boosters: Array<IKeyBoosterView> = await this.getKeyBoosters(req.client).then(items => {
-            return items.filter(item => {
-                if (req.query.name && !this.isValidName(<string>req.query.name, item.name)) return false;
-                if (req.query.armors && !this.isValidArmor(<Array<string>>req.query.armors, item)) return false;
-                if (req.query.classes && !this.isValidClass(<Array<string>>req.query.classes, item)) return false;
-                return true;
-            });
+        const boosters: Array<IKeyBoosterView> = await this.getKeyBoosters(req.client, {
+            name: <string>req.query.name,
+            armors: <Array<string>>req.query.armors,
+            classes: <Array<string>>req.query.classes
         });
 
         res.status(StatusCodes.OK).json({
@@ -28,92 +25,46 @@ export class BoostersController {
         });
     }
 
-    private isValidArmor(armors: Array<string>, item: IKeyBoosterView): boolean {
-        console.log(armors);
+    private isValidArmor(user: GuildMember, armors: Array<string>): boolean {
         for (const armor of armors) {
             // @ts-ignore
-            if (item.armors[armor.toLowerCase()]) {
+            if (user.roles.cache.get(Configuration.get().ArmorRoles[armor.toUpperCase()].discordId)) {
                 return true;
             }
         }
+        return false;
     }
 
-    private isValidClass(classes: Array<string>, item: IKeyBoosterView): boolean {
+    private isValidClass(user: GuildMember, classes: Array<string>): boolean {
         for (const clazz of classes) {
             // @ts-ignore
-            if (item.classes[clazz.toLowerCase()]) {
+             if (user.roles.cache.get(Configuration.get().ClassRoles[clazz.toUpperCase()].discordId)) {
                 return true;
             }
         }
+        return false;
     }
 
     private isValidName(search: string, name: string): boolean {
         return new RegExp(`^${search}`, 'i').test(name);
     }
 
-    private async getKeyBoosters(client: Client): Promise<Array<IKeyBoosterView>> {
+    private async getKeyBoosters(client: Client, filters: { name: string, armors: Array<string>, classes: Array<string> }): Promise<Array<IKeyBoosterView>> {
         const guild = client.guilds.cache.get(process.env.DISCORD_GUILD_ID);
         const response: Array<IKeyBoosterView> = [];
         (await guild.roles.fetch(Configuration.get().RoleIds.LOW_KEY_BOOSTER)).members.forEach(item => {
+            const name = item.nickname ? item.nickname : item.displayName;
+            if (filters.name && !this.isValidName(filters.name, name)) return;
+            if ((filters.armors || []).length > 0 && !this.isValidArmor(item, filters.armors)) return;
+            if ((filters.classes || []).length > 0 && !this.isValidClass(item, filters.classes)) return;
+            
             const data: IKeyBoosterView = {
                 discordId: item.id,
-                name: item.nickname ? item.nickname : item.displayName,
-                armors: this.getUserArmors(item),
-                classes: this.getUserClasses(item),
-                roles: {
-                    isLow: true,
-                    isMid: item.roles.cache.get(Configuration.get().RoleIds.MEDIUM_KEY_BOOSTER) != null,
-                    isHigh: item.roles.cache.get(Configuration.get().RoleIds.HIGH_KEY_BOOSTER) != null,
-                    isEpic: item.roles.cache.get(Configuration.get().RoleIds.ELITE_KEY_BOOSTER) != null
-                }
+                name: name
             };
             response.push(data);
         });
 
         return response;
-    }
-
-    private getUserClasses(user: GuildMember): {
-        priest: boolean,
-        warlock: boolean,
-        mage: boolean,
-        druid: boolean,
-        monk: boolean,
-        rogue: boolean,
-        demonHunter: boolean,
-        hunter: boolean,
-        shaman: boolean,
-        warrior: boolean,
-        deathKnight: boolean,
-        paladin: boolean
-    } {
-        return {
-            priest: user.roles.cache.get(Configuration.get().ClassRoles.PRIEST.discordId) != null,
-            warlock: user.roles.cache.get(Configuration.get().ClassRoles.WARLOCK.discordId) != null,
-            mage: user.roles.cache.get(Configuration.get().ClassRoles.MAGE.discordId) != null,
-            druid: user.roles.cache.get(Configuration.get().ClassRoles.DRUID.discordId) != null,
-            monk: user.roles.cache.get(Configuration.get().ClassRoles.MONK.discordId) != null,
-            rogue: user.roles.cache.get(Configuration.get().ClassRoles.ROGUE.discordId) != null,
-            demonHunter: user.roles.cache.get(Configuration.get().ClassRoles.DEMON_HUNTER.discordId) != null,
-            hunter: user.roles.cache.get(Configuration.get().ClassRoles.HUNTER.discordId) != null,
-            shaman: user.roles.cache.get(Configuration.get().ClassRoles.SHAMAN.discordId) != null,
-            warrior: user.roles.cache.get(Configuration.get().ClassRoles.WARRIOR.discordId) != null,
-            deathKnight: user.roles.cache.get(Configuration.get().ClassRoles.DEATH_KNIGHT.discordId) != null,
-            paladin: user.roles.cache.get(Configuration.get().ClassRoles.PALADIN.discordId) != null
-        }
-    }
-
-    private getUserArmors(user: GuildMember): {
-        cloth: boolean,
-        leather: boolean,
-        mail: boolean,
-        plate: boolean
-    } {
-        return {
-            cloth: user.roles.cache.get(Configuration.get().ArmorRoles.CLOTH.discordId) != null,
-            leather: user.roles.cache.get(Configuration.get().ArmorRoles.LEATHER.discordId) != null,
-            mail: user.roles.cache.get(Configuration.get().ArmorRoles.MAIL.discordId) != null,
-            plate: user.roles.cache.get(Configuration.get().ArmorRoles.PLATE.discordId) != null
-        }
     }
 }
