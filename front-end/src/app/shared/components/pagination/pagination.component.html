@@ -21,7 +21,7 @@
                 </a>
                 <a
                     *ngIf="onPageChange"
-                    (click)="onPageChange ? onPageChange(item) : null">
+                    (click)="onPageChange(item)">
                     {{ item < 0 ? '...' : item }}
                 </a>
             </div>
