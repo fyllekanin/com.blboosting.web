@@ -46,7 +46,7 @@ export class BattleNetController {
             }
 
             const result = await BattleNetService.getOath(BattleNetRegions.EU, req.query.code as string, 'wow.profile');
-            if ((result.scope || '').includes('wow.profile')) {
+            if (!(result.scope || '').includes('wow.profile')) {
                 res.status(StatusCodes.BAD_REQUEST).redirect('/default/error?message=You did not give access to your WoW profile. This is required');
                 return;
             }
