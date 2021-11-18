@@ -99,7 +99,7 @@ export class BoostComponent {
             this.dialogComponent = (<DialogTableComponent<IBooster>>componentRef.instance);
             this.dialogComponent.onPageChange = this.setDialogData.bind(this);
             this.dialogComponent.onSearchChange = this.setDialogData.bind(this);
-            this.dialogComponent.headers = [{ label: 'Name' }, { label: 'Discord ID' }];
+            this.dialogComponent.headers = [{ label: 'Name' }, { label: 'Discord ID' }, { label: 'Is correct class/armor' }];
             this.dialogComponent.onPageChange(1);
 
             this.dialogComponent.onSelectRow = rowId => {
@@ -180,21 +180,25 @@ export class BoostComponent {
         const armors = Object.keys(this.entity.boost.armor).filter(key => this.entity.boost.armor[key]).map(key => key);
         const classes = Object.keys(this.entity.boost.class).filter(key => this.entity.boost.class[key]).map(key => key);
         const data: IPagination<IBooster> = await this.boostService.getBoosters(page, {
-            name: this.dialogComponent.search,
-            armors: armors,
-            classes: classes
+            name: this.dialogComponent.search
         });
         this.dialogComponent.pagination = data;
-        this.dialogComponent.rows = data.items.map(item => ({
-            rowId: item.discordId,
-            actions: [{
-                label: 'Select',
-                buttonClass: ButtonClasses.BLUE
-            }],
-            cells: [
-                { label: item.name },
-                { label: item.discordId }
-            ]
-        }));
+        this.dialogComponent.rows = data.items.map(item => {
+
+            const isCorrectArmor = armors.length === 0 || armors.some(armor => Object.keys(item.armors).some(key => item.armors[armor]));
+            const isCorrectClass = classes.length === 0 || classes.some(clazz => Object.keys(item.classes).some(key => item.classes[clazz]));
+            return {
+                rowId: item.discordId,
+                actions: [{
+                    label: 'Select',
+                    buttonClass: ButtonClasses.BLUE
+                }],
+                cells: [
+                    { label: item.name },
+                    { label: item.discordId },
+                    { label: isCorrectArmor && isCorrectClass ? 'Yes' : 'No' }
+                ]
+            };
+        });
     }
 }
