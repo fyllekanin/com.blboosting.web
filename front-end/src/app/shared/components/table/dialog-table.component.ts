@@ -12,7 +12,7 @@ export class DialogTableComponent<T> {
     rows: Array<TableRow> = [];
     search: string;
 
-    onSearchChange: (search: string) => void;
+    onSearchChange: (page: number) => void;
     onPageChange: (page: number) => void;
     onSelectRow: (rowId: number | string) => void;
 
