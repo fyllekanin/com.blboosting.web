@@ -2,7 +2,7 @@ import { Type } from '@angular/core';
 
 export interface DialogButton {
     label: string;
-    action: string;
+    action?: string;
     type: 'button-red' | 'button-green' | 'button-blue' | 'button-gray';
     isClosing?: boolean;
 }
