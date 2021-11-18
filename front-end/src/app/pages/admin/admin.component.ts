@@ -8,7 +8,6 @@ import { AuthUser } from '../../core/auth/auth.model';
     styleUrls: ['admin.component.scss']
 })
 export class AdminComponent {
-    avatarUrl: string;
     amount: string;
     authUser: AuthUser;
 
@@ -41,7 +40,6 @@ export class AdminComponent {
 
     constructor(private authService: AuthService) {
         this.authUser = this.authService.getUser();
-        this.avatarUrl = `https://cdn.discordapp.com/avatars/${this.authUser.discordId}/${this.authUser.avatarHash}.png?size=100`;
         this.navigationItems = this.navigationItems.filter(item => !item.permission || authService.getUser().permissions[item.permission])
     }
 
